@@ -24,7 +24,7 @@
         <relativePath>../oparent</relativePath>
     </parent>
 
-	<groupId>org.openo.holmes</groupId>
+	<groupId>org.openo.holmes.rule-management</groupId>
 	<artifactId>holmes-rulemgt-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>holmes-rulemgt-parent</name>
