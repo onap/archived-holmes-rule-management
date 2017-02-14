@@ -21,11 +21,9 @@ import org.openo.dropwizard.ioc.bundle.IOCApplication;
 public class RuleActiveApp extends IOCApplication < RuleAppConfig > {
 
     public static void main( String[] args ) throws Exception {
-//        args = new String[]{ "server",
-//                        "D:\\code\\open-o\\holmes-rule-management\\rulemgt-standalone\\src\\assembly\\resource\\conf\\holmes-rulemgt.yml" };
-        new RuleActiveApp().run( args );
+       new RuleActiveApp().run( args );
     }
-
+        
     @Override
     public String getName() {
         return "Holmes Rule Management ActiveApp APP ";
