@@ -119,6 +119,7 @@ public class RuleMgtResources {
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
                 e.getMessage()));
         } catch (Exception e) {
+            log.error("update rule:" + ruleUpdateRequest.getRuleId() + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
                 I18nProxy.RULE_MANAGEMENT_UNKNOWN_EXCEPTION));
         }
