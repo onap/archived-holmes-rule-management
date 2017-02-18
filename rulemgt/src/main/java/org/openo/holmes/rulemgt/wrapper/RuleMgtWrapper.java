@@ -23,9 +23,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.api.entity.CorrelationRule;
-import org.openo.holmes.common.exception.CallException;
-import org.openo.holmes.common.exception.DataFormatException;
-import org.openo.holmes.common.exception.DbException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.DbDaoUtil;
 import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
@@ -56,24 +54,29 @@ public class RuleMgtWrapper {
     private DbDaoUtil daoUtil;
 
     public RuleAddAndUpdateResponse addCorrelationRule(String creator,
-        RuleCreateRequest ruleCreateRequest)
-        throws DataFormatException, CallException, DbException {
+            RuleCreateRequest ruleCreateRequest)
+            throws CorrelationException {
         CorrelationRule correlationRule = convertRuleCreateRequest2CorrelationRule(creator,
-            ruleCreateRequest);
+                ruleCreateRequest);
         if (correlationRule.getName() == null || "".equals(correlationRule.getName().trim())) {
-            throw new DbException(I18nProxy.RULE_MANAGEMENT_RULE_NAME_IS_EMPTY);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_RULE_NAME_IS_EMPTY);
         }
-        CorrelationRule ruleTemp = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-            .queryRuleByRuleName(correlationRule.getName());
+        CorrelationRule ruleTemp;
+        try {
+            ruleTemp = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
+                    .queryRuleByRuleName(correlationRule.getName());
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR, e);
+        }
         if (ruleTemp != null) {
-            throw new DbException(I18nProxy.RULE_MANAGEMENT_REPEAT_RULE_NAME);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REPEAT_RULE_NAME);
         }
         correlationRule.setPackageName(deployRule2Engine(correlationRule));
         try {
             correlationRule = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                .saveRule(correlationRule);
-        } catch (RuntimeException e) {
-            throw new DbException(I18nProxy.RULE_MANAGEMENT_CREATE_RULE_FAILED, e);
+                    .saveRule(correlationRule);
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_RULE_FAILED, e);
         }
         RuleAddAndUpdateResponse ruleAddAndUpdateResponse = new RuleAddAndUpdateResponse();
         ruleAddAndUpdateResponse.setRuleId(correlationRule.getRid());
@@ -81,17 +84,22 @@ public class RuleMgtWrapper {
     }
 
     public RuleAddAndUpdateResponse updateCorrelationRule(String modifier,
-        RuleUpdateRequest ruleUpdateRequest)
-        throws DataFormatException, DbException, CallException {
+            RuleUpdateRequest ruleUpdateRequest)
+            throws CorrelationException {
         if (ruleUpdateRequest != null) {
-            CorrelationRule oldCorrelationRule = daoUtil
-                .getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                .getRuleByRid(ruleUpdateRequest.getRuleId());
+            CorrelationRule oldCorrelationRule;
+            try {
+                oldCorrelationRule = daoUtil
+                        .getJdbiDaoByOnDemand(CorrelationRuleDao.class)
+                        .getRuleByRid(ruleUpdateRequest.getRuleId());
+            } catch (Exception e) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR, e);
+            }
             if (oldCorrelationRule == null) {
-                throw new DbException(I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE);
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE);
             }
             CorrelationRule newCorrelationRule = convertRuleUpdateRequest2CorrelationRule(modifier,
-                ruleUpdateRequest);
+                    ruleUpdateRequest);
             checkCorrelation(newCorrelationRule, oldCorrelationRule);
             RuleAddAndUpdateResponse ruleChangeResponse = new RuleAddAndUpdateResponse();
             try {
@@ -99,65 +107,68 @@ public class RuleMgtWrapper {
                     engineWarpper.deleteRuleFromEngine(oldCorrelationRule.getPackageName());
                 }
                 daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                    .updateRule(newCorrelationRule);
-            } catch (RuntimeException e) {
-                throw new DbException(I18nProxy.RULE_MANAGEMENT_UPDATE_RULE_FAILED, e);
+                        .updateRule(newCorrelationRule);
+            } catch (Exception e) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_UPDATE_RULE_FAILED, e);
             }
             ruleChangeResponse.setRuleId(newCorrelationRule.getRid());
             deployRule2Engine(newCorrelationRule);
             return ruleChangeResponse;
         } else {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
         }
 
     }
 
     public void checkCorrelation(CorrelationRule newCorrelationRule,
-        CorrelationRule oldCorrelationRule) throws DataFormatException {
+            CorrelationRule oldCorrelationRule) throws CorrelationException {
         int newEnabled = newCorrelationRule.getEnabled();
         if (newCorrelationRule.getContent() == null) {
             newCorrelationRule.setContent(oldCorrelationRule.getContent());
         }
         if (newEnabled != RuleMgtConstant.STATUS_RULE_CLOSE
-            && newEnabled != RuleMgtConstant.STATUS_RULE_OPEN) {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_PARAMETER_ENABLED_ERROR);
+                && newEnabled != RuleMgtConstant.STATUS_RULE_OPEN) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARAMETER_ENABLED_ERROR);
         }
     }
 
     public void deleteCorrelationRule(RuleDeleteRequest ruleDeleteRequest)
-        throws DbException, DataFormatException, CallException {
+            throws CorrelationException {
         if (ruleDeleteRequest != null) {
-            CorrelationRule correlationRule = daoUtil
-                .getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                .getRuleByRid(ruleDeleteRequest.getRuleId());
+            CorrelationRule correlationRule;
+            try {
+                correlationRule = daoUtil
+                        .getJdbiDaoByOnDemand(CorrelationRuleDao.class)
+                        .getRuleByRid(ruleDeleteRequest.getRuleId());
+            } catch (Exception e) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            }
             if (correlationRule == null) {
                 log.warn("the rule:rule id=" + ruleDeleteRequest.getRuleId()
-                    + " does not exist the database.");
-                throw new DbException(I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE);
+                        + " does not exist the database.");
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE);
             }
             try {
                 if (correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN) {
                     engineWarpper.deleteRuleFromEngine(correlationRule.getPackageName());
                 }
                 daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                    .deleteRule(correlationRule);
-            } catch (RuntimeException e) {
-                throw new DbException(I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED, e);
+                        .deleteRule(correlationRule);
+            } catch (Exception e) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED, e);
             }
-        } else
-
-        {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
+        } else {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
         }
 
     }
 
     public CorrelationRule convertRuleCreateRequest2CorrelationRule(String userName,
-        RuleCreateRequest ruleCreateRequest) throws DataFormatException {
+            RuleCreateRequest ruleCreateRequest) throws CorrelationException {
         if (ruleCreateRequest != null) {
             if (ruleCreateRequest.getEnabled() != RuleMgtConstant.STATUS_RULE_OPEN
-                && ruleCreateRequest.getEnabled() != RuleMgtConstant.STATUS_RULE_CLOSE) {
-                throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
+                    && ruleCreateRequest.getEnabled() != RuleMgtConstant.STATUS_RULE_CLOSE) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
             }
             CorrelationRule correlationRule = new CorrelationRule();
             String ruleId = "rule_" + System.currentTimeMillis();
@@ -177,13 +188,13 @@ public class RuleMgtWrapper {
             correlationRule.setEnabled(ruleCreateRequest.getEnabled());
             return correlationRule;
         } else {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
         }
 
     }
 
     private CorrelationRule convertRuleUpdateRequest2CorrelationRule(String modifier,
-        RuleUpdateRequest ruleUpdateRequest) throws DataFormatException {
+            RuleUpdateRequest ruleUpdateRequest) throws CorrelationException {
         if (ruleUpdateRequest != null) {
             CorrelationRule correlationRule = new CorrelationRule();
             correlationRule.setRid(ruleUpdateRequest.getRuleId());
@@ -194,12 +205,12 @@ public class RuleMgtWrapper {
             correlationRule.setModifier(modifier);
             return correlationRule;
         } else {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
         }
 
     }
 
-    private String deployRule2Engine(CorrelationRule correlationRule) throws CallException {
+    private String deployRule2Engine(CorrelationRule correlationRule) throws CorrelationException {
         if (engineWarpper.checkRuleFromEngine(correlationRules2CheckRule(correlationRule))) {
             if (correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN) {
                 return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule));
@@ -209,18 +220,18 @@ public class RuleMgtWrapper {
     }
 
     public RuleQueryListResponse getCorrelationRuleByCondition(
-        RuleQueryCondition ruleQueryCondition) throws DataFormatException, DbException {
+            RuleQueryCondition ruleQueryCondition) throws CorrelationException {
         List<CorrelationRule> correlationRule = correlationRuleQueryDao
-            .getCorrelationRulesByCondition(ruleQueryCondition);
+                .getCorrelationRulesByCondition(ruleQueryCondition);
         RuleQueryListResponse ruleQueryListResponse = new RuleQueryListResponse();
         ruleQueryListResponse.setTotalCount(correlationRule.size());
         ruleQueryListResponse
-            .setCorrelationRules(correlationRules2RuleResult4APIs(correlationRule));
+                .setCorrelationRules(correlationRules2RuleResult4APIs(correlationRule));
         return ruleQueryListResponse;
     }
 
     private List<RuleResult4API> correlationRules2RuleResult4APIs(
-        List<CorrelationRule> correlationRules) {
+            List<CorrelationRule> correlationRules) {
         List<RuleResult4API> ruleResult4APIs = new ArrayList<RuleResult4API>();
         for (CorrelationRule correlationRule : correlationRules) {
             RuleResult4API ruleResult4API = new RuleResult4API();
@@ -239,7 +250,7 @@ public class RuleMgtWrapper {
     }
 
     private CorrelationDeployRule4Engine correlationRules2DeployRule(
-        CorrelationRule correlationRule) {
+            CorrelationRule correlationRule) {
         CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent(correlationRule.getContent());
         correlationDeployRule4Engine.setEngineId(correlationRule.getEngineId());
@@ -247,7 +258,7 @@ public class RuleMgtWrapper {
     }
 
     private CorrelationCheckRule4Engine correlationRules2CheckRule(
-        CorrelationRule correlationRule) {
+            CorrelationRule correlationRule) {
         CorrelationCheckRule4Engine correlationCheckRule4Engine = new CorrelationCheckRule4Engine();
         correlationCheckRule4Engine.setContent(correlationRule.getContent());
         return correlationCheckRule4Engine;

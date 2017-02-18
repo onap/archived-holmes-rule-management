@@ -35,9 +35,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.jvnet.hk2.annotations.Service;
-import org.openo.holmes.common.exception.CallException;
-import org.openo.holmes.common.exception.DataFormatException;
-import org.openo.holmes.common.exception.DbException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.ExceptionUtil;
 import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.common.utils.JacksonUtil;
@@ -67,30 +65,18 @@ public class RuleMgtResources {
     @ApiOperation(value = "Save the alarm+ rule to the database, and deployed to the engine when the enable to open.", response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse addCorrelationRule(@Context HttpServletRequest request,
-        @ApiParam(value = "alarm+ rule create request.<br>[rulename]:<font color=\"red\">required</font><br>[content]:<font color=\"red\">required</font><br>[enabled]:<font color=\"red\">required</font>", required = true) RuleCreateRequest ruleCreateRequest) {
+            @ApiParam(value = "alarm+ rule create request.<br>[rulename]:<font color=\"red\">required</font><br>[content]:<font color=\"red\">required</font><br>[enabled]:<font color=\"red\">required</font>", required = true) RuleCreateRequest ruleCreateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
             ruleChangeResponse = ruleMgtWrapper
-                .addCorrelationRule(UserUtil.getUserName(request), ruleCreateRequest);
+                    .addCorrelationRule(UserUtil.getUserName(request), ruleCreateRequest);
             log.info("create rule:" + ruleCreateRequest.getRuleName() + " success.");
             return ruleChangeResponse;
-        } catch (CallException e) {
+        } catch (CorrelationException e) {
             log.error("create rule:" + ruleCreateRequest.getRuleName() + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DbException e) {
-            log.error("create rule:" + ruleCreateRequest.getRuleName() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DataFormatException e) {
-            log.error("create rule:" + ruleCreateRequest.getRuleName() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (Exception e) {
-            log.error("create rule:" + ruleCreateRequest.getRuleName() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                I18nProxy.RULE_MANAGEMENT_UNKNOWN_EXCEPTION));
+                    e.getMessage()));
         }
     }
 
@@ -99,29 +85,17 @@ public class RuleMgtResources {
     @ApiOperation(value = "Update the alarm+ rule and deployed to the engine when the enable to open.", response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse updateCorrelationRule(@Context HttpServletRequest request,
-        @ApiParam(value = "alarm+ rule update request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleUpdateRequest ruleUpdateRequest) {
+            @ApiParam(value = "alarm+ rule update request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleUpdateRequest ruleUpdateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
             ruleChangeResponse = ruleMgtWrapper
-                .updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
+                    .updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
             return ruleChangeResponse;
-        } catch (CallException e) {
+        } catch (CorrelationException e) {
             log.error("create rule:" + ruleUpdateRequest.getContent() + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DataFormatException e) {
-            log.error("update alarm plus rule:" + ruleUpdateRequest.getContent() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DbException e) {
-            log.error("update rule:" + ruleUpdateRequest.getContent() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (Exception e) {
-            log.error("update rule:" + ruleUpdateRequest.getRuleId() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                I18nProxy.RULE_MANAGEMENT_UNKNOWN_EXCEPTION));
+                    e.getMessage()));
         }
     }
 
@@ -130,28 +104,16 @@ public class RuleMgtResources {
     @ApiOperation(value = "Delete the alarm+ rule,and when the enable is open also removed from the engine.")
     @Timed
     public boolean deleteCorrelationRule(@Context HttpServletRequest request,
-        @ApiParam(value = "alarm+ rule delete request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleDeleteRequest ruleDeleteRequest) {
+            @ApiParam(value = "alarm+ rule delete request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleDeleteRequest ruleDeleteRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         try {
             ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
             log.info("delete rule:" + ruleDeleteRequest.getRuleId() + " successful");
             return true;
-        } catch (DataFormatException e) {
+        } catch (CorrelationException e) {
             log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DbException e) {
-            log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (CallException e) {
-            log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (Exception e) {
-            log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                I18nProxy.RULE_MANAGEMENT_UNKNOWN_EXCEPTION));
+                    e.getMessage()));
         }
     }
 
@@ -160,38 +122,30 @@ public class RuleMgtResources {
     @ApiOperation(value = "According to the conditions query the alarm + rules", response = RuleQueryListResponse.class)
     @Timed
     public RuleQueryListResponse getCorrelationRules(@Context HttpServletRequest request,
-        @ApiParam(value = "query condition:<br>" + " <b>[ruleid]</b>:Rule ID;<br>"
-            + "<b>[rulename]</b>:Rule name;<br>" + "<b>[creator]</b>:creator of the rule;<br>"
-            + "<b>[modifier]</b>:modifier of the rule;<br>"
-            + "<b>[enabled]</b>: 0 is Enabled,1 is disabled;<br><font color=\"red\">for example:</font><br>{\"ruleid\":\"rule_1484727187317\"}", required = false) @QueryParam("queryrequest") String ruleQueryRequest) {
+            @ApiParam(value = "query condition:<br>" + " <b>[ruleid]</b>:Rule ID;<br>"
+                    + "<b>[rulename]</b>:Rule name;<br>" + "<b>[creator]</b>:creator of the rule;<br>"
+                    + "<b>[modifier]</b>:modifier of the rule;<br>"
+                    + "<b>[enabled]</b>: 0 is Enabled,1 is disabled;<br><font color=\"red\">for example:</font><br>{\"ruleid\":\"rule_1484727187317\"}", required = false) @QueryParam("queryrequest") String ruleQueryRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleQueryListResponse ruleQueryListResponse;
         RuleQueryCondition ruleQueryCondition = getRuleQueryCondition(ruleQueryRequest, request);
         try {
             ruleQueryListResponse = ruleMgtWrapper
-                .getCorrelationRuleByCondition(ruleQueryCondition);
+                    .getCorrelationRuleByCondition(ruleQueryCondition);
             return ruleQueryListResponse;
-        } catch (DataFormatException e) {
+        } catch (CorrelationException e) {
             log.error("query rule failed,cause query condition conversion failure", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (DbException e) {
-            log.error("query rule failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                e.getMessage()));
-        } catch (Exception e) {
-            log.error("query rule failed", e);
-            throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                I18nProxy.RULE_MANAGEMENT_UNKNOWN_EXCEPTION));
+                    e.getMessage()));
         }
     }
 
     private RuleQueryCondition getRuleQueryCondition(String queryRequest,
-        HttpServletRequest request) {
+            HttpServletRequest request) {
         Locale locale = LanguageUtil.getLocale(request);
         try {
             RuleQueryCondition ruleQueryCondition = JacksonUtil
-                .jsonToBean(queryRequest, RuleQueryCondition.class);
+                    .jsonToBean(queryRequest, RuleQueryCondition.class);
             if (queryRequest == null) {
                 ruleQueryCondition.setEnabled(2);
             } else if (queryRequest.indexOf("enabled") == -1) {
@@ -201,7 +155,7 @@ public class RuleMgtResources {
         } catch (IOException e) {
             log.warn("queryRequest convert to json failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
-                I18nProxy.RULE_MANAGEMENT_DATA_FORMAT_ERROR));
+                    I18nProxy.RULE_MANAGEMENT_DATA_FORMAT_ERROR));
         }
     }
 

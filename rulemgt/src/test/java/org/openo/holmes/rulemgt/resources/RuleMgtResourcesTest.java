@@ -23,9 +23,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openo.holmes.common.exception.CallException;
-import org.openo.holmes.common.exception.DataFormatException;
-import org.openo.holmes.common.exception.DbException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.openo.holmes.rulemgt.bean.request.RuleDeleteRequest;
 import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
@@ -54,53 +52,12 @@ public class RuleMgtResourcesTest {
     }
 
     @Test
-    public void addCorrelationRule_call_exception() throws Exception {
+    public void addCorrelationRule_correlation_exception() throws Exception {
         thrown.expect(WebApplicationException.class);
 
         final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
         EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest))
-                .andThrow(new CallException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void addCorrelationRule_db_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
-        EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest)).andThrow(new DbException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void addCorrelationRule_data_format_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
-        EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest))
-                .andThrow(new DataFormatException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void addCorrelationRule_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
-        EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest))
-                .andThrow(new RuntimeException(""));
+                .andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         EasyMock.expect(request.getHeader("username")).andReturn("admin");
         PowerMock.replayAll();
@@ -121,54 +78,12 @@ public class RuleMgtResourcesTest {
     }
 
     @Test
-    public void updateCorrelationRule_call_exception() throws Exception {
+    public void updateCorrelationRule_correlation_exception() throws Exception {
         thrown.expect(WebApplicationException.class);
 
         final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
         EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin", ruleUpdateRequest))
-                .andThrow(new CallException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.updateCorrelationRule(request, ruleUpdateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void updateCorrelationRule_data_format_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
-        EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin", ruleUpdateRequest))
-                .andThrow(new DataFormatException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.updateCorrelationRule(request, ruleUpdateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void updateCorrelationRule_db_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
-        EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin", ruleUpdateRequest))
-                .andThrow(new DbException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
-        PowerMock.replayAll();
-        ruleMgtResources.updateCorrelationRule(request, ruleUpdateRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void updateCorrelationRule_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
-        EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin", ruleUpdateRequest))
-                .andThrow(new RuntimeException(""));
+                .andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         EasyMock.expect(request.getHeader("username")).andReturn("admin");
         PowerMock.replayAll();
@@ -189,51 +104,12 @@ public class RuleMgtResourcesTest {
     }
 
     @Test
-    public void deleteCorrelationRule_call_exception() throws Exception {
+    public void deleteCorrelationRule_correlation_exception() throws Exception {
         thrown.expect(WebApplicationException.class);
 
         final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
         ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-        EasyMock.expectLastCall().andThrow(new CallException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void deleteCorrelationRule_data_format_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
-        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-        EasyMock.expectLastCall().andThrow(new DataFormatException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void deleteCorrelationRule_db_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
-        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-        EasyMock.expectLastCall().andThrow(new DbException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
-        PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void deleteCorrelationRule_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
-        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-        EasyMock.expectLastCall().andThrow(new RuntimeException(""));
+        EasyMock.expectLastCall().andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         PowerMock.replayAll();
         ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
@@ -258,41 +134,12 @@ public class RuleMgtResourcesTest {
         final String requestStr = "{\"ruleid\":\"rule_001\",\"rulename\":\"Rule-001\","
                 + "\"enabled\":0,\"creator\":\"admin\"}";
         EasyMock.expect(ruleMgtWrapper.getCorrelationRuleByCondition(EasyMock.anyObject(RuleQueryCondition.class)))
-                .andThrow(new DataFormatException(""));
+                .andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
         PowerMock.replayAll();
         ruleMgtResources.getCorrelationRules(request, requestStr);
         PowerMock.verifyAll();
     }
-
-    @Test
-    public void getCorrelationRules_db_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final String requestStr = "{\"ruleid\":\"rule_001\",\"rulename\":\"Rule-001\","
-                + "\"enabled\":0,\"creator\":\"admin\"}";
-        EasyMock.expect(ruleMgtWrapper.getCorrelationRuleByCondition(EasyMock.anyObject(RuleQueryCondition.class)))
-                .andThrow(new DbException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
-        PowerMock.replayAll();
-        ruleMgtResources.getCorrelationRules(request, requestStr);
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void getCorrelationRules_exception() throws Exception {
-        thrown.expect(WebApplicationException.class);
-
-        final String requestStr = "{\"ruleid\":\"rule_001\",\"rulename\":\"Rule-001\","
-                + "\"enabled\":0,\"creator\":\"admin\"}";
-        EasyMock.expect(ruleMgtWrapper.getCorrelationRuleByCondition(EasyMock.anyObject(RuleQueryCondition.class)))
-                .andThrow(new RuntimeException(""));
-        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
-        PowerMock.replayAll();
-        ruleMgtResources.getCorrelationRules(request, requestStr);
-        PowerMock.verifyAll();
-    }
-
 
     @Test
     public void getCorrelationRules_normal_request_string_null() throws Exception {

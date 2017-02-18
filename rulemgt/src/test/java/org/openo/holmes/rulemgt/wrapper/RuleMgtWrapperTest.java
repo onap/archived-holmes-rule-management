@@ -20,7 +20,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,9 +30,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openo.holmes.common.api.entity.CorrelationRule;
-import org.openo.holmes.common.exception.CallException;
-import org.openo.holmes.common.exception.DataFormatException;
-import org.openo.holmes.common.exception.DbException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.DbDaoUtil;
 import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
@@ -90,7 +87,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void addCorrelationRule_name_is_null() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_RULE_NAME_IS_EMPTY);
 
         ruleMgtWrapper.addCorrelationRule(USER_NAME, createRuleCreateRequest(null, "This is a rule for testing.",
@@ -99,11 +96,34 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void addCorrelationRule_name_is_empty() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_RULE_NAME_IS_EMPTY);
 
         ruleMgtWrapper.addCorrelationRule("admin", createRuleCreateRequest("", "This is a rule for testing.",
                 "Mocked contents.", 0));
+    }
+
+    @Test
+    public void addCorrelationRule_rule_query_exception() throws Exception {
+
+        final String ruleName = "Rule-001";
+
+        RuleCreateRequest ruleCreateRequest = createRuleCreateRequest(ruleName, "This is a rule for testing.",
+                "Mocked contents.", 0);
+
+        thrown.expect(CorrelationException.class);
+        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+
+        EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
+                correlationRuleDaoMock);
+        EasyMock.expect(correlationRuleDaoMock.queryRuleByRuleName(ruleName))
+                .andThrow(new RuntimeException(""));
+
+        PowerMock.replayAll();
+
+        ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest);
+
+        PowerMock.verifyAll();
     }
 
     @Test
@@ -115,7 +135,7 @@ public class RuleMgtWrapperTest {
                 "Mocked contents.", 0);
         CorrelationRule correlationRule = convertCreateRequest2CorrelationRule(ruleCreateRequest);
 
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_REPEAT_RULE_NAME);
 
         EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
@@ -137,14 +157,14 @@ public class RuleMgtWrapperTest {
         RuleCreateRequest ruleCreateRequest = createRuleCreateRequest(ruleName, "This is a rule for testing.",
                 "Mocked contents.", 0);
 
-        thrown.expect(CallException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED);
 
         EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
                 correlationRuleDaoMock);
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRuleName(ruleName)).andReturn(null);
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
-                .andThrow(new CallException(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED));
 
         PowerMock.replayAll();
 
@@ -161,7 +181,7 @@ public class RuleMgtWrapperTest {
         RuleCreateRequest ruleCreateRequest = createRuleCreateRequest(ruleName, "This is a rule for testing.",
                 "Mocked contents.", 1);
 
-        thrown.expect(CallException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED);
 
         EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
@@ -170,7 +190,7 @@ public class RuleMgtWrapperTest {
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
                 .andReturn(true);
         EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
-                .andThrow(new CallException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED));
 
         PowerMock.replayAll();
 
@@ -186,7 +206,7 @@ public class RuleMgtWrapperTest {
         RuleCreateRequest ruleCreateRequest = createRuleCreateRequest(ruleName, "This is a rule for testing.",
                 "Mocked contents.", 1);
 
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CREATE_RULE_FAILED);
 
         EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
@@ -236,15 +256,32 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_param_null() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY);
 
         ruleMgtWrapper.updateCorrelationRule(USER_NAME, null);
     }
 
     @Test
+    public void updateCorrelationRule_rule_query_exception() throws Exception {
+        thrown.expect(CorrelationException.class);
+        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+
+        EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
+                correlationRuleDaoMock);
+        EasyMock.expect(correlationRuleDaoMock.getRuleByRid(EasyMock.anyObject(String.class)))
+                .andThrow(new RuntimeException(""));
+
+        PowerMock.replayAll();
+
+        ruleMgtWrapper.updateCorrelationRule(USER_NAME, new RuleUpdateRequest());
+
+        PowerMock.verifyAll();
+    }
+
+    @Test
     public void updateCorrelationRule_rule_not_exist() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE);
 
         EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
@@ -260,7 +297,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_status_illegal_with_contents() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_PARAMETER_ENABLED_ERROR);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -282,7 +319,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_status_illegal_with_null_contents() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_PARAMETER_ENABLED_ERROR);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -304,7 +341,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_disabled_update_failure() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_UPDATE_RULE_FAILED);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -328,7 +365,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_disabled_deploy_verify_exception() throws Exception {
-        thrown.expect(CallException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -343,7 +380,7 @@ public class RuleMgtWrapperTest {
         correlationRuleDaoMock.updateRule(EasyMock.anyObject(CorrelationRule.class));
         EasyMock.expectLastCall();
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
-                .andThrow(new CallException(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED));
 
         PowerMock.replayAll();
 
@@ -380,7 +417,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_enabled_engine_delete_failure() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_UPDATE_RULE_FAILED);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -404,7 +441,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void updateCorrelationRule_rule_enabled_engine_deploy_failure() throws Exception {
-        thrown.expect(CallException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED);
 
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -422,7 +459,7 @@ public class RuleMgtWrapperTest {
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
                 .andReturn(true);
         EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
-                .andThrow(new CallException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED));
 
         PowerMock.replayAll();
 
@@ -475,7 +512,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void checkCorrelation_illegal_status() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_PARAMETER_ENABLED_ERROR);
 
         RuleUpdateRequest ruleCreateRequest = createRuleUpdateRequest("rule_" + System.currentTimeMillis(),
@@ -490,15 +527,34 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void deleteCorrelationRule_request_null() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_REQUEST_OBJECT_IS_EMPTY));
 
         ruleMgtWrapper.deleteCorrelationRule(null);
     }
 
     @Test
+    public void deleteCorrelationRule_rule_query_exception() throws Exception {
+        thrown.expect(CorrelationException.class);
+        thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_DB_ERROR));
+
+        RuleDeleteRequest ruleDeleteRequest = createRuleDeleteRequest("rule_" + System.currentTimeMillis());
+
+        EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(
+                correlationRuleDaoMock).anyTimes();
+        EasyMock.expect(correlationRuleDaoMock.getRuleByRid(ruleDeleteRequest.getRuleId()))
+                .andThrow(new RuntimeException(""));
+
+        PowerMock.replayAll();
+
+        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
+
+        PowerMock.verifyAll();
+    }
+
+    @Test
     public void deleteCorrelationRule_rule_not_exit() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_RULE_NOT_EXIST_DATABASE));
 
         RuleDeleteRequest ruleDeleteRequest = createRuleDeleteRequest("rule_" + System.currentTimeMillis());
@@ -517,7 +573,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void deleteCorrelationRule_rule_enabled_engine_delete_exception() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED));
 
         RuleDeleteRequest ruleDeleteRequest = createRuleDeleteRequest("rule_" + System.currentTimeMillis());
@@ -541,7 +597,7 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void deleteCorrelationRule_rule_disabled_delete_exception() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED));
 
         RuleDeleteRequest ruleDeleteRequest = createRuleDeleteRequest("rule_" + System.currentTimeMillis());
@@ -587,12 +643,12 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void getCorrelationRuleByCondition_data_format_exception() throws Exception {
-        thrown.expect(DataFormatException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED));
 
         EasyMock.expect(correlationRuleQueryDaoMock.getCorrelationRulesByCondition(EasyMock.anyObject(
                 RuleQueryCondition.class)))
-                .andThrow(new DataFormatException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED));
 
         PowerMock.replay(correlationRuleQueryDaoMock, CorrelationRuleQueryDao.class);
 
@@ -603,12 +659,12 @@ public class RuleMgtWrapperTest {
 
     @Test
     public void getCorrelationRuleByCondition_db_exception() throws Exception {
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage((I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED));
 
         EasyMock.expect(correlationRuleQueryDaoMock.getCorrelationRulesByCondition(EasyMock.anyObject(
                 RuleQueryCondition.class)))
-                .andThrow(new DbException(I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED));
+                .andThrow(new CorrelationException(I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED));
 
         PowerMock.replay(correlationRuleQueryDaoMock, CorrelationRuleQueryDao.class);
 

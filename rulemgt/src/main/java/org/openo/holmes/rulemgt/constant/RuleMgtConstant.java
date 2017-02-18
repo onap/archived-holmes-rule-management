@@ -16,8 +16,13 @@
 package org.openo.holmes.rulemgt.constant;
 
 public class RuleMgtConstant {
+
     public static final int STATUS_RULE_OPEN = 1;
     public static final int STATUS_RULE_CLOSE = 0;
     public static final int STATUS_RULE_ALL = 2;
     public static final String PACKAGE_NAME = "packagename";
+
+    private RuleMgtConstant() {
+
+    }
 }

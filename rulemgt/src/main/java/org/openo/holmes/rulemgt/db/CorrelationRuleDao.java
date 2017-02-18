@@ -53,9 +53,9 @@ public abstract class CorrelationRuleDao {
     private void deleteRule2DbInner(CorrelationRule correlationRule) {
         String name = correlationRule.getName() != null ? correlationRule.getName().trim() : "";
         String rid = correlationRule.getRid() != null ? correlationRule.getRid().trim() : "";
-        if (!name.equals("") && !rid.equals("")) {
+        if (!"".equals(name) && !"".equals(rid)) {
             deleteRuleByRidAndName(rid, name);
-        } else if (!rid.equals("")) {
+        } else if (!"".equals(rid)) {
             deleteRuleByRid(rid);
         }
     }

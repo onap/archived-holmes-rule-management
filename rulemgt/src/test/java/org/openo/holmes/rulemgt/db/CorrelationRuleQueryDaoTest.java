@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openo.holmes.common.api.entity.CorrelationRule;
-import org.openo.holmes.common.exception.DbException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.DbDaoUtil;
 import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
@@ -78,7 +78,7 @@ public class CorrelationRuleQueryDaoTest {
     @Test
     public void getCorrelationRulesByCondition_db_exception() throws Exception {
 
-        thrown.expect(DbException.class);
+        thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED);
 
         EasyMock.expect(dbDaoUtil.getHandle()).andReturn(handle);

@@ -15,19 +15,6 @@
  */
 package org.openo.holmes.rulemgt.db;
 
-import org.openo.holmes.common.api.entity.CorrelationRule;
-import org.openo.holmes.common.exception.DataFormatException;
-import org.openo.holmes.common.exception.DbException;
-import org.openo.holmes.common.utils.DbDaoUtil;
-import org.openo.holmes.common.utils.I18nProxy;
-import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
-import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
-import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.Query;
-
-import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,14 +23,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.jvnet.hk2.annotations.Service;
+import org.openo.holmes.common.api.entity.CorrelationRule;
+import org.openo.holmes.common.exception.CorrelationException;
+import org.openo.holmes.common.utils.DbDaoUtil;
+import org.openo.holmes.common.utils.I18nProxy;
+import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
+import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.Query;
 
 @Service
 @Slf4j
 public class CorrelationRuleQueryDao {
+
     @Inject
     private DbDaoUtil dbDaoUtil;
 
-    public List<CorrelationRule> getCorrelationRulesByCondition(RuleQueryCondition ruleQueryCondition) throws DataFormatException, DbException {
+    public List<CorrelationRule> getCorrelationRulesByCondition(RuleQueryCondition ruleQueryCondition)
+            throws CorrelationException {
         List<CorrelationRule> correlationRules = new ArrayList<CorrelationRule>();
         Handle handle = null;
         String whereStr = getWhereStrByRequestEntity(ruleQueryCondition);
@@ -58,7 +58,7 @@ public class CorrelationRuleQueryDao {
             return correlationRules;
         } catch (Exception e) {
             log.warn("Query rule: rule id =" + ruleQueryCondition.getRid() + " failed");
-            throw new DbException(I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED, e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_QUERY_RULE_FAILED, e);
         } finally {
             dbDaoUtil.close(handle);
         }
@@ -86,7 +86,7 @@ public class CorrelationRuleQueryDao {
         return correlationRule;
     }
 
-    private String getWhereStrByRequestEntity(RuleQueryCondition ruleQueryCondition) throws DataFormatException {
+    private String getWhereStrByRequestEntity(RuleQueryCondition ruleQueryCondition) throws CorrelationException {
         try {
             Class clazz = ruleQueryCondition.getClass();
             Field[] fields = clazz.getDeclaredFields();
@@ -95,23 +95,17 @@ public class CorrelationRuleQueryDao {
             for (Field field : fields) {
                 PropertyDescriptor pd = new PropertyDescriptor(field.getName(),
                         clazz);
-                Method getMethod = pd.getReadMethod();//获得get方法
-                Object o = getMethod.invoke(ruleQueryCondition);//执行get方法返回一个Object
+                Method getMethod = pd.getReadMethod();
+                Object o = getMethod.invoke(ruleQueryCondition);
                 if (o != null) {
-                    if (field.getName().equals("enabled")) {
-                        int enabled = (int) o;
-                        if (enabled != RuleMgtConstant.STATUS_RULE_ALL) {
-                            whereSql = whereSql + "enable =" + enabled;
-                            whereSql += " AND ";
-                        }
-                    } else if (field.getName().equals("name")) {
-                        if (!"".equals(o.toString().trim())) {
-                            whereSql = whereSql + field.getName() + "  like '%" + o + "%'  AND ";
-                        }
-                    } else {
-                        if (!"".equals(o.toString().trim())) {
-                            whereSql = whereSql + field.getName() + "='" + o + "'  AND ";
-                        }
+                    String tempName = field.getName();
+                    if ("enabled".equals(tempName) && (int) o != RuleMgtConstant.STATUS_RULE_ALL) {
+                        whereSql = whereSql + "enable =" + (int) o;
+                        whereSql += " AND ";
+                    } else if ("name".equals(tempName) && !"".equals(o.toString().trim())) {
+                        whereSql = whereSql + field.getName() + "  like '%" + o + "%'  AND ";
+                    } else if (!"".equals(o.toString().trim())) {
+                        whereSql = whereSql + field.getName() + "='" + o + "'  AND ";
                     }
                 }
             }
@@ -121,7 +115,7 @@ public class CorrelationRuleQueryDao {
             }
             return "";
         } catch (Exception e) {
-            throw new DataFormatException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED, e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED, e);
         }
     }
 }

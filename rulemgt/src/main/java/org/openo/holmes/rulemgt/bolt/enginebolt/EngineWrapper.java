@@ -17,7 +17,7 @@ package org.openo.holmes.rulemgt.bolt.enginebolt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jvnet.hk2.annotations.Service;
-import org.openo.holmes.common.exception.CallException;
+import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 
@@ -26,16 +26,16 @@ import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 public class EngineWrapper {
 
 
-    public String deployEngine(CorrelationDeployRule4Engine correlationRule) throws CallException {
+    public String deployEngine(CorrelationDeployRule4Engine correlationRule) throws CorrelationException {
         return "";
     }
 
-    public boolean deleteRuleFromEngine(String packageName) throws CallException {
+    public boolean deleteRuleFromEngine(String packageName) throws CorrelationException {
         return true;
     }
 
     public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine)
-        throws CallException {
+            throws CorrelationException {
         return true;
     }
 }
