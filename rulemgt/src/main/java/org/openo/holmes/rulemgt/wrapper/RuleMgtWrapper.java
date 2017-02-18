@@ -141,7 +141,7 @@ public class RuleMgtWrapper {
                         .getJdbiDaoByOnDemand(CorrelationRuleDao.class)
                         .getRuleByRid(ruleDeleteRequest.getRuleId());
             } catch (Exception e) {
-                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR, e);
             }
             if (correlationRule == null) {
                 log.warn("the rule:rule id=" + ruleDeleteRequest.getRuleId()

@@ -16,7 +16,18 @@
 
 package org.openo.holmes.rulemgt;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+
+import org.junit.Test;
+
 public class RuleActiveAppTest {
+
+    @Test
+    public void getName() throws Exception {
+        RuleActiveApp app = new RuleActiveApp();
+        assertThat(app.getName(), equalTo("Holmes Rule Management ActiveApp APP "));
+    }
 
     public static void main(String[] args) throws Exception {
         String filePath = "E:\\code\\OES_Analytics_FM_Relation\\correlation-mgt\\rulemgt-standalone\\src\\assembly\\resource\\conf\\correlation-rule.yml";
