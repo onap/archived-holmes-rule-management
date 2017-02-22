@@ -18,11 +18,10 @@ package org.openo.holmes.rulemgt;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import io.dropwizard.db.DataSourceFactory;
 import org.junit.Before;
-import org.junit.Test;
 
 public class RuleAppConfigTest {
 
@@ -33,24 +32,20 @@ public class RuleAppConfigTest {
         ruleAppConfig = new RuleAppConfig();
     }
 
-    @Test
     public void getDataSourceFactory() throws Exception {
         assertThat(ruleAppConfig.getDataSourceFactory(), notNullValue());
     }
 
-    @Test
     public void setDataSourceFactory() throws Exception {
         final DataSourceFactory factory = new DataSourceFactory();
         ruleAppConfig.setDataSourceFactory(factory);
         assertThat(ruleAppConfig.getDataSourceFactory(), equalTo(factory));
     }
 
-    @Test
     public void getApidescription() throws Exception {
         assertThat(ruleAppConfig.getApidescription(), equalTo("Holmes rule management rest API"));
     }
 
-    @Test
     public void setApidescription() throws Exception {
         final String value = "desc";
         ruleAppConfig.setApidescription(value);
