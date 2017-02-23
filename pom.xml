@@ -43,6 +43,7 @@
         <pkgzip.dir>${basedir}/../release/pkgzip</pkgzip.dir>
         <excludesFile>**/*$*</excludesFile>
         <nexusproxy>https://nexus.open-o.org/content</nexusproxy>
+        <powermock.version>1.6.5</powermock.version>
 
 
         <stringtemplate.version>3.2.1</stringtemplate.version>

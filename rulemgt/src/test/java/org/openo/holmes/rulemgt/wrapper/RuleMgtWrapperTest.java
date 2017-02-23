@@ -47,14 +47,16 @@ import org.openo.holmes.rulemgt.db.CorrelationRuleQueryDao;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 
-@RunWith(PowerMockRunner.class)
-@SuppressStaticInitializationFor("org.openo.holmes.common.utils.DbDaoUtil")
 public class RuleMgtWrapperTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private RuleMgtWrapper ruleMgtWrapper;
 
