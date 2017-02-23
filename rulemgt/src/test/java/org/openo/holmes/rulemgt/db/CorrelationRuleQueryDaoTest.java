@@ -30,15 +30,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.openo.holmes.common.api.entity.CorrelationRule;
 import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.DbDaoUtil;
 import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
 import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 import org.skife.jdbi.v2.Handle;
@@ -77,7 +74,7 @@ public class CorrelationRuleQueryDaoTest {
 
 
 
-
+    @Test
     public void getCorrelationRulesByCondition_db_exception() throws Exception {
 
         thrown.expect(CorrelationException.class);
@@ -96,7 +93,7 @@ public class CorrelationRuleQueryDaoTest {
         PowerMock.verifyAll();
     }
 
-    
+    @Test
     public void getCorrelationRulesByCondition_normal() throws Exception {
         EasyMock.expect(dbDaoUtil.getHandle()).andReturn(handle);
         EasyMock.expect(handle.createQuery(EasyMock.anyObject(String.class))).andReturn(query);

@@ -15,7 +15,6 @@
  */
 package org.openo.holmes.rulemgt.db;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -93,10 +92,16 @@ public class CorrelationRuleQueryDao {
             String whereSql = " WHERE ";
 
             for (Field field : fields) {
-                PropertyDescriptor pd = new PropertyDescriptor(field.getName(),
-                        clazz);
-                Method getMethod = pd.getReadMethod();
-                Object o = getMethod.invoke(ruleQueryCondition);
+                String methodName = getMethodName(field);
+
+                // If these lines are removed, Jacoco will cause an exception when calculation the coverage of UT
+                // Remove it if someday Jacoco solve this problem
+                if (methodName.contains("jacoco")){
+                    continue;
+                }
+
+                Method method = clazz.getMethod(methodName);
+                Object o = method.invoke(ruleQueryCondition);
                 if (o != null) {
                     String tempName = field.getName();
                     if ("enabled".equals(tempName) && (int) o != RuleMgtConstant.STATUS_RULE_ALL) {
@@ -117,5 +122,18 @@ public class CorrelationRuleQueryDao {
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED, e);
         }
+    }
+
+    private String getMethodName(Field field){
+        String ret = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);;
+        Class clazz = field.getDeclaringClass();
+
+        if (clazz.equals(Boolean.class)){
+            ret = "is" + ret;
+        }else{
+            ret = "get" + ret;
+        }
+
+        return ret;
     }
 }
