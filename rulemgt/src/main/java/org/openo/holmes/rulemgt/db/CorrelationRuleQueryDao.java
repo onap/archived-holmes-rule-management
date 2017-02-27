@@ -71,7 +71,7 @@ public class CorrelationRuleQueryDao {
         correlationRule.setDescription((String) value.get("description"));
         correlationRule.setEnabled((Integer) value.get("enable"));
         correlationRule.setTemplateID((Integer) value.get("templateID"));
-        correlationRule.setEngineId((String) value.get("engineID"));
+        correlationRule.setEngineID((String) value.get("engineID"));
         correlationRule.setEngineType((String) value.get("engineType"));
         correlationRule.setCreator((String) value.get("creator"));
         correlationRule.setCreateTime((Date) value.get("createTime"));
@@ -80,7 +80,6 @@ public class CorrelationRuleQueryDao {
         correlationRule.setParams((Properties) value.get("params"));
         correlationRule.setDomain((String) value.get("domain"));
         correlationRule.setContent((String) value.get("content"));
-        correlationRule.setIsManual((Integer) value.get("isManual"));
         correlationRule.setVendor((String) value.get("vendor"));
         correlationRule.setPackageName((String) value.get("package"));
         return correlationRule;
@@ -95,21 +94,25 @@ public class CorrelationRuleQueryDao {
             for (Field field : fields) {
                 // Jacoco will cause an exception when calculating the coverage of the UT
                 // Remove this if jacoco solves this problem in the future
-                if (field.getName().contains("jacoco")){
+                if (field.getName().contains("jacoco")) {
                     continue;
                 }
-
                 PropertyDescriptor pd = new PropertyDescriptor(field.getName(),
                         clazz);
                 Method getMethod = pd.getReadMethod();
                 Object o = getMethod.invoke(ruleQueryCondition);
                 if (o != null) {
                     String tempName = field.getName();
-                    if ("enabled".equals(tempName) && (int) o != RuleMgtConstant.STATUS_RULE_ALL) {
-                        whereSql = whereSql + "enable =" + (int) o;
-                        whereSql += " AND ";
-                    } else if ("name".equals(tempName) && !"".equals(o.toString().trim())) {
-                        whereSql = whereSql + field.getName() + "  like '%" + o + "%'  AND ";
+                    if ("enabled".equals(tempName)) {
+                        int enabled = (int) o;
+                        if (enabled != RuleMgtConstant.STATUS_RULE_ALL) {
+                            whereSql = whereSql + "enable =" + enabled;
+                            whereSql += " AND ";
+                        }
+                    } else if ("name".equals(tempName)) {
+                        if (!"".equals(o.toString().trim())) {
+                            whereSql = whereSql + field.getName() + "  like '%" + o + "%'  AND ";
+                        }
                     } else if (!"".equals(o.toString().trim())) {
                         whereSql = whereSql + field.getName() + "='" + o + "'  AND ";
                     }
@@ -123,18 +126,5 @@ public class CorrelationRuleQueryDao {
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED, e);
         }
-    }
-
-    private String getMethodName(Field field){
-        String ret = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);;
-        Class clazz = field.getDeclaringClass();
-
-        if (clazz.equals(Boolean.class)){
-            ret = "is" + ret;
-        }else{
-            ret = "get" + ret;
-        }
-
-        return ret;
     }
 }

@@ -15,14 +15,15 @@
  */
 package org.openo.holmes.rulemgt;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotEmpty;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
+import org.jvnet.hk2.annotations.Service;
 
+@Service
 public class RuleAppConfig extends Configuration {
 
     @NotEmpty
@@ -31,6 +32,8 @@ public class RuleAppConfig extends Configuration {
     @NotEmpty
     private String apidescription = "Holmes rule management rest API";
 
+    @NotEmpty
+    private String msbServerAddr;
 
     @Valid
     @NotNull
@@ -51,8 +54,17 @@ public class RuleAppConfig extends Configuration {
         return apidescription;
     }
 
-    public void setApidescription( String apidescription ) {
+    public void setApidescription(String apidescription) {
         this.apidescription = apidescription;
     }
 
+    @JsonProperty
+    public String getMsbServerAddr() {
+        return msbServerAddr;
+    }
+
+    @JsonProperty
+    public void setMsbServerAddr(String msbServerAddr) {
+        this.msbServerAddr = msbServerAddr;
+    }
 }

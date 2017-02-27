@@ -44,7 +44,6 @@ public class CorrelationRuleMapperTest {
         expect(resultSet.getObject("params")).andReturn(new Properties());
         expect(resultSet.getString("domain")).andReturn("");
         expect(resultSet.getString("content")).andReturn("");
-        expect(resultSet.getInt("isManual")).andReturn(0);
         expect(resultSet.getString("vendor")).andReturn("");
         expect(resultSet.getString("package")).andReturn("");
         PowerMock.replay(resultSet);

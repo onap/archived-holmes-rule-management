@@ -19,6 +19,7 @@ package org.openo.holmes.rulemgt.resources;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import org.easymock.EasyMock;
+import org.eclipse.jetty.server.Request;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +46,8 @@ public class RuleMgtResourcesTest {
 
     private RuleMgtResources ruleMgtResources = new RuleMgtResources();
 
+    private Request requestMock = PowerMock.createMock(Request.class);
+
     @Before
     public void setUp() throws Exception {
         Whitebox.setInternalState(ruleMgtResources, "ruleMgtWrapper", ruleMgtWrapper);
@@ -67,6 +70,7 @@ public class RuleMgtResourcesTest {
 
     @Test
     public void addCorrelationRule_normal() throws Exception {
+        StringBuilder stringBuilder = new StringBuilder("http://localhost");
         final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
         EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin",
                 ruleCreateRequest)).andReturn(new RuleAddAndUpdateResponse());
@@ -139,6 +143,19 @@ public class RuleMgtResourcesTest {
         PowerMock.replayAll();
         ruleMgtResources.getCorrelationRules(request, requestStr);
         PowerMock.verifyAll();
+    }
+
+    @Test
+    public void getCorrelationRules_param_translate_exception() {
+        thrown.expect(WebApplicationException.class);
+
+        String queryRequest = "this is error param";
+        EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
+
+        PowerMock.replayAll();
+        ruleMgtResources.getCorrelationRules(request, queryRequest);
+        PowerMock.verifyAll();
+
     }
 
     @Test

@@ -34,6 +34,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.ExceptionUtil;
@@ -47,10 +48,11 @@ import org.openo.holmes.rulemgt.bean.request.RuleQueryCondition;
 import org.openo.holmes.rulemgt.bean.request.RuleUpdateRequest;
 import org.openo.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
 import org.openo.holmes.rulemgt.bean.response.RuleQueryListResponse;
+import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
 import org.openo.holmes.rulemgt.wrapper.RuleMgtWrapper;
 
-@SwaggerDefinition
 @Service
+@SwaggerDefinition
 @Path("/rule")
 @Api(tags = {"CorrelationRules"})
 @Produces(MediaType.APPLICATION_JSON)
@@ -89,11 +91,11 @@ public class RuleMgtResources {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
-            ruleChangeResponse = ruleMgtWrapper
-                    .updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
+            ruleChangeResponse = ruleMgtWrapper.updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
+            log.info("update rule:" + ruleUpdateRequest.getRuleId() + " successful");
             return ruleChangeResponse;
         } catch (CorrelationException e) {
-            log.error("create rule:" + ruleUpdateRequest.getContent() + " failed", e);
+            log.error("update rule:" + ruleUpdateRequest.getContent() + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
                     e.getMessage()));
         }
@@ -132,6 +134,7 @@ public class RuleMgtResources {
         try {
             ruleQueryListResponse = ruleMgtWrapper
                     .getCorrelationRuleByCondition(ruleQueryCondition);
+            log.info("query rule successful by condition:" + JSONObject.fromObject(ruleQueryCondition));
             return ruleQueryListResponse;
         } catch (CorrelationException e) {
             log.error("query rule failed,cause query condition conversion failure", e);
@@ -147,9 +150,9 @@ public class RuleMgtResources {
             RuleQueryCondition ruleQueryCondition = JacksonUtil
                     .jsonToBean(queryRequest, RuleQueryCondition.class);
             if (queryRequest == null) {
-                ruleQueryCondition.setEnabled(2);
+                ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
             } else if (queryRequest.indexOf("enabled") == -1) {
-                ruleQueryCondition.setEnabled(2);
+                ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
             }
             return ruleQueryCondition;
         } catch (IOException e) {
@@ -158,5 +161,4 @@ public class RuleMgtResources {
                     I18nProxy.RULE_MANAGEMENT_DATA_FORMAT_ERROR));
         }
     }
-
 }

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openo.holmes.rulemgt.constant;
 
-public class RuleMgtConstant {
+package org.openo.holmes.rulemgt.bean.request;
 
-    private RuleMgtConstant() {
+import lombok.Getter;
+import lombok.Setter;
 
-    }
-    public static final int STATUS_RULE_OPEN = 1;
-    public static final int STATUS_RULE_CLOSE = 0;
-    public static final int STATUS_RULE_ALL = 2;
-    public static final String PACKAGE = "package";
-    public static final String ENGINE_PATH = "/api/correlation-engine/v1/rule";
-    public static final int RESPONSE_STATUS_OK = 200;
+@Getter
+@Setter
+public class CorrelationRestRequest {
+
+    private String rootURL;
 }

@@ -32,7 +32,7 @@ public class CorrelationRuleMapper implements ResultSetMapper<CorrelationRule> {
         correlationRule.setDescription(resultSet.getString("description"));
         correlationRule.setEnabled(resultSet.getInt("enable"));
         correlationRule.setTemplateID(resultSet.getInt("templateID"));
-        correlationRule.setEngineId(resultSet.getString("engineID"));
+        correlationRule.setEngineID(resultSet.getString("engineID"));
         correlationRule.setEngineType(resultSet.getString("engineType"));
         correlationRule.setCreator(resultSet.getString("creator"));
         correlationRule.setCreateTime(resultSet.getDate("createTime"));
@@ -41,7 +41,6 @@ public class CorrelationRuleMapper implements ResultSetMapper<CorrelationRule> {
         correlationRule.setParams((Properties)resultSet.getObject("params"));
         correlationRule.setDomain(resultSet.getString("domain"));
         correlationRule.setContent(resultSet.getString("content"));
-        correlationRule.setIsManual(resultSet.getInt("isManual"));
         correlationRule.setVendor(resultSet.getString("vendor"));
         correlationRule.setPackageName(resultSet.getString("package"));
         return correlationRule;
