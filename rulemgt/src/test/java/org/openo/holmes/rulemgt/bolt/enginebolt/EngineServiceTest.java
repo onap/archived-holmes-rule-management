@@ -18,15 +18,15 @@
 package org.openo.holmes.rulemgt.bolt.enginebolt;
 
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openo.holmes.rulemgt.RuleAppConfig;
+import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
+import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
@@ -38,18 +38,18 @@ public class EngineServiceTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
     private EngineService engineService;
-    private HttpEntity httpEntityMock;
     private HttpResponse httpResponseMock;
-    private HttpClient httpClient;
     private RuleAppConfig ruleAppConfig = new RuleAppConfig();
+    private CorrelationDeployRule4Engine correlationDeployRule4Engine;
 
     @Before
     public void setUp() {
         engineService = new EngineService();
-        httpEntityMock = PowerMock.createMock(HttpEntity.class);
         httpResponseMock = PowerMock.createMock(HttpResponse.class);
-        httpClient = PowerMock.createMock(HttpClient.class);
         Whitebox.setInternalState(engineService, "ruleAppConfig", ruleAppConfig);
+        correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
+        correlationDeployRule4Engine.setContent("{\"package\":\"test\"}");
+        correlationDeployRule4Engine.setEngineId("engine_id");
     }
 
     @Test
@@ -60,5 +60,30 @@ public class EngineServiceTest {
         engineService.getResponseContent(httpResponseMock);
 
         PowerMock.verifyAll();
+    }
+
+    @Test
+    public void delete_exception() throws Exception {
+        thrown.expect(Exception.class);
+
+        engineService.delete("test");
+
+    }
+
+    @Test
+    public void deploy_exception() throws Exception {
+
+        thrown.expect(Exception.class);
+
+        engineService.deploy(correlationDeployRule4Engine);
+
+    }
+
+    @Test
+    public void check_normal() throws Exception {
+        thrown.expect(Exception.class);
+
+        engineService.check(new CorrelationCheckRule4Engine());
+
     }
 }

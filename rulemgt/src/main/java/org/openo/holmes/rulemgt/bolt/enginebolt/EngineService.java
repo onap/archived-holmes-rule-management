@@ -72,13 +72,7 @@ public class EngineService {
             }
             return httpClient.execute(httpPost);
         } finally {
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            httpClient.close();
         }
     }
 
@@ -92,13 +86,7 @@ public class EngineService {
             }
             return httpClient.execute(httpPut);
         } finally {
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            httpClient.close();
         }
     }
 
@@ -109,13 +97,7 @@ public class EngineService {
             setHeader(httpDelete);
             return httpClient.execute(httpDelete);
         } finally {
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            httpClient.close();
         }
     }
 
