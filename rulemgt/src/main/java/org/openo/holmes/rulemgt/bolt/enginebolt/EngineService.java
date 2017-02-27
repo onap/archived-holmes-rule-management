@@ -17,18 +17,19 @@ package org.openo.holmes.rulemgt.bolt.enginebolt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.exception.CorrelationException;
@@ -44,48 +45,78 @@ public class EngineService {
     @Inject
     private RuleAppConfig ruleAppConfig;
 
-    protected HttpResponse delete(String packageName) throws Exception {
+    protected HttpResponse delete(String packageName) throws IOException {
         return deleteRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
     }
 
-    protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine) throws Exception {
+    protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
+            throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationCheckRule4Engine);
         return postRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
     }
 
-    protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws Exception {
+    protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationDeployRule4Engine);
         return putRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
     }
 
-    private HttpResponse postRequest(String url, String content) throws Exception {
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        setHeader(httpPost);
-        if (StringUtils.isNotEmpty(content)) {
-            httpPost.setEntity(new ByteArrayEntity(content.getBytes()));
+    private HttpResponse postRequest(String url, String content) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            setHeader(httpPost);
+            if (StringUtils.isNotEmpty(content)) {
+                httpPost.setEntity(new ByteArrayEntity(content.getBytes()));
+            }
+            return httpClient.execute(httpPost);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return httpClient.execute(httpPost);
     }
 
-    private HttpResponse putRequest(String url, String content)
-            throws Exception {
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPut httpPut = new HttpPut(url);
-        setHeader(httpPut);
-        if (StringUtils.isNotEmpty(content)) {
-            httpPut.setEntity(new ByteArrayEntity(content.getBytes()));
+    private HttpResponse putRequest(String url, String content) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpPut httpPut = new HttpPut(url);
+            setHeader(httpPut);
+            if (StringUtils.isNotEmpty(content)) {
+                httpPut.setEntity(new ByteArrayEntity(content.getBytes()));
+            }
+            return httpClient.execute(httpPut);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return httpClient.execute(httpPut);
     }
 
-    private HttpResponse deleteRequest(String url) throws Exception {
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpDelete httpDelete = new HttpDelete(url);
-        setHeader(httpDelete);
-        return httpClient.execute(httpDelete);
+    private HttpResponse deleteRequest(String url) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpDelete httpDelete = new HttpDelete(url);
+            setHeader(httpDelete);
+            return httpClient.execute(httpDelete);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void setHeader(HttpRequestBase httpRequestBase) {
@@ -94,7 +125,7 @@ public class EngineService {
         httpRequestBase.setHeader("Content-Type", "application/json");
     }
 
-    public byte[] getData(HttpEntity httpEntity) throws Exception {
+    public byte[] getData(HttpEntity httpEntity) throws IOException {
         BufferedHttpEntity bufferedHttpEntity = new BufferedHttpEntity(httpEntity);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bufferedHttpEntity.writeTo(byteArrayOutputStream);
