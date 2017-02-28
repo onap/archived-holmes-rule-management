@@ -13,46 +13,48 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
-/******************drop old database and user***************************/
-use mysql;
-drop database IF  EXISTS holmes;
-delete from user where User='holmes';
+/******************DROP OLD DATABASE AND USER***************************/
+USE MYSQL;
+DROP DATABASE IF  EXISTS HOLMES;
+DELETE FROM USER WHERE USER='HOLMES';
 FLUSH PRIVILEGES;
 
-/******************create new database and user***************************/
-create database holmes CHARACTER SET utf8;
+/******************CREATE NEW DATABASE AND USER***************************/
+CREATE DATABASE HOLMES CHARACTER SET UTF8;
 
-GRANT ALL PRIVILEGES ON holmes.* TO 'holmes'@'%' IDENTIFIED BY 'holmes' WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON mysql.* TO 'holmes'@'%' IDENTIFIED BY 'holmes' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON HOLMES.* TO 'HOLMES'@'%' IDENTIFIED BY 'HOLMES' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON MYSQL.* TO 'HOLMES'@'%' IDENTIFIED BY 'HOLMES' WITH GRANT OPTION;
 
-GRANT ALL PRIVILEGES ON catalog.* TO 'holmes'@'localhost' IDENTIFIED BY 'holmes' WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON mysql.* TO 'holmes'@'localhost' IDENTIFIED BY 'holmes' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON CATALOG.* TO 'HOLMES'@'LOCALHOST' IDENTIFIED BY 'HOLMES' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON MYSQL.* TO 'HOLMES'@'LOCALHOST' IDENTIFIED BY 'HOLMES' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 
-use holmes;
-set Names 'utf8';
-/******************delete old table and create new***************************/
-use holmes;
-DROP TABLE IF EXISTS aplus_rule;
-CREATE TABLE aplus_rule (
-  rid varchar(30) NOT NULL,
-  name varchar(150) NOT NULL,
-  description varchar(4000)  DEFAULT NULL,
-  enable int(1) NOT NULL,
-  templateID int(10) NOT NULL,
-  engineType varchar(20)  NOT NULL,
-  creator varchar(20)  NOT NULL,
-  createTime datetime NOT NULL,
-  updator varchar(20)  DEFAULT NULL,
-  updateTime datetime DEFAULT NULL,
-  params varchar(4000)  DEFAULT NULL,
-  content varchar(4000)  NOT NULL,
-  vendor varchar(100)  NOT NULL,
-  package varchar(255) NULL,
-  PRIMARY KEY (rid),
-  UNIQUE KEY name (name),
-  KEY IDX_APLUS_RULE_ENABLE (enable),
-  KEY IDX_APLUS_RULE_TEMPLATEID (templateID),
-  KEY IDX_APLUS_RULE_ENGINETYPE (engineType)
+USE HOLMES;
+SET NAMES 'UTF8';
+/******************DELETE OLD TABLE AND CREATE NEW***************************/
+USE HOLMES;
+DROP TABLE IF EXISTS APLUS_RULE;
+CREATE TABLE APLUS_RULE (
+  RID VARCHAR(30) NOT NULL,
+  NAME VARCHAR(150) NOT NULL,
+  DESCRIPTION VARCHAR(4000) NULL,
+  ENABLE INT(1) NOT NULL,
+  TEMPLATEID INT(10) NOT NULL,
+  ENGINEID VARCHAR(20)  NOT NULL,
+  ENGINETYPE VARCHAR(20)  NOT NULL,
+  CREATOR VARCHAR(20)  NOT NULL,
+  CREATETIME DATETIME NOT NULL,
+  UPDATOR VARCHAR(20)  NULL,
+  UPDATETIME DATETIME NULL,
+  PARAMS VARCHAR(4000) NULL,
+  CONTENT VARCHAR(4000) NOT NULL,
+  VENDOR VARCHAR(100)  NOT NULL,
+  PACKAGE VARCHAR(255) NULL,
+  PRIMARY KEY (RID),
+  UNIQUE KEY NAME (NAME),
+  KEY IDX_APLUS_RULE_ENABLE (ENABLE),
+  KEY IDX_APLUS_RULE_TEMPLATEID (TEMPLATEID),
+  KEY IDX_APLUS_RULE_ENGINEID (ENGINEID),
+  KEY IDX_APLUS_RULE_ENGINETYPE (ENGINETYPE)
 )
 
