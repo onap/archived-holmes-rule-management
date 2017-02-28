@@ -30,6 +30,7 @@
     <name>holmes-rulemgt-parent</name>
     <modules>
         <module>rulemgt</module>
+        <module>rulemgt-standalone</module>
     </modules>
 
     <properties>
@@ -55,13 +56,31 @@
         <jaxrs.consumer.version>5.0</jaxrs.consumer.version>
         <slf4j.version>1.6.1</slf4j.version>
         <quartz.version>2.2.1</quartz.version>
+
+
+        <packagename>openo-holmes-rulemgt</packagename>
+        <linux64id>linux64</linux64id>
+        <win64id>win64</win64id>
+        <linux64outputdir>target/assembly/${linux64id}</linux64outputdir>
+        <win64outputdir>target/assembly/${win64id}</win64outputdir>
+        <version.output>target/version</version.output>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.openo.holmes.actions</groupId>
                 <artifactId>holmes-actions</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-core</artifactId>
+                <version>${dropwizard.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard</groupId>
@@ -72,6 +91,7 @@
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-jersey2-jaxrs</artifactId>
                 <version>${swagger.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -128,8 +148,14 @@
             <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-module-junit4</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openo.client.cli</groupId>
+                <artifactId>swagger-sdk</artifactId>
+                <version>1.1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

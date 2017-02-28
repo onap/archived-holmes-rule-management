@@ -1,0 +1,127 @@
+apidescription: ZTE Holmes rule Management rest API
+
+# use the simple server factory if you only want to run on a single port
+#server:
+#  type: simple
+#  connector:
+#    type: http
+#    port: 12003
+
+server:
+  type: simple
+  rootPath:  '/api/correlation-mgt/v1/*'
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 12004
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.example: DEBUG
+  
+  appenders:
+    - type: console
+      threshold: INFO
+      timeZone: UTC
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] - %m%n"
+    - type: file
+      threshold: INFO
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] - %m%n"
+      currentLogFilename: ../logs/fm-relation.log
+      archivedLogFilenamePattern: ../logs/zip/fm-relation-%d{yyyy-MM-dd}.log.gz
+      archivedFileCount: 7
+  #  - type: socketJson
+      threshold: INFO 
+  #    autoDiscover: false
+  #    logstashServiceName: logstash
+   #   logstashServiceVersion: v1
+
+#database
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: root
+  password: root
+  #url: jdbc:mysql://${db_ip}:${db_port}/mysql?useUnicode=relationtesttrue&characterEncoding=UTF8
+  url: jdbc:mysql://localhost:3306/relationtest?useUnicode=true&characterEncoding=UTF8
+  properties:
+    charSet: UTF-8
+  maxWaitForConnection: 1s
+  validationQuery: "/* MyService Health Check */ SELECT 1"
+  minSize: 8
+  maxSize: 100
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1s
+  #dbServiceName: dbService
+ # dbServiceVersion: v1
+
+#mqConfig:
+#  brokerIp: 127.0.0.1
+#  brokerPort: 61616
+#  autoDiscover: false
+#  mqServiceName: activemq
+#  mqServiceVersion: v1
+#
+#cacheConfig:
+#  cacheServerIp: 10.74.156.206
+#  cacheServerPort: 27017
+#  autoDiscover: false
+#  cacheServiceName: mongodbService
+#  cacheServiceVersion: v1
+#  asNamespace: zenap
+#  type: mongodb
+#  userName: zenap
+#  password: zenap
+#
+# the micro service ip
+
+#msbClientConfig:
+ # msbSvrIp: 10.74.156.206
+ # msbSvrPort: 10081
+
+#kafkaClientConf:
+#  bootstrapServers: 10.74.151.190:9092
+#  autoDiscover: true
+#  kafkaServiceName: kafka
+#  kafkaServiceVersion: v1
+#  consumerConf:
+#    properties:
+#      value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#  producerConf:
+#    properties:
+#      value.serializer: org.apache.kafka.common.serialization.StringSerializer
+#
+#zkConfig:
+#  connectString: 10.74.151.195:2181
+#  retryPolicy:
+#    type: boundedExponentialBackoff
+#    baseSleepTimeMs: 50
+#    maxSleepTimeMs: 500
+#    maxRetries: 3
+#  sessionTimeout: 60
+#  connectionTimeout: 15
+#    autoDiscover: true
+#  zkServiceName: zk
+#  zkServiceVersion: v1
+#
+#ftpServiceConfig:
+#  type: ftp
+#  pasv: false
+#  userName: uep
+#  userPassword: U_tywg_2008_ftp
+#  ftpServerAddress: 10.74.148.251
+#  ftpServerPort: 20021
+#  ftpsServerAddress: 10.74.148.251
+#  ftpsServerPort: 20021
+#  sftpServerAddress: 10.74.148.251
+#  sftpServerPort: 20021
+#
