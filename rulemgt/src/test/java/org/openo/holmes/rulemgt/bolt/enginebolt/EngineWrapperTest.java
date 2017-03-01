@@ -167,7 +167,7 @@ public class EngineWrapperTest {
     @Test
     public void checkRuleFromEngine_invoke_rule_delete_exception() throws Exception {
         thrown.expect(CorrelationException.class);
-        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED);
+        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED);
 
         EasyMock.expect(engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class))).andThrow(
                 new RuntimeException(""));

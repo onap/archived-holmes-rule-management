@@ -75,7 +75,7 @@ public class EngineWrapper {
         try {
             httpResponse = engineService.check(correlationCheckRule4Engine);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT__CALL_CHECK_RULE_REST_FAILED,e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED,e);
         }
         if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call check rule rest interface in engine successfully.");
