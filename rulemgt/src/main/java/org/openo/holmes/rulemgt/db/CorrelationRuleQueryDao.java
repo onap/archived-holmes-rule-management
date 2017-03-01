@@ -78,7 +78,6 @@ public class CorrelationRuleQueryDao {
         correlationRule.setModifier((String) value.get("updator"));
         correlationRule.setUpdateTime((Date) value.get("updateTime"));
         correlationRule.setParams((Properties) value.get("params"));
-        correlationRule.setDomain((String) value.get("domain"));
         correlationRule.setContent((String) value.get("content"));
         correlationRule.setVendor((String) value.get("vendor"));
         correlationRule.setPackageName((String) value.get("package"));

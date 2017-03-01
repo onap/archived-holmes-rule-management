@@ -39,7 +39,6 @@ public class CorrelationRuleMapper implements ResultSetMapper<CorrelationRule> {
         correlationRule.setModifier(resultSet.getString("updator"));
         correlationRule.setUpdateTime(resultSet.getDate("updateTime"));
         correlationRule.setParams((Properties)resultSet.getObject("params"));
-        correlationRule.setDomain(resultSet.getString("domain"));
         correlationRule.setContent(resultSet.getString("content"));
         correlationRule.setVendor(resultSet.getString("vendor"));
         correlationRule.setPackageName(resultSet.getString("package"));

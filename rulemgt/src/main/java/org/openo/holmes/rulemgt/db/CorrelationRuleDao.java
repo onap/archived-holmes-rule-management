@@ -15,7 +15,10 @@
  */
 package org.openo.holmes.rulemgt.db;
 
+import java.util.List;
 import org.openo.holmes.common.api.entity.CorrelationRule;
+import org.openo.holmes.common.exception.CorrelationException;
+import org.openo.holmes.common.utils.I18nProxy;
 import org.openo.holmes.rulemgt.db.mapper.CorrelationRuleMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
@@ -24,10 +27,9 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
-import java.util.List;
-
 @RegisterMapper(CorrelationRuleMapper.class)
 public abstract class CorrelationRuleDao {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,DOMAIN ,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,ISMANUAL,PACKAGE,RID) VALUES (:name,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:domain,:content,:vendor,:createTime,:updateTime,:engineId,:isManual,:packageName,:rid)")
     protected abstract int addRule(@BindBean CorrelationRule correlationRule);
@@ -45,10 +47,10 @@ public abstract class CorrelationRuleDao {
     protected abstract List<CorrelationRule> queryAllRules();
 
     @SqlQuery("SELECT * FROM APLUS_RULE WHERE RID=:rid")
-    public abstract CorrelationRule queryRuleByRid(@Bind("rid") String rid);
+    protected abstract CorrelationRule queryRuleById(@Bind("rid") String rid);
 
     @SqlQuery("SELECT * FROM APLUS_RULE WHERE NAME=:name")
-    public abstract CorrelationRule queryRuleByName(@Bind("name") String name);
+    protected abstract CorrelationRule queryRuleByName(@Bind("name") String name);
 
     private void deleteRule2DbInner(CorrelationRule correlationRule) {
         String name = correlationRule.getName() != null ? correlationRule.getName().trim() : "";
@@ -60,26 +62,46 @@ public abstract class CorrelationRuleDao {
         }
     }
 
-    public CorrelationRule saveRule(CorrelationRule correlationRule) {
-        addRule(correlationRule);
-        return correlationRule;
+    public CorrelationRule saveRule(CorrelationRule correlationRule) throws CorrelationException {
+        try {
+            addRule(correlationRule);
+            return correlationRule;
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+        }
     }
 
-    public void updateRule(CorrelationRule correlationRule){
-        updateRuleByRid(correlationRule);
+    public void updateRule(CorrelationRule correlationRule) throws CorrelationException {
+        try {
+            updateRuleByRid(correlationRule);
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+        }
     }
 
-    public void deleteRule(CorrelationRule correlationRule) {
-        deleteRule2DbInner(correlationRule);
+    public void deleteRule(CorrelationRule correlationRule) throws CorrelationException {
+        try {
+            deleteRule2DbInner(correlationRule);
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+        }
     }
 
 
-    public CorrelationRule getRuleByRid(String rid) {
-        return queryRuleByRid(rid);
+    public CorrelationRule queryRuleByRid(String rid) throws CorrelationException {
+        try {
+            return queryRuleById(rid);
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+        }
     }
 
-    public CorrelationRule queryRuleByRuleName(String name) {
-        return queryRuleByName(name);
+    public CorrelationRule queryRuleByRuleName(String name) throws CorrelationException {
+        try {
+            return queryRuleByName(name);
+        } catch (Exception e) {
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+        }
     }
 }
 
