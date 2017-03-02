@@ -67,7 +67,7 @@ public abstract class CorrelationRuleDao {
             addRule(correlationRule);
             return correlationRule;
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR,e);
         }
     }
 
@@ -75,7 +75,7 @@ public abstract class CorrelationRuleDao {
         try {
             updateRuleByRid(correlationRule);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR,e);
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class CorrelationRuleDao {
         try {
             deleteRule2DbInner(correlationRule);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR,e);
         }
     }
 
@@ -92,7 +92,7 @@ public abstract class CorrelationRuleDao {
         try {
             return queryRuleById(rid);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR,e);
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class CorrelationRuleDao {
         try {
             return queryRuleByName(name);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DB_ERROR,e);
         }
     }
 }

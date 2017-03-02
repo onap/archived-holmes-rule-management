@@ -117,11 +117,8 @@ public class CorrelationRuleQueryDao {
                     }
                 }
             }
-            if (whereSql.indexOf("AND") > -1) {
-                whereSql = whereSql.trim();
-                return whereSql.substring(0, whereSql.length() - "AND".length());
-            }
-            return "";
+            whereSql = whereSql.trim();
+            return whereSql.substring(0, whereSql.length() - "AND".length());
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CREATE_QUERY_SQL_FAILED, e);
         }
