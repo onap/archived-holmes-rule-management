@@ -14,7 +14,7 @@ server:
   adminContextPath: /admin
   connector:
     type: http
-    port: 12004
+    port: 9101
 
 # Logging settings.
 logging:
