@@ -19,18 +19,22 @@ package org.openo.holmes.rulemgt.bolt.enginebolt;
 
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openo.holmes.rulemgt.RuleAppConfig;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.powermock.reflect.Whitebox;
 
+@PrepareForTest({HttpClients.class, CloseableHttpClient.class})
 public class EngineServiceTest {
 
     @Rule
@@ -39,14 +43,16 @@ public class EngineServiceTest {
     public PowerMockRule powerMockRule = new PowerMockRule();
     private EngineService engineService;
     private HttpResponse httpResponseMock;
-    private RuleAppConfig ruleAppConfig = new RuleAppConfig();
+    private CloseableHttpClient closeableHttpClient;
     private CorrelationDeployRule4Engine correlationDeployRule4Engine;
+    private CloseableHttpResponse closeableHttpResponseMock;
 
     @Before
     public void setUp() {
         engineService = new EngineService();
+        closeableHttpClient = PowerMock.createMock(CloseableHttpClient.class);
         httpResponseMock = PowerMock.createMock(HttpResponse.class);
-        Whitebox.setInternalState(engineService, "ruleAppConfig", ruleAppConfig);
+        closeableHttpResponseMock = PowerMock.createMock(CloseableHttpResponse.class);
         correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent("{\"package\":\"test\"}");
         correlationDeployRule4Engine.setEngineId("engine_id");

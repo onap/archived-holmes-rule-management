@@ -165,7 +165,7 @@ public class EngineWrapperTest {
     }
 
     @Test
-    public void checkRuleFromEngine_invoke_rule_delete_exception() throws Exception {
+    public void checkRuleFromEngine_rule_delete_exception() throws Exception {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED);
 
@@ -179,7 +179,7 @@ public class EngineWrapperTest {
     }
 
     @Test
-    public void checkRuleFromEngine_http_status_not_ok() throws Exception {
+    public void checkRuleFromEngine_http_status_not_200() throws Exception {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
 

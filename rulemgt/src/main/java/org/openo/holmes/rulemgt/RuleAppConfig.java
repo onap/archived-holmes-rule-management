@@ -32,9 +32,6 @@ public class RuleAppConfig extends Configuration {
     @NotEmpty
     private String apidescription = "Holmes rule management rest API";
 
-    @NotEmpty
-    private String msbServerAddr;
-
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
@@ -58,13 +55,4 @@ public class RuleAppConfig extends Configuration {
         this.apidescription = apidescription;
     }
 
-    @JsonProperty
-    public String getMsbServerAddr() {
-        return msbServerAddr;
-    }
-
-    @JsonProperty
-    public void setMsbServerAddr(String msbServerAddr) {
-        this.msbServerAddr = msbServerAddr;
-    }
 }

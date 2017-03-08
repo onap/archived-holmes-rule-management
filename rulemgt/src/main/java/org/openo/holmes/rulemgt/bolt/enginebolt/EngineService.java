@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,9 +31,9 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jvnet.hk2.annotations.Service;
+import org.openo.holmes.common.config.MicroServiceConfig;
 import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.I18nProxy;
-import org.openo.holmes.rulemgt.RuleAppConfig;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
@@ -42,24 +41,21 @@ import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
 @Service
 public class EngineService {
 
-    @Inject
-    private RuleAppConfig ruleAppConfig;
-
     protected HttpResponse delete(String packageName) throws IOException {
-        return deleteRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
+        return deleteRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
     }
 
     protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationCheckRule4Engine);
-        return postRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
+        return postRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
     }
 
     protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationDeployRule4Engine);
-        return putRequest(ruleAppConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
+        return putRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
     }
 
     private HttpResponse postRequest(String url, String content) throws IOException {

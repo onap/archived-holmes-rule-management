@@ -56,11 +56,4 @@ public class RuleAppConfigTest {
         ruleAppConfig.setApidescription(value);
         assertThat(ruleAppConfig.getApidescription(), equalTo(value));
     }
-
-    @Test
-    public void getterAndSetter4MsbServerAddr() throws Exception {
-        final String value = "msbServerAddr";
-        ruleAppConfig.setMsbServerAddr(value);
-        assertThat(ruleAppConfig.getMsbServerAddr(), equalTo(value));
-    }
 }
