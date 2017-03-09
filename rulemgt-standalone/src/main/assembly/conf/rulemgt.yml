@@ -60,5 +60,3 @@ database:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1s
-# the micro service ip
-msbServerAddr: http://10.250.0.3:9102
