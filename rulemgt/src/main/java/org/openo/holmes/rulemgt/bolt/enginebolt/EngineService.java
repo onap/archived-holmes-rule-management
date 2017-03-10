@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -38,6 +39,7 @@ import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
 
+@Slf4j
 @Service
 public class EngineService {
 
@@ -62,6 +64,7 @@ public class EngineService {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         try {
             HttpPost httpPost = new HttpPost(url);
+            log.info("url:" + url + "," + "post:" + httpPost);
             setHeader(httpPost);
             if (StringUtils.isNotEmpty(content)) {
                 httpPost.setEntity(new ByteArrayEntity(content.getBytes()));

@@ -15,10 +15,12 @@
  */
 package org.openo.holmes.rulemgt.bolt.enginebolt;
 
+import java.io.IOException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.I18nProxy;
@@ -38,7 +40,7 @@ public class EngineWrapper {
         try {
             httpResponse = engineService.deploy(correlationRule);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED,e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED, e);
         }
         if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call deploy rule rest interface in engine successfully.");
@@ -47,7 +49,7 @@ public class EngineWrapper {
                 JSONObject json = JSONObject.fromObject(content);
                 return json.get(RuleMgtConstant.PACKAGE).toString();
             } catch (Exception e) {
-                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR,e);
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR, e);
             }
         } else {
             throw new CorrelationException(I18nProxy.ENGINE_DEPLOY_RULE_FAILED);
@@ -59,7 +61,7 @@ public class EngineWrapper {
         try {
             httpResponse = engineService.delete(packageName);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DELETE_RULE_REST_FAILED,e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DELETE_RULE_REST_FAILED, e);
         }
         if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call delete rule rest interface in engine successfully.");
@@ -75,13 +77,19 @@ public class EngineWrapper {
         try {
             httpResponse = engineService.check(correlationCheckRule4Engine);
         } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED,e);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED, e);
         }
         if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call check rule rest interface in engine successfully.");
             return true;
         } else {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
+            try {
+                log.info(httpResponse.getStatusLine().getStatusCode() + "," + EntityUtils
+                        .toString(httpResponse.getEntity()));
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
+            } catch (IOException e) {
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
+            }
         }
     }
 }

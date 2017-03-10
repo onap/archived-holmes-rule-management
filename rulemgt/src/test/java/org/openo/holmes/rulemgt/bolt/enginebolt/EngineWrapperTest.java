@@ -179,23 +179,6 @@ public class EngineWrapperTest {
     }
 
     @Test
-    public void checkRuleFromEngine_http_status_not_200() throws Exception {
-        thrown.expect(CorrelationException.class);
-        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
-
-        EasyMock.expect(engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
-
-        PowerMock.replayAll();
-
-        engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine());
-
-        PowerMock.verifyAll();
-    }
-
-    @Test
     public void checkRuleFromEngine_success() throws Exception {
         EasyMock.expect(engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
                 .andReturn(httpResponseMock);
