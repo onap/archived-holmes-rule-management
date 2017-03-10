@@ -73,6 +73,7 @@ public class EngineWrapper {
 
     public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine)
             throws CorrelationException {
+        log.info("content:" + correlationCheckRule4Engine.getContent());
         HttpResponse httpResponse;
         try {
             httpResponse = engineService.check(correlationCheckRule4Engine);
@@ -88,7 +89,7 @@ public class EngineWrapper {
                         .toString(httpResponse.getEntity()));
                 throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
             } catch (IOException e) {
-                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
+                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS, e);
             }
         }
     }
