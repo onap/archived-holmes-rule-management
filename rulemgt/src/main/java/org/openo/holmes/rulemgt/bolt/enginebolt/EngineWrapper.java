@@ -89,6 +89,8 @@ public class EngineWrapper {
                         .toString(httpResponse.getEntity()));
                 throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
             } catch (IOException e) {
+                log.info(httpResponse.getStatusLine().getStatusCode() + "," + httpResponse.getStatusLine()
+                        .getReasonPhrase());
                 throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS, e);
             }
         }
