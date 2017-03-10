@@ -104,7 +104,6 @@ public class EngineService {
         httpRequestBase.setHeader("Content-Type", "text/html;charset=UTF-8");
         httpRequestBase.setHeader("Accept", "application/json");
         httpRequestBase.setHeader("Content-Type", "application/json");
-        httpRequestBase.setHeader("Content-Length","2000");
     }
 
     public byte[] getData(HttpEntity httpEntity) throws IOException {
