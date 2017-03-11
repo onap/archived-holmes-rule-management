@@ -120,6 +120,8 @@ public class EngineService {
     }
 
     public byte[] getData(HttpEntity httpEntity) throws IOException {
+        log.info("Rule deployed. Package name: " + httpEntity.getContent().toString()
+                + ". Content length: " + httpEntity.getContentLength());
         BufferedHttpEntity bufferedHttpEntity = new BufferedHttpEntity(httpEntity);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bufferedHttpEntity.writeTo(byteArrayOutputStream);
