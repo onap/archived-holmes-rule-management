@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -31,6 +32,7 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.config.MicroServiceConfig;
 import org.openo.holmes.common.exception.CorrelationException;
@@ -43,21 +45,33 @@ import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
 @Service
 public class EngineService {
 
+    String url = "http://10.250.0.3:9102";
+
     protected HttpResponse delete(String packageName) throws IOException {
-        return deleteRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
+        return deleteRequest(url + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
     }
 
     protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
             throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationCheckRule4Engine);
-        return postRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
+        String queryUrl = MicroServiceConfig.getMsbServerAddr()
+                + "/openoapi/microservices/v1/services/holmes-engine/version/v1";
+        HttpGet httpGet = new HttpGet(queryUrl);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            log.info("response entity:" + EntityUtils.toString(httpResponse.getEntity()));
+        } finally {
+            httpClient.close();
+        }
+        return postRequest(url + RuleMgtConstant.ENGINE_PATH, content);
     }
 
     protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationDeployRule4Engine);
-        return putRequest(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH, content);
+        return putRequest(url + RuleMgtConstant.ENGINE_PATH, content);
     }
 
     private HttpResponse postRequest(String url, String content) throws IOException {
@@ -104,6 +118,7 @@ public class EngineService {
         httpRequestBase.setHeader("Content-Type", "text/html;charset=UTF-8");
         httpRequestBase.setHeader("Accept", "application/json");
         httpRequestBase.setHeader("Content-Type", "application/json");
+        httpRequestBase.setHeader("Content-Length", "2000");
     }
 
     public byte[] getData(HttpEntity httpEntity) throws IOException {
