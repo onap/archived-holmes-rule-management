@@ -179,7 +179,7 @@ public class RuleMgtResources {
 
     private ServiceRegisterEntity initServiceEntity() {
         ServiceRegisterEntity serviceRegisterEntity = new ServiceRegisterEntity();
-        serviceRegisterEntity.setServiceName("holmes");
+        serviceRegisterEntity.setServiceName("holmes-rule-management");
         serviceRegisterEntity.setProtocol("REST");
         serviceRegisterEntity.setVersion("v1");
         serviceRegisterEntity.setUrl("/api/holmes/v1");
