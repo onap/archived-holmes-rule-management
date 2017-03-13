@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
 import org.jvnet.hk2.annotations.Service;
-import org.openo.holmes.common.config.MicroServiceConfig;
 import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
@@ -35,10 +34,11 @@ import org.openo.holmes.rulemgt.constant.RuleMgtConstant;
 @Service
 public class EngineService {
 
+    String url = "http://10.250.0.3:9102";
+
     protected Response delete(String packageName) throws IOException {
         Client client = createClient();
-        WebTarget webTarget = client
-                .target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
+        WebTarget webTarget = client.target(url + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
         return webTarget.request(MediaType.APPLICATION_JSON).delete();
     }
 
@@ -52,7 +52,7 @@ public class EngineService {
         Client client = createClient();
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationCheckRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH);
+        WebTarget webTarget = client.target(url + RuleMgtConstant.ENGINE_PATH);
         return webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(content, MediaType.APPLICATION_JSON));
     }
 
@@ -60,7 +60,7 @@ public class EngineService {
         Client client = createClient();
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationDeployRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH);
+        WebTarget webTarget = client.target(url + RuleMgtConstant.ENGINE_PATH);
         return webTarget.request(MediaType.APPLICATION_JSON).put(Entity.entity(content, MediaType.APPLICATION_JSON));
     }
 }

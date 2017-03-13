@@ -81,6 +81,7 @@ public class EngineWrapper {
             log.info("Call check rule rest interface in engine successfully.");
             return true;
         } else {
+            log.info(response.getStatus() + " " + response.getStatusInfo() + " " + response.getEntity());
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
         }
     }
