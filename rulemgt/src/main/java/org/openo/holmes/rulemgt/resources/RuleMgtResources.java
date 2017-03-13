@@ -179,10 +179,10 @@ public class RuleMgtResources {
 
     private ServiceRegisterEntity initServiceEntity() {
         ServiceRegisterEntity serviceRegisterEntity = new ServiceRegisterEntity();
-        serviceRegisterEntity.setServiceName("holmes-rulemgt");
+        serviceRegisterEntity.setServiceName("holmes-rule-mgmt");
         serviceRegisterEntity.setProtocol("REST");
         serviceRegisterEntity.setVersion("v1");
-        serviceRegisterEntity.setUrl("/api/holmes-rulemgt/v1");
+        serviceRegisterEntity.setUrl("/openoapi/holmes-rule-mgmt/v1");
         serviceRegisterEntity.setSingleNode(MicroServiceConfig.getServiceIp(), "9101", 0);
         serviceRegisterEntity.setVisualRange("1");
         return serviceRegisterEntity;
