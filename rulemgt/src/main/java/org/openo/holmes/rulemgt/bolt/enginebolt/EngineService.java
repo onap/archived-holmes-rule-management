@@ -15,12 +15,19 @@
  */
 package org.openo.holmes.rulemgt.bolt.enginebolt;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.ConnectionClosedException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -30,8 +37,10 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.config.MicroServiceConfig;
@@ -119,6 +128,46 @@ public class EngineService {
         httpRequestBase.setHeader("Content-Type", "application/json");
     }
 
+    public String getResponseContent(HttpResponse response) {
+        HttpEntity entity = response.getEntity();
+        InputStream is = null;
+        if (entity != null) {
+            try {
+                is = entity.getContent();
+                final ContentType contentType = ContentType.getOrDefault(entity);
+                Charset charset = contentType.getCharset();
+                if (charset == null) {
+                    charset = HTTP.DEF_CONTENT_CHARSET;
+                }
+                final StringBuilder b = new StringBuilder();
+                final char[] tmp = new char[1024];
+                final Reader reader = new InputStreamReader(is, charset);
+                try {
+                    int l;
+                    while ((l = reader.read(tmp)) != -1) {
+                        b.append(tmp, 0, l);
+                    }
+                } catch (ConnectionClosedException ignore) {
+
+                } catch (IOException e) {
+                    log.info("Failed to read the contents of the input stream of the http entity.", e);
+                }
+                return b.toString();
+            } catch (IOException e) {
+                log.info("Failed to read the contents of the http entity.", e);
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    log.info("Failed to close the input stream of the http entity.", e);
+                }
+            }
+        }
+        return "{}";
+    }
+
     public byte[] getData(HttpEntity httpEntity) throws IOException {
         log.info("Rule deployed. Package name: " + httpEntity.getContent().toString()
                 + ". Content length: " + httpEntity.getContentLength());
@@ -129,21 +178,21 @@ public class EngineService {
         return responseBytes;
     }
 
-    public String getResponseContent(HttpResponse httpResponse) throws CorrelationException {
-        byte[] dataByte;
-        String result = null;
-        try {
-            HttpEntity httpEntity = httpResponse.getEntity();
-            if (httpEntity != null) {
-                byte[] responseBytes = getData(httpEntity);
-                dataByte = responseBytes;
-                result = bytesToString(dataByte);
-            }
-            return result;
-        } catch (Exception e) {
-            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR, e);
-        }
-    }
+//    public String getResponseContent(HttpResponse httpResponse) throws CorrelationException {
+//        byte[] dataByte;
+//        String result = null;
+//        try {
+//            HttpEntity httpEntity = httpResponse.getEntity();
+//            if (httpEntity != null) {
+//                byte[] responseBytes = getData(httpEntity);
+//                dataByte = responseBytes;
+//                result = bytesToString(dataByte);
+//            }
+//            return result;
+//        } catch (Exception e) {
+//            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR, e);
+//        }
+//    }
 
     private String bytesToString(byte[] bytes) throws UnsupportedEncodingException {
         if (bytes != null) {
