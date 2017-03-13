@@ -46,6 +46,7 @@ public class EngineWrapper {
             log.info("Call deploy rule rest interface in engine successfully.");
             String content = engineService.getResponseContent(httpResponse);
             try {
+                log.info("Deploy result from the engine is: " + content + ".");
                 JSONObject json = JSONObject.fromObject(content);
                 return json.get(RuleMgtConstant.PACKAGE).toString();
             } catch (Exception e) {
