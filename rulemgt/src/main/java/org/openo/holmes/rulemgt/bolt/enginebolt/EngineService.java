@@ -106,7 +106,9 @@ public class EngineService {
             if (StringUtils.isNotEmpty(content)) {
                 httpPut.setEntity(new ByteArrayEntity(content.getBytes()));
             }
-            return httpClient.execute(httpPut);
+            HttpResponse response = httpClient.execute(httpPut);
+            log.info("Return value for put request is " + EntityUtils.toString(response.getEntity()) + ".");
+            return response;
         } finally {
             httpClient.close();
         }
