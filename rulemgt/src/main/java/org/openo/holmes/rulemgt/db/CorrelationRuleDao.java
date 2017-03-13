@@ -31,7 +31,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 public abstract class CorrelationRuleDao {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,DOMAIN ,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,ISMANUAL,PACKAGE,RID) VALUES (:name,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:domain,:content,:vendor,:createTime,:updateTime,:engineId,:isManual,:packageName,:rid)")
+    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID) VALUES (:name,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid)")
     protected abstract int addRule(@BindBean CorrelationRule correlationRule);
 
     @SqlUpdate("UPDATE APLUS_RULE SET DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime WHERE RID=:rid")

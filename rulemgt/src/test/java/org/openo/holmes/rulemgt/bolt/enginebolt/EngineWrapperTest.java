@@ -20,7 +20,7 @@ package org.openo.holmes.rulemgt.bolt.enginebolt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.apache.http.HttpResponse;
+import javax.ws.rs.core.Response;
 import org.apache.http.StatusLine;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -40,13 +40,13 @@ public class EngineWrapperTest {
     public ExpectedException thrown = ExpectedException.none();
     private EngineWrapper engineWrapper = new EngineWrapper();
     private EngineService engineServiceMock;
-    private HttpResponse httpResponseMock;
+    private Response response;
     private StatusLine statusLineMock;
 
     @Before
     public void setUp() throws Exception {
         engineServiceMock = PowerMock.createMock(EngineService.class);
-        httpResponseMock = PowerMock.createMock(HttpResponse.class);
+        response = PowerMock.createMock(Response.class);
         statusLineMock = PowerMock.createMock(StatusLine.class);
         Whitebox.setInternalState(engineWrapper, "engineService", engineServiceMock);
     }
@@ -71,10 +71,8 @@ public class EngineWrapperTest {
         thrown.expectMessage(I18nProxy.ENGINE_DEPLOY_RULE_FAILED);
 
         EasyMock.expect(engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
-
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(400);
         PowerMock.replayAll();
 
         engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
@@ -89,12 +87,9 @@ public class EngineWrapperTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR);
         EasyMock.expect(engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
-        EasyMock.expect(engineServiceMock.getResponseContent(EasyMock.anyObject(HttpResponse.class)))
-                .andReturn(content);
-
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(200);
+        EasyMock.expect(response.readEntity(String.class)).andReturn(content);
         PowerMock.replayAll();
 
         engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
@@ -106,11 +101,9 @@ public class EngineWrapperTest {
     public void deployEngine_success() throws Exception {
         String content = "{\"package\":\"test\"}";
         EasyMock.expect(engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
-        EasyMock.expect(engineServiceMock.getResponseContent(EasyMock.anyObject(HttpResponse.class)))
-                .andReturn(content);
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(200);
+        EasyMock.expect(response.readEntity(String.class)).andReturn(content);
         PowerMock.replayAll();
 
         String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
@@ -139,9 +132,8 @@ public class EngineWrapperTest {
         thrown.expectMessage(I18nProxy.ENGINE_DELETE_RULE_FAILED);
 
         EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(400);
 
         PowerMock.replayAll();
 
@@ -153,9 +145,8 @@ public class EngineWrapperTest {
     @Test
     public void deleteRuleFromEngine_success() throws Exception {
         EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(200);
 
         PowerMock.replayAll();
 
@@ -181,9 +172,8 @@ public class EngineWrapperTest {
     @Test
     public void checkRuleFromEngine_success() throws Exception {
         EasyMock.expect(engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
-                .andReturn(httpResponseMock);
-        EasyMock.expect(httpResponseMock.getStatusLine()).andReturn(statusLineMock);
-        EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
+                .andReturn(response);
+        EasyMock.expect(response.getStatus()).andReturn(200);
 
         PowerMock.replayAll();
 

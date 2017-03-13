@@ -20,15 +20,11 @@ package org.openo.holmes.rulemgt.bolt.enginebolt;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openo.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.openo.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -56,40 +52,5 @@ public class EngineServiceTest {
         correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent("{\"package\":\"test\"}");
         correlationDeployRule4Engine.setEngineId("engine_id");
-    }
-
-    @Test
-    public void getResponseContent_http_entity_is_null() throws Exception {
-        EasyMock.expect(httpResponseMock.getEntity()).andReturn(null);
-        PowerMock.replayAll();
-
-        engineService.getResponseContent(httpResponseMock);
-
-        PowerMock.verifyAll();
-    }
-
-    @Test
-    public void delete_exception() throws Exception {
-        thrown.expect(Exception.class);
-
-        engineService.delete("test");
-
-    }
-
-    @Test
-    public void deploy_exception() throws Exception {
-
-        thrown.expect(Exception.class);
-
-        engineService.deploy(correlationDeployRule4Engine);
-
-    }
-
-    @Test
-    public void check_normal() throws Exception {
-        thrown.expect(Exception.class);
-
-        engineService.check(new CorrelationCheckRule4Engine());
-
     }
 }

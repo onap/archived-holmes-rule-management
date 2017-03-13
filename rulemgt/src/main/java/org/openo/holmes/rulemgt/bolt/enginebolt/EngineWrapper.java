@@ -15,12 +15,10 @@
  */
 package org.openo.holmes.rulemgt.bolt.enginebolt;
 
-import java.io.IOException;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.jvnet.hk2.annotations.Service;
 import org.openo.holmes.common.exception.CorrelationException;
 import org.openo.holmes.common.utils.I18nProxy;
@@ -36,18 +34,16 @@ public class EngineWrapper {
     private EngineService engineService;
 
     public String deployEngine(CorrelationDeployRule4Engine correlationRule) throws CorrelationException {
-        HttpResponse httpResponse;
+        Response response;
         try {
-            httpResponse = engineService.deploy(correlationRule);
+            response = engineService.deploy(correlationRule);
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DEPLOY_RULE_REST_FAILED, e);
         }
-        if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call deploy rule rest interface in engine successfully.");
-            String content = engineService.getResponseContent(httpResponse);
             try {
-                log.info("Deploy result from the engine is: " + content + ".");
-                JSONObject json = JSONObject.fromObject(content);
+                JSONObject json = JSONObject.fromObject(response.readEntity(String.class));
                 return json.get(RuleMgtConstant.PACKAGE).toString();
             } catch (Exception e) {
                 throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_PARSE_DEPLOY_RESULT_ERROR, e);
@@ -58,13 +54,13 @@ public class EngineWrapper {
     }
 
     public boolean deleteRuleFromEngine(String packageName) throws CorrelationException {
-        HttpResponse httpResponse;
+        Response response;
         try {
-            httpResponse = engineService.delete(packageName);
+            response = engineService.delete(packageName);
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_DELETE_RULE_REST_FAILED, e);
         }
-        if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call delete rule rest interface in engine successfully.");
             return true;
         } else {
@@ -75,25 +71,17 @@ public class EngineWrapper {
     public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine)
             throws CorrelationException {
         log.info("content:" + correlationCheckRule4Engine.getContent());
-        HttpResponse httpResponse;
+        Response response;
         try {
-            httpResponse = engineService.check(correlationCheckRule4Engine);
+            response = engineService.check(correlationCheckRule4Engine);
         } catch (Exception e) {
             throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CALL_CHECK_RULE_REST_FAILED, e);
         }
-        if (httpResponse.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Call check rule rest interface in engine successfully.");
             return true;
         } else {
-            try {
-                log.info(httpResponse.getStatusLine().getStatusCode() + "," + EntityUtils
-                        .toString(httpResponse.getEntity()));
-                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
-            } catch (IOException e) {
-                log.info(httpResponse.getStatusLine().getStatusCode() + "," + httpResponse.getStatusLine()
-                        .getReasonPhrase());
-                throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS, e);
-            }
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_CHECK_NO_PASS);
         }
     }
 }
