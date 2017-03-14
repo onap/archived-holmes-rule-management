@@ -64,18 +64,7 @@ import org.openo.holmes.rulemgt.wrapper.RuleMgtWrapper;
 public class RuleMgtResources {
 
     @Inject
-    private MSBRegisterUtil msbRegisterUtil;
-    @Inject
     private RuleMgtWrapper ruleMgtWrapper;
-
-    @PostConstruct
-    public void init() {
-        try {
-            msbRegisterUtil.register(initServiceEntity());
-        } catch (IOException e) {
-            log.warn("Micro service registry httpclient close failure",e);
-        }
-    }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -175,16 +164,5 @@ public class RuleMgtResources {
             throw ExceptionUtil.buildExceptionResponse(I18nProxy.getInstance().getValue(locale,
                     I18nProxy.RULE_MANAGEMENT_DATA_FORMAT_ERROR));
         }
-    }
-
-    private ServiceRegisterEntity initServiceEntity() {
-        ServiceRegisterEntity serviceRegisterEntity = new ServiceRegisterEntity();
-        serviceRegisterEntity.setServiceName("holmes-rule-mgmt");
-        serviceRegisterEntity.setProtocol("REST");
-        serviceRegisterEntity.setVersion("v1");
-        serviceRegisterEntity.setUrl("/openoapi/holmes-rule-mgmt/v1");
-        serviceRegisterEntity.setSingleNode(MicroServiceConfig.getServiceIp(), "9101", 0);
-        serviceRegisterEntity.setVisualRange("1");
-        return serviceRegisterEntity;
     }
 }
