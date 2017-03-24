@@ -64,7 +64,7 @@ public class EngineWrapper {
             log.info("Call delete rule rest interface in engine successfully.");
             return true;
         } else {
-            throw new CorrelationException(I18nProxy.ENGINE_DELETE_RULE_FAILED);
+            throw new CorrelationException(I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED);
         }
     }
 

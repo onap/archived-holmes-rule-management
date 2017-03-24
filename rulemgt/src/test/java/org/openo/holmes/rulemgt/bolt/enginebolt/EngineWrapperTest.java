@@ -129,7 +129,7 @@ public class EngineWrapperTest {
     @Test
     public void deleteRuleFromEngine_http_status_not_ok() throws Exception {
         thrown.expect(CorrelationException.class);
-        thrown.expectMessage(I18nProxy.ENGINE_DELETE_RULE_FAILED);
+        thrown.expectMessage(I18nProxy.RULE_MANAGEMENT_DELETE_RULE_FAILED);
 
         EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class)))
                 .andReturn(response);

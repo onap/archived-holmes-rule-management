@@ -100,8 +100,8 @@ public class RuleMgtWrapper {
         if (oldCorrelationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN) {
             engineWarpper.deleteRuleFromEngine(oldCorrelationRule.getPackageName());
         }
+        newCorrelationRule.setPackageName(deployRule2Engine(newCorrelationRule));
         correlationRuleDao.updateRule(newCorrelationRule);
-        deployRule2Engine(newCorrelationRule);
         return ruleChangeResponse;
     }
 
@@ -155,11 +155,12 @@ public class RuleMgtWrapper {
         String tempContent = ruleCreateRequest.getContent();
         CorrelationRule correlationRule = new CorrelationRule();
         String ruleId = "rule_" + System.currentTimeMillis();
+        String description = ruleCreateRequest.getDescription() == null ? "" : ruleCreateRequest.getDescription();
         correlationRule.setRid(ruleId);
         if (tempContent != null) {
             correlationRule.setContent(tempContent.trim());
         }
-        correlationRule.setDescription(ruleCreateRequest.getDescription());
+        correlationRule.setDescription(description);
         correlationRule.setCreateTime(new Date());
         correlationRule.setUpdateTime(new Date());
         correlationRule.setName(ruleCreateRequest.getRuleName());
@@ -176,9 +177,10 @@ public class RuleMgtWrapper {
     private CorrelationRule convertRuleUpdateRequest2CorrelationRule(String modifier,
             RuleUpdateRequest ruleUpdateRequest, String ruleName) throws CorrelationException {
         CorrelationRule correlationRule = new CorrelationRule();
+        String description = ruleUpdateRequest.getDescription() == null ? "" : ruleUpdateRequest.getDescription();
         correlationRule.setRid(ruleUpdateRequest.getRuleId());
         correlationRule.setContent(ruleUpdateRequest.getContent());
-        correlationRule.setDescription(ruleUpdateRequest.getDescription());
+        correlationRule.setDescription(description);
         correlationRule.setEnabled(ruleUpdateRequest.getEnabled());
         correlationRule.setUpdateTime(new Date());
         correlationRule.setModifier(modifier);
@@ -211,9 +213,10 @@ public class RuleMgtWrapper {
         List<RuleResult4API> ruleResult4APIs = new ArrayList<RuleResult4API>();
         for (CorrelationRule correlationRule : correlationRules) {
             RuleResult4API ruleResult4API = new RuleResult4API();
+            String description = correlationRule.getDescription() == null ? "" : correlationRule.getDescription();
             ruleResult4API.setRuleId(correlationRule.getRid());
             ruleResult4API.setRuleName(correlationRule.getName());
-            ruleResult4API.setDescription(correlationRule.getDescription());
+            ruleResult4API.setDescription(description);
             ruleResult4API.setContent(correlationRule.getContent());
             ruleResult4API.setCreateTime(correlationRule.getCreateTime());
             ruleResult4API.setCreator(correlationRule.getCreator());
