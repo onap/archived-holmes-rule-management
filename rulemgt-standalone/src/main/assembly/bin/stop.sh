@@ -17,7 +17,7 @@
 
 DIRNAME=`dirname $0`
 HOME=`cd $DIRNAME/; pwd`
-Main_Class="org.openo.holmes.rulemgt.RuleActiveApp"
+Main_Class="org.onap.holmes.rulemgt.RuleActiveApp"
 
 echo ================== engine-d-service info =============================================
 echo HOME=$HOME

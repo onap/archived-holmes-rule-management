@@ -30,7 +30,7 @@ set class_path=%main_path%;%main_path%holmes-rulemgt.jar
 echo ### jvm_opts: %jvm_opts%
 echo ### class_path: %class_path%
 
-%JAVA% -classpath %class_path% %jvm_opts% org.openo.holmes.rulemgt.RuleActiveApp server %main_path%conf/rulemgt.yml
+%JAVA% -classpath %class_path% %jvm_opts% org.onap.holmes.rulemgt.RuleActiveApp server %main_path%conf/rulemgt.yml
 
 IF ERRORLEVEL 1 goto showerror
 exit
