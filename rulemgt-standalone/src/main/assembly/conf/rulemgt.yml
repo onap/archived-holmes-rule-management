@@ -9,7 +9,7 @@ apidescription: ZTE Holmes rule Management rest API
 
 server:
   type: simple
-  rootPath:  '/openoapi/holmes-rule-mgmt/v1/*'
+  rootPath:  '/onapapi/holmes-rule-mgmt/v1/*'
   applicationContextPath: /
   adminContextPath: /admin
   connector:

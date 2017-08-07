@@ -19,9 +19,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.openo.holmes.rule-management</groupId>
+        <groupId>org.onap.holmes.rule-management</groupId>
         <artifactId>holmes-rulemgt-parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>holmes-rulemgt</artifactId>
@@ -31,8 +31,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.openo.holmes.actions</groupId>
+            <groupId>org.onap.holmes.common</groupId>
             <artifactId>holmes-actions</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.jersey.containers</groupId>
@@ -43,11 +44,6 @@
                     <artifactId>activemq-core</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.22.2</version>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
@@ -102,10 +98,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openo.client.cli</groupId>
-            <artifactId>swagger-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -241,7 +233,7 @@
                                     implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.openo.holmes.rulemgt.RuleActiveApp</mainClass>
+                                    <mainClass>org.onap.holmes.rulemgt.RuleActiveApp</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

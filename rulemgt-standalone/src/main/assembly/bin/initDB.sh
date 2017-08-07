@@ -23,12 +23,12 @@ port=$3
 host=$4
 echo "start init holmes rulemgt db"
 main_path=$HOME/../
-cat $main_path/dbscripts/mysql/openo-holmes_rulemgt-createobj.sql
+cat $main_path/dbscripts/mysql/onap-holmes_rulemgt-createobj.sql
 echo "user="$user
 echo "password"$password
 echo "port="$port
 echo "host="$host
-mysql -u$user -p$password -P$port -h$host <$main_path/dbscripts/mysql/openo-holmes_rulemgt-createobj.sql
+mysql -u$user -p$password -P$port -h$host <$main_path/dbscripts/mysql/onap-holmes_rulemgt-createobj.sql
 sql_result=$?
 cat "sql_result="$sql_result
 if [ $sql_result != 0 ] ; then
