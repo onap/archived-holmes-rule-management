@@ -52,6 +52,7 @@
                   </includes>
                   <excludes>
                     <exclude>**/*.bat</exclude>
+					<exclude>Dockerfile</exclude>
                   </excludes>
                 </resource>
               </resources>
@@ -75,7 +76,28 @@
                   </includes>
                   <excludes>
                     <exclude>**/*.sh</exclude>
+					<exclude>Dockerfile</exclude>
                   </excludes>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
+          </execution>
+		  <execution>
+            <id>copy-dockerfile</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/version</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/assembly/</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>Dockerfile</include>
+                  </includes>
                 </resource>
               </resources>
               <overwrite>true</overwrite>
