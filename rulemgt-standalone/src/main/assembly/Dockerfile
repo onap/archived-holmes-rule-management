@@ -43,6 +43,6 @@ ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
 RUN chmod 755 /home/holmes/bin/*.sh
 
 
-CMD /home/holmes/bin/run.sh
+ENTRYPOINT /home/holmes/bin/run.sh
 
 
