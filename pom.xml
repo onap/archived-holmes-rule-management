@@ -51,6 +51,7 @@
         <stringtemplate.version>3.2.1</stringtemplate.version>
         <mysql.connector.version>5.1.38</mysql.connector.version>
         <dropwizard.version>0.8.0</dropwizard.version>
+        <reflections.version>0.9.9</reflections.version>
         <swagger.version>1.5.3</swagger.version>
         <lombok.version>1.16.4</lombok.version>
         <jersey.version>2.22.2</jersey.version>
@@ -68,6 +69,11 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
