@@ -21,7 +21,7 @@ echo @RUNHOME@ $RUNHOME
 echo @JAVA_HOME@ $JAVA_HOME
 JAVA="$JAVA_HOME/bin/java"
 echo @JAVA@ $JAVA
-main_path=$RUNHOME/../
+main_path=$RUNHOME/..
 cd $main_path
 JAVA_OPTS="-Xms50m -Xmx128m"
 port=8312
