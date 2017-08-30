@@ -19,9 +19,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.oparent</groupId>
-        <artifactId>version</artifactId>
+        <artifactId>oparent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../oparent</relativePath>
     </parent>
 
     <groupId>org.onap.holmes.rule-management</groupId>
@@ -69,6 +68,11 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.onap.msb.java-sdk</groupId>
+                <artifactId>msb-java-sdk</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
@@ -154,6 +158,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 </project>
 
