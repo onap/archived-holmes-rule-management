@@ -31,5 +31,10 @@ echo @JAVA_OPTS@ $JAVA_OPTS
 class_path="$main_path/:$main_path/holmes-rulemgt.jar"
 echo @class_path@ $class_path
 
+sed -i "s|url:.*|url: jdbc:mysql://$URL_JDBC/holmes|" "$main_path/conf/rulemgt.yml"
+sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/rulemgt.yml"
+
+./initDB.sh root rootpass 3306 `${URL_JDBC%:*}`
+
 "$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
 
