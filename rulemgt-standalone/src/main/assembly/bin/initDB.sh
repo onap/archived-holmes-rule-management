@@ -22,7 +22,7 @@ password=$2
 port=$3
 host=$4
 echo "start init holmes rulemgt db"
-main_path=$HOME/../
+main_path=$HOME/..
 cat $main_path/dbscripts/mysql/onap-holmes_rulemgt-createobj.sql
 echo "user="$user
 echo "password"$password
