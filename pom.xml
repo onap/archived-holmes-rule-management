@@ -48,7 +48,6 @@
 
 
         <stringtemplate.version>3.2.1</stringtemplate.version>
-        <mysql.connector.version>5.1.38</mysql.connector.version>
         <dropwizard.version>0.8.0</dropwizard.version>
         <reflections.version>0.9.9</reflections.version>
         <swagger.version>1.5.3</swagger.version>
@@ -57,6 +56,7 @@
         <jaxrs.consumer.version>5.0</jaxrs.consumer.version>
         <slf4j.version>1.6.1</slf4j.version>
         <quartz.version>2.2.1</quartz.version>
+        <postgres.jdbc.driver.version>42.1.1</postgres.jdbc.driver.version>
 
 
         <packagename>onap-holmes-rulemgt</packagename>
@@ -119,10 +119,11 @@
             </dependency>
 
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.version}</version>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgres.jdbc.driver.version}</version>
             </dependency>
+
 
             <dependency>
                 <groupId>org.antlr</groupId>
