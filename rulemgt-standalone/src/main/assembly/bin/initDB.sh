@@ -23,13 +23,16 @@ port=$3
 host=$4
 echo "start init holmes rulemgt db"
 main_path=$HOME/..
-cat $main_path/dbscripts/mysql/onap-holmes_rulemgt-createobj.sql
+cat $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 echo "user="$user
-echo "password"$password
+echo "password="$password
 echo "port="$port
 echo "host="$host
-mysql -u$user -p$password -P$port -h$host <$main_path/dbscripts/mysql/onap-holmes_rulemgt-createobj.sql
+export PGPASSWORD=$password
+psql -U $user -p $port -h $host -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+psql -U $user -p $port -h $host -d holmes --command 'select * from aplus_rule;'
 sql_result=$?
+unset PGPASSWORD
 cat "sql_result="$sql_result
 if [ $sql_result != 0 ] ; then
    echo "failed to init rulemgt database!"

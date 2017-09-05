@@ -20,7 +20,8 @@ WORKDIR /home/holmes
 ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
 RUN chmod 755 /home/holmes/bin/*.sh
 
-#RUN apt-get install -y mysql-client
+#install the postgres client
+RUN apt-get install -y postgresql-client-9.5 postgresql-contrib-9.5
 
 ENTRYPOINT /home/holmes/bin/run.sh
 

@@ -31,14 +31,14 @@ echo @JAVA_OPTS@ $JAVA_OPTS
 class_path="$main_path/:$main_path/holmes-rulemgt.jar"
 echo @class_path@ $class_path
 
-sed -i "s|url:.*|url: jdbc:mysql://$URL_JDBC/holmes|" "$main_path/conf/rulemgt.yml"
+sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/holmes|" "$main_path/conf/rulemgt.yml"
 sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/rulemgt.yml"
 
 export SERVICE_IP=`hostname -i`
 echo SERVICE_IP=${SERVICE_IP}
 
 
-./bin/initDB.sh root rootpass 3306 "${URL_JDBC%:*}"
+./bin/initDB.sh holmes holmespwd 5432 "${URL_JDBC%:*}"
 
 "$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
 
