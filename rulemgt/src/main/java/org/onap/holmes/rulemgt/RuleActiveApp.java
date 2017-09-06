@@ -58,7 +58,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName("holmes-rule-mgmt");
         msinfo.setVersion("v1");
-        msinfo.setUrl("/onapapi/holmes-rule-mgmt/v1");
+        msinfo.setUrl("/api/holmes-rule-mgmt/v1");
         msinfo.setProtocol("REST");
         msinfo.setVisualRange("0|1");
         Set<Node> nodes = new HashSet<>();

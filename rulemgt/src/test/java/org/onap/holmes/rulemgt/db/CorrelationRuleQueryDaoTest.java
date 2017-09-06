@@ -131,7 +131,7 @@ public class CorrelationRuleQueryDaoTest {
         value.put("rid", "rule_" + System.currentTimeMillis());
         value.put("description", "desc");
         value.put("enable", 0);
-        value.put("templateID", 1);
+        value.put("templateID", 1L);
         value.put("engineId", "engine-001");
         value.put("engineType", "engineType-001");
         value.put("creator", "admin");

@@ -69,7 +69,7 @@ public class CorrelationRuleQueryDao {
         correlationRule.setRid((String) value.get("rid"));
         correlationRule.setDescription((String) value.get("description"));
         correlationRule.setEnabled((Integer) value.get("enable"));
-        correlationRule.setTemplateID((Integer) value.get("templateID"));
+        correlationRule.setTemplateID((Long) value.get("templateID"));
         correlationRule.setEngineID((String) value.get("engineID"));
         correlationRule.setEngineType((String) value.get("engineType"));
         correlationRule.setCreator((String) value.get("creator"));
