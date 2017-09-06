@@ -9,7 +9,7 @@ apidescription: ZTE Holmes rule Management rest API
 
 server:
   type: simple
-  rootPath:  '/onapapi/holmes-rule-mgmt/v1/*'
+  rootPath:  '/api/holmes-rule-mgmt/v1/*'
   applicationContextPath: /
   adminContextPath: /admin
   connector:
@@ -50,7 +50,7 @@ database:
   driverClass: org.postgresql.Driver
   user: holmes
   password: holmespwd
-  url: jdbc:postgresql://169.254.59.196:5432/holmes
+  url: jdbc:postgresql://10.74.156.206:5432/holmes
   properties:
     charSet: UTF-8
   maxWaitForConnection: 1s

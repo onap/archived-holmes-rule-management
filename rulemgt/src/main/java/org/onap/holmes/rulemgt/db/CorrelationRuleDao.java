@@ -31,9 +31,9 @@ public abstract class CorrelationRuleDao {
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID) VALUES (:name,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid)")
-    protected abstract int addRule(@BindBean CorrelationRule correlationRule);
+    protected abstract String addRule(@BindBean CorrelationRule correlationRule);
 
-    @SqlUpdate("UPDATE APLUS_RULE SET DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime WHERE RID=:rid")
+    @SqlUpdate("UPDATE APLUS_RULE SET DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime, PACKAGE=:packageName WHERE RID=:rid")
     protected abstract int updateRuleByRid(@BindBean CorrelationRule correlationRule);
 
     @SqlUpdate("DELETE FROM APLUS_RULE WHERE RID=:rid")

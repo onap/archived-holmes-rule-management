@@ -24,6 +24,6 @@ public class RuleMgtConstant {
     public static final int STATUS_RULE_CLOSE = 0;
     public static final int STATUS_RULE_ALL = 2;
     public static final String PACKAGE = "package";
-    public static final String ENGINE_PATH = "/onapapi/holmes-engine-mgmt/v1/rule";
+    public static final String ENGINE_PATH = "/api/holmes-engine-mgmt/v1/rule";
     public static final int RESPONSE_STATUS_OK = 200;
 }
