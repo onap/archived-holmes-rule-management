@@ -27,7 +27,7 @@
     <artifactId>holmes-rulemgt-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>holmes-rulemgt-parent</name>
+    <name>holmes-rule-management</name>
     <modules>
         <module>rulemgt</module>
         <module>rulemgt-standalone</module>
