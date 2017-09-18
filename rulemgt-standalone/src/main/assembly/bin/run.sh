@@ -37,7 +37,7 @@ sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/ru
 export SERVICE_IP=`hostname -i`
 echo SERVICE_IP=${SERVICE_IP}
 
-if [ ${TESTING} == 1 ]
+if [ ${TESTING} == 1 ]; then
     export HOSTNAME=${SERVICE_IP}:9101
 fi
 
