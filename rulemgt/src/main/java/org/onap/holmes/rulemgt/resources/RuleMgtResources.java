@@ -29,6 +29,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -36,13 +37,10 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
-import org.onap.holmes.common.api.entity.ServiceRegisterEntity;
-import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.ExceptionUtil;
 import org.onap.holmes.common.utils.JacksonUtil;
 import org.onap.holmes.common.utils.LanguageUtil;
-import org.onap.holmes.common.utils.MSBRegisterUtil;
 import org.onap.holmes.common.utils.UserUtil;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.request.RuleDeleteRequest;
@@ -56,7 +54,7 @@ import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
 @Service
 @SwaggerDefinition
 @Path("/rule")
-@Api(tags = {"CorrelationRules"})
+@Api(tags = {"Holmes Rule Management"})
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 public class RuleMgtResources {
@@ -66,10 +64,13 @@ public class RuleMgtResources {
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Save the alarm+ rule to the database, and deployed to the engine when the enable to open.", response = RuleAddAndUpdateResponse.class)
+    @ApiOperation(value = "Save a rule into the database; deploy it to the Drools engine if it is enabled.",
+            response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse addCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "alarm+ rule create request.<br>[rulename]:<font color=\"red\">required</font><br>[content]:<font color=\"red\">required</font><br>[enabled]:<font color=\"red\">required</font>", required = true) RuleCreateRequest ruleCreateRequest) {
+            @ApiParam(value = "The request entity of the HTTP call, which comprises \"rulename\"(required), "
+                    + "\"content\"(required), \"enabled\"(required) and \"description\"(optional)", required = true)
+                    RuleCreateRequest ruleCreateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
@@ -85,10 +86,12 @@ public class RuleMgtResources {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Update the alarm+ rule and deployed to the engine when the enable to open.", response = RuleAddAndUpdateResponse.class)
+    @ApiOperation(value = "Update an existing rule; deploy it to the Drools engine if it is enabled.", response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse updateCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "alarm+ rule update request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleUpdateRequest ruleUpdateRequest) {
+            @ApiParam(value = "The request entity of the HTTP call, which comprises \"ruleid\"(required), "
+                    + "\"content\"(required), \"enabled\"(required) and \"description\"(optional)", required = true)
+                    RuleUpdateRequest ruleUpdateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
@@ -103,30 +106,31 @@ public class RuleMgtResources {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Delete the alarm+ rule,and when the enable is open also removed from the engine.")
+    @ApiOperation(value = "Remove a rule from Holmes.")
     @Timed
+    @Path("/{ruleid}")
     public boolean deleteCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "alarm+ rule delete request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleDeleteRequest ruleDeleteRequest) {
+            @PathParam("ruleid") String ruleId) {
         Locale locale = LanguageUtil.getLocale(request);
         try {
-            ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-            log.info("delete rule:" + ruleDeleteRequest.getRuleId() + " successful");
+            ruleMgtWrapper.deleteCorrelationRule(new RuleDeleteRequest(ruleId));
+            log.info("delete rule:" + ruleId + " successful");
             return true;
         } catch (CorrelationException e) {
-            log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
+            log.error("delete rule:" + ruleId + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "According to the conditions query the alarm + rules", response = RuleQueryListResponse.class)
+    @ApiOperation(value = "Query rules using certain criteria.", response = RuleQueryListResponse.class)
     @Timed
     public RuleQueryListResponse getCorrelationRules(@Context HttpServletRequest request,
-            @ApiParam(value = "query condition:<br>" + " <b>[ruleid]</b>:Rule ID;<br>"
-                    + "<b>[rulename]</b>:Rule name;<br>" + "<b>[creator]</b>:creator of the rule;<br>"
-                    + "<b>[modifier]</b>:modifier of the rule;<br>"
-                    + "<b>[enabled]</b>: 0 is Enabled,1 is disabled;<br><font color=\"red\">for example:</font><br>{\"ruleid\":\"rule_1484727187317\"}", required = false) @QueryParam("queryrequest") String ruleQueryRequest) {
+            @ApiParam(value = "A JSON string used as a query parameter, which comprises \"ruleid\"(optional), "
+                    + "\"rulename\"(optional), \"creator\"(optional), "
+                    + "\"modifier\"(optional) and \"enabled\"(optional). E.g. {\"ruleid\":\"rule_1484727187317\"}",
+                    required = false) @QueryParam("queryrequest") String ruleQueryRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleQueryListResponse ruleQueryListResponse;
         RuleQueryCondition ruleQueryCondition = getRuleQueryCondition(ruleQueryRequest, request);
