@@ -55,6 +55,10 @@
                                         <exclude>Dockerfile</exclude>
                                     </excludes>
                                 </resource>
+                                <resource>
+                                    <directory>../rulemgt/src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
                             </resources>
                             <overwrite>true</overwrite>
                         </configuration>
@@ -78,6 +82,10 @@
                                         <exclude>**/*.sh</exclude>
                                         <exclude>Dockerfile</exclude>
                                     </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>../rulemgt/src/main/resources</directory>
+                                    <filtering>false</filtering>
                                 </resource>
                             </resources>
                             <overwrite>true</overwrite>

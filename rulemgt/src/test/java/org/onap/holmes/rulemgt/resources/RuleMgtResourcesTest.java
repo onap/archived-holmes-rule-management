@@ -111,23 +111,23 @@ public class RuleMgtResourcesTest {
     public void deleteCorrelationRule_correlation_exception() throws Exception {
         thrown.expect(WebApplicationException.class);
 
-        final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
-        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
+        final String ruleId = "mockedRule";
+        ruleMgtWrapper.deleteCorrelationRule(new RuleDeleteRequest(ruleId));
         EasyMock.expectLastCall().andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
+        ruleMgtResources.deleteCorrelationRule(request, ruleId);
         PowerMock.verifyAll();
     }
 
     @Test
     public void deleteCorrelationRule_normal() throws Exception {
-        final RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
-        ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
+        final String ruleId = "mockedRule";
+        ruleMgtWrapper.deleteCorrelationRule(new RuleDeleteRequest(ruleId));
         EasyMock.expectLastCall();
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
+        ruleMgtResources.deleteCorrelationRule(request, ruleId);
         PowerMock.verifyAll();
     }
 
