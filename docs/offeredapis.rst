@@ -1,4 +1,4 @@
-DCAEGEN2 Components Offered APIs
+Holmes Rule Management Components Offered APIs
 ==================================
 The rule management module provides the following APIs.
 
