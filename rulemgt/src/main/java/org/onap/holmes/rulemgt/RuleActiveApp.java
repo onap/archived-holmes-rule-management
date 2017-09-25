@@ -21,11 +21,15 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 import io.dropwizard.setup.Environment;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.MSBRegisterUtil;
+import org.onap.holmes.rulemgt.dcae.DaceConfigurationPolling;
 import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
@@ -45,6 +49,10 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     @Override
     public void run(RuleAppConfig configuration, Environment environment) throws Exception {
         super.run(configuration, environment);
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(new DaceConfigurationPolling("holmes-rule-mgmt"), 0,
+                1000, TimeUnit.MILLISECONDS);
 
         environment.jersey().register(new RuleMgtResources());
         try {
