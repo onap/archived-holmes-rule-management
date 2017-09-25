@@ -84,6 +84,11 @@
                 <version>3.0</version>
             </dependency>
             <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>1.7.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.onap.holmes.common</groupId>
                 <artifactId>holmes-actions</artifactId>
                 <version>${project.version}</version>

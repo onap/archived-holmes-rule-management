@@ -29,6 +29,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -105,15 +106,18 @@ public class RuleMgtResources {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Delete the alarm+ rule,and when the enable is open also removed from the engine.")
     @Timed
+    @Path("/{ruleId}")
     public boolean deleteCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "alarm+ rule delete request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) RuleDeleteRequest ruleDeleteRequest) {
+            @ApiParam(value = "alarm+ rule delete request.<br>[ruleid]:<font color=\"red\">required</font>", required = true) @PathParam("ruleId") String ruleId) {
         Locale locale = LanguageUtil.getLocale(request);
+        RuleDeleteRequest ruleDeleteRequest = new RuleDeleteRequest();
+        ruleDeleteRequest.setRuleId(ruleId);
         try {
             ruleMgtWrapper.deleteCorrelationRule(ruleDeleteRequest);
-            log.info("delete rule:" + ruleDeleteRequest.getRuleId() + " successful");
+            log.info("delete rule:" + ruleId + " successful");
             return true;
         } catch (CorrelationException e) {
-            log.error("delete rule:" + ruleDeleteRequest.getRuleId() + " failed", e);
+            log.error("delete rule:" + ruleId + " failed", e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }

@@ -116,7 +116,7 @@ public class RuleMgtResourcesTest {
         EasyMock.expectLastCall().andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
+        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest.getRuleId());
         PowerMock.verifyAll();
     }
 
@@ -127,7 +127,7 @@ public class RuleMgtResourcesTest {
         EasyMock.expectLastCall();
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         PowerMock.replayAll();
-        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest);
+        ruleMgtResources.deleteCorrelationRule(request, ruleDeleteRequest.getRuleId());
         PowerMock.verifyAll();
     }
 
