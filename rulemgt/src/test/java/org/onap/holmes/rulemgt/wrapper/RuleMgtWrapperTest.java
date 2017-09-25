@@ -174,9 +174,9 @@ public class RuleMgtWrapperTest {
         PowerMock.replayAll();
 
         RuleAddAndUpdateResponse response = ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest);
-        assertThat(response.getRuleId(), equalTo(correlationRuleRet.getRid()));
-
         PowerMock.verifyAll();
+
+        assertThat(response.getRuleId(), equalTo(correlationRuleRet.getRid()));
     }
 
     @Test
