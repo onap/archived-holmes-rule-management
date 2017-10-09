@@ -24,6 +24,8 @@ import lombok.Setter;
 public class RuleCreateRequest {
     @JsonProperty(value = "rulename")
     private String ruleName;
+    @JsonProperty(value = "loopcontrolname")
+    private String loopControlName;
     @JsonProperty
     private String description;
     @JsonProperty

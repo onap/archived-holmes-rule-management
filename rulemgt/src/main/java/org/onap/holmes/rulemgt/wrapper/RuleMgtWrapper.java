@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.jvnet.hk2.annotations.Service;
+import org.onap.holmes.common.dmaap.DmaapService;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
@@ -72,7 +73,9 @@ public class RuleMgtWrapper {
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
-        correlationRule.setPackageName(deployRule2Engine(correlationRule));
+        String packageName = deployRule2Engine(correlationRule);
+        DmaapService.loopControlNames.put(packageName, ruleCreateRequest.getLoopControlName());
+        correlationRule.setPackageName(packageName);
         CorrelationRule result = correlationRuleDao.saveRule(correlationRule);
         RuleAddAndUpdateResponse ruleAddAndUpdateResponse = new RuleAddAndUpdateResponse();
         ruleAddAndUpdateResponse.setRuleId(result.getRid());

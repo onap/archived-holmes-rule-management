@@ -159,6 +159,7 @@ public class RuleMgtWrapperTest {
 
         RuleCreateRequest ruleCreateRequest = createRuleCreateRequest(ruleName, "This is a rule for testing.",
                 "Mocked contents.", 1);
+        ruleCreateRequest.setLoopControlName("loopName");
 
         CorrelationRule correlationRuleRet = new CorrelationRule();
         correlationRuleRet.setRid("rule_" + System.currentTimeMillis());
