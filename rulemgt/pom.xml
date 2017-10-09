@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.onap.holmes.rule-management</groupId>
         <artifactId>holmes-rulemgt-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>holmes-rulemgt</artifactId>
@@ -40,7 +40,6 @@
         <dependency>
             <groupId>org.onap.holmes.common</groupId>
             <artifactId>holmes-actions</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.jersey.containers</groupId>
