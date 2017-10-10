@@ -2,7 +2,7 @@
 .. http://creativecommons.org/licenses/by/4.0
 
 Logging & Diagnostic Information
-
+---------------------------------
 
 Description of how to interact with and diagnose problems with the components as delivered.
 

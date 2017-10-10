@@ -1,5 +1,6 @@
-Holmes Rule Management Component Offered APIs
-==================================
+Offered APIs
+------------
+
 The rule management module provides the following APIs.
 
 * Rule Creation

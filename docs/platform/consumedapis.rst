@@ -4,4 +4,4 @@
 Consumed APIs
 -------------
 
-References to APIs offered by other components
+In the Amsterdam release, Holmes does not consume any APIs provided by other ONAP components.
