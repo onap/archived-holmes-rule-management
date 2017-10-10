@@ -8,4 +8,4 @@ The rule management module provides the following APIs.
 * Rule Query
 * Rule Deletion
 
-.. swaggerv2doc:: ../rulemgt/src/main/resources/swagger.json
+.. swaggerv2doc:: ../../rulemgt/src/main/resources/swagger.json
