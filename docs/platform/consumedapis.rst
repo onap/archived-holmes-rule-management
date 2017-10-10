@@ -17,15 +17,19 @@ A&AI
 In order to get the correlation between different alarms with the help of the topological information provided by A&AI. Holmes needs to call the A&AI APIs. Generally, we have to query the information of VNFs, VMs and the corresponding relation between resources from different layers. The following APIs are invoked by Holmes.
 
 #. Query a VNF by name:
+
    ``/aai/v11/network/generic-vnfs/generic-vnf?vnf-name={vnf-name}``
 
 #. Query a VNF by ID:
+
    ``/aai/v11/network/generic-vnfs/generic-vnf?vnf-id={vnf-id}``
 
 #. Query a VM by name:
+
    ``/aai/v11/search/nodes-query?search-node-type=vserver&filter=vserver-name:EQUALS:{vserver-name}``
 
 #. Query a VM by ID:
+
    ``/aai/v11/search/nodes-query?search-node-type=vserver&filter=vserver-id:EQUALS:{vserver-id}`` 
 
 More details could be found at `A&AI APIs <https://wiki.onap.org/pages/viewpage.action?pageId=13598793>`_.
@@ -36,9 +40,11 @@ DMaaP
 Holmes fetches VES data from DMaaP and publishes the control loop event back to DMaaP. The related APIs are:
 
 #. Subscribing:
-   ``events/{topic}/{consumergroup}/{consumerid}``
+
+   ``/events/{topic}/{consumergroup}/{consumerid}``
 
 #. Publishing:
+
    ``/events/{topic}``
 
 More details could be found at `DMaaP APIs <https://wiki.onap.org/display/DW/DMaaP+API>`_.
