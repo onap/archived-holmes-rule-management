@@ -21,10 +21,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ws.rs.ProcessingException;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,26 +33,24 @@ import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.dcae.utils.DcaeConfigurationParser;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
-import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
-import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-@PrepareForTest({DaceConfigurationPolling.class, MicroServiceConfig.class, ObjectMapper.class})
+@PrepareForTest({DcaeConfigurationPolling.class, MicroServiceConfig.class, ObjectMapper.class})
 @RunWith(PowerMockRunner.class)
-public class DaceConfigurationPollingTest {
+public class DcaeConfigurationPollingTest {
 
     @org.junit.Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private DaceConfigurationPolling daceConfigurationPolling;
+    private DcaeConfigurationPolling daceConfigurationPolling;
 
     @Before
     public void setUp() {
-        daceConfigurationPolling = new DaceConfigurationPolling("holmes-rule-mgmt");
+        daceConfigurationPolling = new DcaeConfigurationPolling("holmes-rule-mgmt");
     }
 
     @Test
@@ -100,7 +95,7 @@ public class DaceConfigurationPollingTest {
         PowerMock.resetAll();
         thrown.expect(ProcessingException.class);
         DcaeConfigurations dcaeConfigurations = new DcaeConfigurations();
-        Rule rule = new Rule("test", "test", 1);
+        Rule rule = new Rule("test", "test", "tset",1);
         dcaeConfigurations.getDefaultRules().add(rule);
 
         PowerMock.replayAll();
@@ -112,27 +107,16 @@ public class DaceConfigurationPollingTest {
     @Test
     public void testDaceConfigurationPolling_getRuleCreateRequest() throws Exception {
         PowerMock.resetAll();
-        Rule rule = new Rule("test", "test1", 1);
+        Rule rule = new Rule("test", "test1", "stest",1);
         PowerMock.replayAll();
         RuleCreateRequest actual = Whitebox
                 .invokeMethod(daceConfigurationPolling, "getRuleCreateRequest", rule);
         PowerMock.verifyAll();
 
         assertThat(actual.getRuleName(), equalTo("test"));
-        assertThat(actual.getContent(), equalTo("test1"));
+        assertThat(actual.getLoopControlName(), equalTo("test1"));
+        assertThat(actual.getContent(), equalTo("stest"));
         assertThat(actual.getDescription(), equalTo(""));
         assertThat(actual.getEnabled(), equalTo(1));
     }
-
-    @Test
-    public void testDaceConfigurationPolling_run_null_exception() throws Exception {
-        PowerMock.replayAll();
-        PowerMockito.mockStatic(MicroServiceConfig.class);
-        when(MicroServiceConfig.getServiceAddrInfoFromCBS("holmes-rule-mgmt"))
-                .thenReturn("host");
-        PowerMock.replayAll();
-        Whitebox.invokeMethod(daceConfigurationPolling, "run");
-        PowerMock.verifyAll();
-    }
-    
 }

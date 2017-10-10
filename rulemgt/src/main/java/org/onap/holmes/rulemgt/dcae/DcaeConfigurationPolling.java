@@ -33,15 +33,15 @@ import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 
 @Slf4j
-public class DaceConfigurationPolling implements Runnable {
+public class DcaeConfigurationPolling implements Runnable {
 
-    public static long POLLING_PERIOD = 10 * 1000;
+    public static long POLLING_PERIOD = 10 * 1000L;
 
     private String hostname;
 
     private String url = "http://127.0.0.1/api/holmes-rule-mgmt/v1/rule";
 
-    public DaceConfigurationPolling(String hostname) {
+    public DcaeConfigurationPolling(String hostname) {
         this.hostname = hostname;
     }
 
@@ -67,9 +67,17 @@ public class DaceConfigurationPolling implements Runnable {
 
     private DcaeConfigurations getDcaeConfigurations() throws CorrelationException {
         String serviceAddrInfo = MicroServiceConfig.getServiceAddrInfoFromCBS(hostname);
+        String response = getDcaeResponse(serviceAddrInfo);
         DcaeConfigurations dcaeConfigurations = null;
-        dcaeConfigurations = DcaeConfigurationParser.parse(serviceAddrInfo);
+        dcaeConfigurations = DcaeConfigurationParser.parse(response);
         return dcaeConfigurations;
+    }
+
+    private String getDcaeResponse(String serviceAddrInfo) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        WebTarget webTarget = client.target(serviceAddrInfo);
+        return webTarget.request("application/json").get()
+                .readEntity(String.class);
     }
 
     private RuleQueryListResponse getAllCorrelationRules() {
@@ -106,6 +114,7 @@ public class DaceConfigurationPolling implements Runnable {
 
     private RuleCreateRequest getRuleCreateRequest(Rule rule) {
         RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
+        ruleCreateRequest.setLoopControlName(rule.getLoopControlName());
         ruleCreateRequest.setRuleName(rule.getName());
         ruleCreateRequest.setContent(rule.getContents());
         ruleCreateRequest.setDescription("");
