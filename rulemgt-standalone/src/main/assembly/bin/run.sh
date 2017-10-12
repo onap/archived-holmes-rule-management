@@ -40,7 +40,7 @@ export SERVICE_IP=`hostname -i`
 echo SERVICE_IP=${SERVICE_IP}
 
 if [ ! -z ${TESTING} ] && [ ${TESTING} == 1 ]; then
-    if [ ! -z ${HOST_IP}]; then
+    if [ ! -z ${HOST_IP} ]; then
         export HOSTNAME=${HOST_IP}:9101
     else
         export HOSTNAME=${SERVICE_IP}:9101
