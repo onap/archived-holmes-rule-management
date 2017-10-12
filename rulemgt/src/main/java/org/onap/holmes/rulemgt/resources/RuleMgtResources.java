@@ -69,7 +69,8 @@ public class RuleMgtResources {
     @Timed
     public RuleAddAndUpdateResponse addCorrelationRule(@Context HttpServletRequest request,
             @ApiParam(value = "The request entity of the HTTP call, which comprises \"rulename\"(required), "
-                    + "\"content\"(required), \"enabled\"(required) and \"description\"(optional)", required = true)
+                    + "\"loopcontrolname\"(required), \"content\"(required), \"enabled\"(required) "
+                    + "and \"description\"(optional)", required = true)
                     RuleCreateRequest ruleCreateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;

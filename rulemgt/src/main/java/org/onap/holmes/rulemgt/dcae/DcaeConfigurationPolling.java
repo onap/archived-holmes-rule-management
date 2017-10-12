@@ -51,7 +51,7 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = getDcaeConfigurations();
         } catch (CorrelationException e) {
-            log.error("Failed to polling dcae configurations" + e.getMessage());
+            log.error("Failed to fetch DCAE configurations" + e.getMessage());
         }
         if (dcaeConfigurations != null) {
             RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
