@@ -22,10 +22,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CorrelationDeployRule4Engine {
+
     @JsonProperty(value = "content")
     private String content;
 
     @JsonProperty(value = "engineid")
     private String engineId;
 
+    @JsonProperty(value = "loopcontrolname")
+    private String loopControlName;
 }

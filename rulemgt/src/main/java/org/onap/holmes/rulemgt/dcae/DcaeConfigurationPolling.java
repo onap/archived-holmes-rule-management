@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
 import org.onap.holmes.common.config.MicroServiceConfig;
+import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.dcae.utils.DcaeConfigurationParser;
@@ -49,7 +50,7 @@ public class DcaeConfigurationPolling implements Runnable {
     public void run() {
         DcaeConfigurations dcaeConfigurations = null;
         try {
-            dcaeConfigurations = getDcaeConfigurations();
+            dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
         } catch (CorrelationException e) {
             log.error("Failed to fetch DCAE configurations" + e.getMessage());
         }
@@ -63,21 +64,6 @@ public class DcaeConfigurationPolling implements Runnable {
                 log.error("Failed to add rules" + e.getMessage());
             }
         }
-    }
-
-    private DcaeConfigurations getDcaeConfigurations() throws CorrelationException {
-        String serviceAddrInfo = MicroServiceConfig.getServiceAddrInfoFromCBS(hostname);
-        String response = getDcaeResponse(serviceAddrInfo);
-        DcaeConfigurations dcaeConfigurations = null;
-        dcaeConfigurations = DcaeConfigurationParser.parse(response);
-        return dcaeConfigurations;
-    }
-
-    private String getDcaeResponse(String serviceAddrInfo) {
-        Client client = ClientBuilder.newClient(new ClientConfig());
-        WebTarget webTarget = client.target(serviceAddrInfo);
-        return webTarget.request("application/json").get()
-                .readEntity(String.class);
     }
 
     private RuleQueryListResponse getAllCorrelationRules() {

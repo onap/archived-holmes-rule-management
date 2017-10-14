@@ -73,9 +73,7 @@ public class RuleMgtWrapper {
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
-        
-        String packageName = deployRule2Engine(correlationRule);
-        DmaapService.loopControlNames.put(packageName, ruleCreateRequest.getLoopControlName());
+        String packageName = deployRule2Engine(correlationRule, ruleCreateRequest.getLoopControlName());
         correlationRule.setPackageName(packageName);
         CorrelationRule result = null;
         try {
@@ -206,6 +204,15 @@ public class RuleMgtWrapper {
         return "";
     }
 
+    private String deployRule2Engine(CorrelationRule correlationRule, String loopControlName)
+            throws CorrelationException {
+        if (engineWarpper.checkRuleFromEngine(correlationRules2CheckRule(correlationRule)) && (
+                correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN)) {
+            return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule, loopControlName));
+        }
+        return "";
+    }
+
     public RuleQueryListResponse getCorrelationRuleByCondition(
             RuleQueryCondition ruleQueryCondition) throws CorrelationException {
         List<CorrelationRule> correlationRule = correlationRuleQueryDao
@@ -242,6 +249,15 @@ public class RuleMgtWrapper {
         CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent(correlationRule.getContent());
         correlationDeployRule4Engine.setEngineId(correlationRule.getEngineID());
+        return correlationDeployRule4Engine;
+    }
+
+    private CorrelationDeployRule4Engine correlationRules2DeployRule(
+            CorrelationRule correlationRule, String loopControlName) {
+        CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
+        correlationDeployRule4Engine.setContent(correlationRule.getContent());
+        correlationDeployRule4Engine.setEngineId(correlationRule.getEngineID());
+        correlationDeployRule4Engine.setLoopControlName(loopControlName);
         return correlationDeployRule4Engine;
     }
 
