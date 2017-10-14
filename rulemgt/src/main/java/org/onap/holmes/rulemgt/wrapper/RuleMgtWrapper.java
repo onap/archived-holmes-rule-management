@@ -73,10 +73,17 @@ public class RuleMgtWrapper {
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
+        
         String packageName = deployRule2Engine(correlationRule);
         DmaapService.loopControlNames.put(packageName, ruleCreateRequest.getLoopControlName());
         correlationRule.setPackageName(packageName);
-        CorrelationRule result = correlationRuleDao.saveRule(correlationRule);
+        CorrelationRule result = null;
+        try {
+            result = correlationRuleDao.saveRule(correlationRule);
+        } catch (CorrelationException e) {
+            engineWarpper.deleteRuleFromEngine(packageName);
+            throw new CorrelationException(e.getMessage());
+        }
         RuleAddAndUpdateResponse ruleAddAndUpdateResponse = new RuleAddAndUpdateResponse();
         ruleAddAndUpdateResponse.setRuleId(result.getRid());
         return ruleAddAndUpdateResponse;
