@@ -45,6 +45,7 @@ public class CorrelationRuleMapperTest {
         expect(resultSet.getString("content")).andReturn("");
         expect(resultSet.getString("vendor")).andReturn("");
         expect(resultSet.getString("package")).andReturn("");
+        expect(resultSet.getString("ctrlloop")).andReturn("");
         PowerMock.replay(resultSet);
         mapper.map(0, resultSet, null);
         PowerMock.verify(resultSet);

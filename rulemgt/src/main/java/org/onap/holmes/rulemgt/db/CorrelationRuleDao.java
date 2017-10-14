@@ -30,10 +30,10 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 public abstract class CorrelationRuleDao {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID) VALUES (:name,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid)")
+    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,CTRLLOOP,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID) VALUES (:name,:closedControlLoopName,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid)")
     protected abstract String addRule(@BindBean CorrelationRule correlationRule);
 
-    @SqlUpdate("UPDATE APLUS_RULE SET DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime, PACKAGE=:packageName WHERE RID=:rid")
+    @SqlUpdate("UPDATE APLUS_RULE SET CTRLLOOP=:closedControlLoopName,DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime, PACKAGE=:packageName WHERE RID=:rid")
     protected abstract int updateRuleByRid(@BindBean CorrelationRule correlationRule);
 
     @SqlUpdate("DELETE FROM APLUS_RULE WHERE RID=:rid")

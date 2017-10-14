@@ -73,7 +73,7 @@ public class RuleMgtWrapper {
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
-        String packageName = deployRule2Engine(correlationRule, ruleCreateRequest.getLoopControlName());
+        String packageName = deployRule2Engine(correlationRule);
         correlationRule.setPackageName(packageName);
         CorrelationRule result = null;
         try {
@@ -135,7 +135,10 @@ public class RuleMgtWrapper {
         int oldEnabled = oldCorrelationRule.getEnabled();
         String newDes = newCorrelationRule.getDescription();
         String oldDes = oldCorrelationRule.getDescription();
-        if (newContent.equals(oldContent) && newEnabled == oldEnabled && newDes.equals(oldDes)) {
+        String oldControlLoop = oldCorrelationRule.getClosedControlLoopName();
+        String newControlLoop = newCorrelationRule.getClosedControlLoopName();
+        if (newContent.equals(oldContent) && newEnabled == oldEnabled
+                && newDes.equals(oldDes) && newControlLoop.equals(oldControlLoop)) {
             return false;
         }
         return true;
@@ -178,6 +181,7 @@ public class RuleMgtWrapper {
         correlationRule.setCreator(userName);
         correlationRule.setModifier(userName);
         correlationRule.setEnabled(ruleCreateRequest.getEnabled());
+        correlationRule.setClosedControlLoopName(ruleCreateRequest.getLoopControlName());
         return correlationRule;
     }
 
@@ -192,6 +196,7 @@ public class RuleMgtWrapper {
         correlationRule.setUpdateTime(new Date());
         correlationRule.setModifier(modifier);
         correlationRule.setName(ruleName);
+        correlationRule.setClosedControlLoopName(ruleUpdateRequest.getLoopControlName());
         return correlationRule;
     }
 
@@ -200,15 +205,6 @@ public class RuleMgtWrapper {
         if (engineWarpper.checkRuleFromEngine(correlationRules2CheckRule(correlationRule)) && (
                 correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN)) {
             return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule));
-        }
-        return "";
-    }
-
-    private String deployRule2Engine(CorrelationRule correlationRule, String loopControlName)
-            throws CorrelationException {
-        if (engineWarpper.checkRuleFromEngine(correlationRules2CheckRule(correlationRule)) && (
-                correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN)) {
-            return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule, loopControlName));
         }
         return "";
     }
@@ -249,15 +245,7 @@ public class RuleMgtWrapper {
         CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent(correlationRule.getContent());
         correlationDeployRule4Engine.setEngineId(correlationRule.getEngineID());
-        return correlationDeployRule4Engine;
-    }
-
-    private CorrelationDeployRule4Engine correlationRules2DeployRule(
-            CorrelationRule correlationRule, String loopControlName) {
-        CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
-        correlationDeployRule4Engine.setContent(correlationRule.getContent());
-        correlationDeployRule4Engine.setEngineId(correlationRule.getEngineID());
-        correlationDeployRule4Engine.setLoopControlName(loopControlName);
+        correlationDeployRule4Engine.setLoopControlName(correlationRule.getClosedControlLoopName());
         return correlationDeployRule4Engine;
     }
 

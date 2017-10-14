@@ -197,7 +197,8 @@ public class RuleMgtWrapperTest {
         oldCorrelationRule.setContent("content");
         oldCorrelationRule.setPackageName("testName");
         oldCorrelationRule.setEnabled(1);
-        RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "des2", "contetnt2", 1);
+        oldCorrelationRule.setClosedControlLoopName("cl-name");
+        RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des2", "contetnt2", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
         EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName")).andReturn(true);
@@ -225,7 +226,8 @@ public class RuleMgtWrapperTest {
         oldCorrelationRule.setContent("content");
         oldCorrelationRule.setPackageName("testName");
         oldCorrelationRule.setEnabled(1);
-        RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "des1", "content", 1);
+        oldCorrelationRule.setClosedControlLoopName("cl-name");
+        RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des1", "content", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
 
@@ -373,12 +375,14 @@ public class RuleMgtWrapperTest {
         return rcr;
     }
 
-    private RuleUpdateRequest createRuleUpdateRequest(String ruleId, String description, String content, int enabled) {
+    private RuleUpdateRequest createRuleUpdateRequest(String ruleId, String clName, String description,
+            String content, int enabled) {
         RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
         ruleUpdateRequest.setRuleId(ruleId);
         ruleUpdateRequest.setDescription(description);
         ruleUpdateRequest.setContent(content);
         ruleUpdateRequest.setEnabled(enabled);
+        ruleUpdateRequest.setLoopControlName(clName);
         return ruleUpdateRequest;
     }
 

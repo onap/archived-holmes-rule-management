@@ -30,4 +30,6 @@ public class RuleUpdateRequest {
     private int enabled;
     @JsonProperty(value="ruleid")
     private String ruleId;
+    @JsonProperty(value = "loopcontrolname")
+    private String loopControlName;
 }
