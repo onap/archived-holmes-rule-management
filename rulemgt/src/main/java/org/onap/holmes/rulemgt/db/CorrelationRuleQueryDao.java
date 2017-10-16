@@ -80,6 +80,7 @@ public class CorrelationRuleQueryDao {
         correlationRule.setContent((String) value.get("content"));
         correlationRule.setVendor((String) value.get("vendor"));
         correlationRule.setPackageName((String) value.get("package"));
+        correlationRule.setClosedControlLoopName((String) value.get("ctrlloop"));
         return correlationRule;
     }
 
