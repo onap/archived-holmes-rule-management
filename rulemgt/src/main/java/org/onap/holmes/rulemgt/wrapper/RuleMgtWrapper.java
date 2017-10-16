@@ -235,6 +235,7 @@ public class RuleMgtWrapper {
             ruleResult4API.setUpdateTime(correlationRule.getUpdateTime());
             ruleResult4API.setModifier(correlationRule.getModifier());
             ruleResult4API.setEnabled(correlationRule.getEnabled());
+            ruleResult4API.setClosedControlLoopName(correlationRule.getClosedControlLoopName());
             ruleResult4APIs.add(ruleResult4API);
         }
         return ruleResult4APIs;

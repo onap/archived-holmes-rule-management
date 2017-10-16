@@ -39,4 +39,6 @@ public class RuleResult4API {
     private Date updateTime;
     private String modifier;
     private int enabled;
+    @JsonProperty(value = "loopcontrolname")
+    private String closedControlLoopName;
 }
