@@ -52,7 +52,7 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
         } catch (CorrelationException e) {
-            log.error("Failed to fetch DCAE configurations" + e.getMessage());
+            log.error("Failed to fetch DCAE configurations. " + e.getMessage());
         }
         if (dcaeConfigurations != null) {
             RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
@@ -61,7 +61,7 @@ public class DcaeConfigurationPolling implements Runnable {
             try {
                 addAllCorrelationRules(dcaeConfigurations);
             } catch (CorrelationException e) {
-                log.error("Failed to add rules" + e.getMessage());
+                log.error("Failed to add rules. " + e.getMessage());
             }
         }
     }
