@@ -48,16 +48,16 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     public void run(RuleAppConfig configuration, Environment environment) throws Exception {
         super.run(configuration, environment);
 
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(new DcaeConfigurationPolling("holmes-rule-mgmt"), 0,
-                DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
-
         environment.jersey().register(new RuleMgtResources());
         try {
             new MSBRegisterUtil().register2Msb(createMicroServiceInfo());
         } catch (CorrelationException e) {
             log.warn(e.getMessage(), e);
         }
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(new DcaeConfigurationPolling("holmes-rule-mgmt"), 0,
+                DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     private MicroServiceInfo createMicroServiceInfo() {
