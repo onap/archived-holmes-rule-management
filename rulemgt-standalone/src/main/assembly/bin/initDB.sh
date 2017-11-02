@@ -19,18 +19,20 @@ DIRNAME=`dirname $0`
 HOME=`cd $DIRNAME/; pwd`
 user=$1
 password=$2
-port=$3
-host=$4
+dbname=$3
+port=$4
+host=$5
 echo "start init holmes rulemgt db"
 main_path=$HOME/..
 cat $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+echo "dbname=$dbname"
 echo "user="$user
 echo "password="$password
 echo "port="$port
 echo "host="$host
 export PGPASSWORD=$password
 psql -U $user -p $port -h $host -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
-psql -U $user -p $port -h $host -d holmes --command 'select * from aplus_rule;'
+psql -U $user -p $port -h $host -d $dbname --command 'select * from aplus_rule;'
 sql_result=$?
 unset PGPASSWORD
 cat "sql_result="$sql_result
