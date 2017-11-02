@@ -33,7 +33,24 @@ echo @JAVA_OPTS@ $JAVA_OPTS
 class_path="$main_path/:$main_path/holmes-rulemgt.jar"
 echo @class_path@ $class_path
 
-sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/holmes|" "$main_path/conf/rulemgt.yml"
+if [ -z ${JDBC_USERNAME} ]; then
+    export JDBC_USERNAME=holmes
+    echo "No user name is specified for the database. Use the default value \"$JDBC_USERNAME\"."
+fi
+
+if [ -z ${JDBC_PASSWORD} ]; then
+    export JDBC_PASSWORD=holmespwd
+    echo "No password is specified for the database. Use the default value \"$JDBC_PASSWORD\"."
+fi
+
+if [ -z ${DB_NAME} ]; then
+    export DB_NAME=holmes
+    echo "No database is name is specified. Use the default value \"$DB_NAME\"."
+fi
+
+sed -i "s|user:.*|user: $JDBC_USERNAME|" "$main_path/conf/rulemgt.yml"
+sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/rulemgt.yml"
+sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
 sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/rulemgt.yml"
 
 export SERVICE_IP=`hostname -i`
@@ -47,8 +64,12 @@ if [ ! -z ${TESTING} ] && [ ${TESTING} == 1 ]; then
     fi
 fi
 
+export DB_PORT=5432
+if [ ! -z ${URL_JDBC} ] && [ `expr index $URL_JDBC :` != 0 ]; then
+    export DB_PORT="${URL_JDBC##*:}"
+if
 
-./bin/initDB.sh holmes holmespwd 5432 "${URL_JDBC%:*}"
+./bin/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
 
 "$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
 
