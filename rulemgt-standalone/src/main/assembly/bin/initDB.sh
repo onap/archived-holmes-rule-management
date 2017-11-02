@@ -26,10 +26,10 @@ echo "start init holmes rulemgt db"
 main_path=$HOME/..
 cat $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 echo "dbname=$dbname"
-echo "user="$user
-echo "password="$password
-echo "port="$port
-echo "host="$host
+echo "user=$user"
+echo "password=$password"
+echo "port=$port"
+echo "host=$host"
 export PGPASSWORD=$password
 psql -U $user -p $port -h $host -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 psql -U $user -p $port -h $host -d $dbname --command 'select * from aplus_rule;'
@@ -42,4 +42,3 @@ if [ $sql_result != 0 ] ; then
 fi
 echo "init rulemgt success!"
 exit 0
-
