@@ -61,7 +61,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     }
 
     private MicroServiceInfo createMicroServiceInfo() {
-        String[] serviceAddrInfo = MicroServiceConfig.getServiceAddrInfo();
+        String[] serviceAddrInfo = MicroServiceConfig.getMicroServiceIpAndPort();
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName("holmes-rule-mgmt");
         msinfo.setVersion("v1");

@@ -59,7 +59,7 @@ public class DcaeConfigurationPollingTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage("host");
         PowerMockito.mockStatic(MicroServiceConfig.class);
-        when(MicroServiceConfig.getServiceAddrInfoFromCBS("holmes-rule-mgmt"))
+        when(MicroServiceConfig.getServiceConfigInfoFromCBS("holmes-rule-mgmt"))
                 .thenReturn("host");
         PowerMock.createMock(DcaeConfigurationParser.class);
         PowerMock.expectPrivate(DcaeConfigurationParser.class, "parse", "host")
@@ -75,7 +75,7 @@ public class DcaeConfigurationPollingTest {
         PowerMock.resetAll();
         thrown.expect(CorrelationException.class);
         PowerMockito.mockStatic(MicroServiceConfig.class);
-        when(MicroServiceConfig.getServiceAddrInfoFromCBS("holmes-rule-mgmt"))
+        when(MicroServiceConfig.getServiceConfigInfoFromCBS("holmes-rule-mgmt"))
                 .thenReturn("host");
         PowerMock.createMock(DcaeConfigurationParser.class);
         PowerMock.expectPrivate(DcaeConfigurationParser.class, "parse", "host")

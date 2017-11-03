@@ -38,7 +38,7 @@ public class EngineService {
     protected Response delete(String packageName) throws IOException {
         Client client = createClient();
         WebTarget webTarget = client
-                .target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
+                .target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
         return webTarget.request(MediaType.APPLICATION_JSON).delete();
     }
 
@@ -52,7 +52,7 @@ public class EngineService {
         Client client = createClient();
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationCheckRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH);
+        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH);
         return webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(content, MediaType.APPLICATION_JSON));
     }
 
@@ -60,7 +60,7 @@ public class EngineService {
         Client client = createClient();
         ObjectMapper mapper = new ObjectMapper();
         String content = mapper.writeValueAsString(correlationDeployRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddr() + RuleMgtConstant.ENGINE_PATH);
+        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH);
         return webTarget.request(MediaType.APPLICATION_JSON).put(Entity.entity(content, MediaType.APPLICATION_JSON));
     }
 }
