@@ -13,22 +13,19 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
-/******************drop old database and user***************************/
-\c postgres;
-
-DROP DATABASE IF EXISTS holmes;
-
-DROP ROLE IF EXISTS holmes;
+\c postgres
 
 /******************CREATE NEW DATABASE AND USER***************************/
-CREATE DATABASE holmes;
+CREATE DATABASE DBNAME;
 
-CREATE ROLE holmes with PASSWORD 'holmespwd' LOGIN;
+CREATE ROLE DBUSER with PASSWORD 'DBPWD' LOGIN;
 
 \encoding UTF8;
 
 /******************DELETE OLD TABLE AND CREATE NEW***************************/
-\c holmes;
+\c DBNAME;
+
+DROP TABLE IF EXISTS APLUS_RULE;
 
 CREATE TABLE APLUS_RULE (
   RID VARCHAR(30) NOT NULL,
@@ -58,5 +55,5 @@ CREATE INDEX IDX_APLUS_RULE_TEMPLATEID ON APLUS_RULE (TEMPLATEID);
 CREATE INDEX IDX_APLUS_RULE_ENGINEID ON APLUS_RULE (ENGINEID);
 CREATE INDEX IDX_APLUS_RULE_ENGINETYPE ON APLUS_RULE (ENGINETYPE);
 
-GRANT ALL PRIVILEGES ON APLUS_RULE TO holmes;
+GRANT ALL PRIVILEGES ON APLUS_RULE TO DBUSER;
 

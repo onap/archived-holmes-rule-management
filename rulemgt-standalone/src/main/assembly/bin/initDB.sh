@@ -24,6 +24,11 @@ port=$4
 host=$5
 echo "start init holmes rulemgt db"
 main_path=$HOME/..
+
+sed -i "s|DBNAME|$dbname|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+sed -i "s|DBUSER|$user|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+sed -i "s|DBPWD|$password|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+
 cat $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 echo "dbname=$dbname"
 echo "user=$user"
@@ -31,7 +36,7 @@ echo "password=$password"
 echo "port=$port"
 echo "host=$host"
 export PGPASSWORD=$password
-psql -U $user -p $port -h $host -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+psql -U $user -p $port -h $host -d $dbname -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 psql -U $user -p $port -h $host -d $dbname --command 'select * from aplus_rule;'
 sql_result=$?
 unset PGPASSWORD
