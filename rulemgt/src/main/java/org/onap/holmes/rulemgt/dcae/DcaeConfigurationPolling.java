@@ -40,7 +40,7 @@ public class DcaeConfigurationPolling implements Runnable {
 
     private String hostname;
 
-    private String url = "http://127.0.0.1/api/holmes-rule-mgmt/v1/rule";
+    private String url = "http://127.0.0.1:9101/api/holmes-rule-mgmt/v1/rule";
 
     public DcaeConfigurationPolling(String hostname) {
         this.hostname = hostname;

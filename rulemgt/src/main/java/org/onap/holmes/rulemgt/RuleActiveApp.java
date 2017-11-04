@@ -56,7 +56,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         }
 
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(new DcaeConfigurationPolling("holmes-rule-mgmt"), 0,
+        service.scheduleAtFixedRate(
+                new DcaeConfigurationPolling(MicroServiceConfig.getEnv(MicroServiceConfig.HOSTNAME)), 0,
                 DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
     }
 
