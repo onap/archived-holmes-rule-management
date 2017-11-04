@@ -36,7 +36,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 @Slf4j
 public class DcaeConfigurationPolling implements Runnable {
 
-    public static long POLLING_PERIOD = 10 * 1000L;
+    public static long POLLING_PERIOD = 30 * 1000L;
 
     private String hostname;
 
@@ -52,7 +52,7 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
         } catch (CorrelationException e) {
-            log.error("Failed to fetch DCAE configurations. " + e.getMessage());
+            log.error("Failed to fetch DCAE configurations. " + e.getMessage(), e);
         }
         if (dcaeConfigurations != null) {
             RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
