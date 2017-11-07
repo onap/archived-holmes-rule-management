@@ -21,8 +21,8 @@ Version: 1.0.0
 
 **New Features**
 In the Amsterdam release, Holmes is mainly intended to support the alarm correlation analysis for the VoLTE scenario. To get us there, Holmes provides the following features:
-	- `Rule Management <>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules. 
-	- `Engine Management <>`_ The feature is not exposed to the end user directly. It's mainly used internally by Holmes as a container for the execution of rules. It provides interface for rule verification and deployment/un-deployment.
+	- `Rule Management <https://jira.onap.org/browse/HOLMES-4>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules. 
+	- `Engine Management <https://jira.onap.org/browse/HOLMES-5>`_ The feature is not exposed to the end user directly. It's mainly used internally by Holmes as a container for the execution of rules. It provides interface for rule verification and deployment/un-deployment.
 
 **Bug Fixes**
 
