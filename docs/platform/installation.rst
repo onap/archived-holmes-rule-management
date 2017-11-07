@@ -21,13 +21,13 @@ Steps
 
 #. Start the rule management module of Holmes using the command below:
 
-   ``sudo docker run --name holmes-rule-management -p 9101:9101 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 nexus3.onap.org:10001/onap/holmes/rule-management`` 
+   ``sudo docker run --name holmes-rule-management -p 9101:9101 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP nexus3.onap.org:10001/onap/holmes/rule-management`` 
 
 #. Start the engine manamgement module of Holmes using the command below:
 
-   ``sudo docker run --name holmes-engine-management -p 9102:9102 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 nexus3.onap.org:10001/onap/holmes/engine-management``
+   ``sudo docker run --name holmes-engine-management -p 9102:9102 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP nexus3.onap.org:10001/onap/holmes/engine-management``
 
-When the environment variable ``TESTING`` is set to ``1``, it means Holmes is running in the standalone mode. All the interactions between Holmes and other ONAP components are routed by MSB.
+When the environment variable ``TESTING`` is set to ``1``, it means Holmes is running in the standalone mode. All the interactions between Holmes and other ONAP components are routed by MSB. In order to register Holmes itself to MSB, the users have to specify the IP address of the host using the ``HOST_IP`` variable. Please note that the ``HOST_IP`` should be the IP address of the host, rather than the IP address of the containers (of which the IP address is allocated by the docker daemon).
 
 Check the Status of Holmes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
