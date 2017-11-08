@@ -29,6 +29,7 @@ import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.dcae.utils.DcaeConfigurationParser;
 import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
@@ -46,13 +47,23 @@ public class DcaeConfigurationPolling implements Runnable {
         this.hostname = hostname;
     }
 
+    private String prevConfigMd5 = Md5Util.md5(null);
+
     @Override
     public void run() {
         DcaeConfigurations dcaeConfigurations = null;
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
+            String md5 = Md5Util.md5(dcaeConfigurations);
+            if (prevConfigMd5.equals(md5)){
+                log.info("Operation aborted due to identical Configurations.");
+                return;
+            }
+            prevConfigMd5 = md5;
         } catch (CorrelationException e) {
             log.error("Failed to fetch DCAE configurations. " + e.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            log.info("Failed to generate the MD5 information for new configurations.", e);
         }
         if (dcaeConfigurations != null) {
             RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
@@ -61,7 +72,7 @@ public class DcaeConfigurationPolling implements Runnable {
             try {
                 addAllCorrelationRules(dcaeConfigurations);
             } catch (CorrelationException e) {
-                log.error("Failed to add rules. " + e.getMessage());
+                log.error("Failed to add rules. " + e.getMessage(), e);
             }
         }
     }
