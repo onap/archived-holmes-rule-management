@@ -14,21 +14,20 @@
 package org.onap.holmes.rulemgt.dcae;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientConfig;
-import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
-import org.onap.holmes.common.dcae.utils.DcaeConfigurationParser;
 import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.common.utils.JacksonUtil;
 import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
@@ -49,17 +48,20 @@ public class DcaeConfigurationPolling implements Runnable {
 
     private String prevConfigMd5 = Md5Util.md5(null);
 
+    private boolean prevResult = false;
+
     @Override
     public void run() {
         DcaeConfigurations dcaeConfigurations = null;
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
             String md5 = Md5Util.md5(dcaeConfigurations);
-            if (prevConfigMd5.equals(md5)){
+            if (prevResult && prevConfigMd5.equals(md5)){
                 log.info("Operation aborted due to identical Configurations.");
                 return;
             }
             prevConfigMd5 = md5;
+            prevResult = false;
         } catch (CorrelationException e) {
             log.error("Failed to fetch DCAE configurations. " + e.getMessage(), e);
         } catch (JsonProcessingException e) {
@@ -70,9 +72,10 @@ public class DcaeConfigurationPolling implements Runnable {
             List<RuleResult4API> ruleResult4APIs = ruleQueryListResponse.getCorrelationRules();
             deleteAllCorrelationRules(ruleResult4APIs);
             try {
-                addAllCorrelationRules(dcaeConfigurations);
+                prevResult = addAllCorrelationRules(dcaeConfigurations);
             } catch (CorrelationException e) {
                 log.error("Failed to add rules. " + e.getMessage(), e);
+                prevResult = false;
             }
         }
     }
@@ -84,21 +87,26 @@ public class DcaeConfigurationPolling implements Runnable {
                 .readEntity(RuleQueryListResponse.class);
     }
 
-    private void addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
+    private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
+        boolean suc = false;
         for (Rule rule : dcaeConfigurations.getDefaultRules()) {
             RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(rule);
             Client client = ClientBuilder.newClient(new ClientConfig());
-            ObjectMapper mapper = new ObjectMapper();
             String content = null;
             try {
-                content = mapper.writeValueAsString(ruleCreateRequest);
+                content = JacksonUtil.beanToJson(ruleCreateRequest);
             } catch (JsonProcessingException e) {
                 throw new CorrelationException("Failed to convert the message object to a json string.", e);
             }
             WebTarget webTarget = client.target(url);
-            webTarget.request(MediaType.APPLICATION_JSON)
+            Response response = webTarget.request(MediaType.APPLICATION_JSON)
                     .put(Entity.entity(content, MediaType.APPLICATION_JSON));
+            suc = response.getStatus() == 200;
+            if (!suc) {
+                break;
+            }
         }
+        return suc;
     }
 
     private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs){
