@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Eric Debeau <eric.debeau@orange.com>
+Code-Review+2: Guangrong Fu <fu.guangrong@zte.com.cn>
+Submitted-by: Guangrong Fu <fu.guangrong@zte.com.cn>
+Submitted-at: Thu, 09 Nov 2017 08:48:36 +0000
+Reviewed-on: http://gerrit.onap.org/r/22787
+Project: holmes/rule-management
+Branch: refs/heads/master
