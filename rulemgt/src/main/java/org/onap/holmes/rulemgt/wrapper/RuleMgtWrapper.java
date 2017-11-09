@@ -80,7 +80,7 @@ public class RuleMgtWrapper {
             result = correlationRuleDao.saveRule(correlationRule);
         } catch (CorrelationException e) {
             engineWarpper.deleteRuleFromEngine(packageName);
-            throw new CorrelationException(e.getMessage());
+            throw new CorrelationException(e.getMessage(), e);
         }
         RuleAddAndUpdateResponse ruleAddAndUpdateResponse = new RuleAddAndUpdateResponse();
         ruleAddAndUpdateResponse.setRuleId(result.getRid());
