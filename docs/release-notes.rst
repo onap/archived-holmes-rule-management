@@ -32,7 +32,7 @@ This is the initial release.
 
 **Known Issues**
 
-If the database is not stable. There may be data/status inconsistency between the rule management module and the engine management module.
+If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
 
 **Security Issues**
 
