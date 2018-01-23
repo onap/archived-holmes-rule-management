@@ -25,7 +25,7 @@
 
     <groupId>org.onap.holmes.rule-management</groupId>
     <artifactId>holmes-rulemgt-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>holmes-rule-management</name>
     <modules>
