@@ -15,20 +15,18 @@
  */
 package org.onap.holmes.rulemgt.bean.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
 @Getter
 @Setter
 public class RuleQueryListResponse {
-    @JsonProperty(value = "rules")
+    @SerializedName(value = "rules")
     private List<RuleResult4API> correlationRules = new ArrayList<RuleResult4API>();
-    @JsonProperty(value = "totalcount")
+    @SerializedName(value = "totalcount")
     private int totalCount;
 }

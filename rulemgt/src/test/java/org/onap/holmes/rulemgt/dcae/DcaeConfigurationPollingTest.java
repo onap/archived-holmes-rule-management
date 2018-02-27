@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import com.alibaba.fastjson.JSONException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.ws.rs.ProcessingException;
 import org.junit.Before;
@@ -57,13 +58,13 @@ public class DcaeConfigurationPollingTest {
     public void testDaceConfigurationPolling_getDcaeConfigurations_exception() throws Exception {
         PowerMock.resetAll();
         thrown.expect(CorrelationException.class);
-        thrown.expectMessage("host");
+        thrown.expectMessage("syntax error, pos 1");
         PowerMockito.mockStatic(MicroServiceConfig.class);
         when(MicroServiceConfig.getServiceConfigInfoFromCBS("holmes-rule-mgmt"))
                 .thenReturn("host");
         PowerMock.createMock(DcaeConfigurationParser.class);
         PowerMock.expectPrivate(DcaeConfigurationParser.class, "parse", "host")
-                .andThrow(new CorrelationException("tests")).anyTimes();
+                .andThrow(new CorrelationException("")).anyTimes();
 
         PowerMock.replayAll();
         Whitebox.invokeMethod(daceConfigurationPolling, "getDcaeConfigurations");

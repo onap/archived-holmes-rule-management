@@ -13,7 +13,6 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -27,7 +26,7 @@ import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.JacksonUtil;
+import org.onap.holmes.common.utils.GsonUtil;
 import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
@@ -56,7 +55,7 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
             String md5 = Md5Util.md5(dcaeConfigurations);
-            if (prevResult && prevConfigMd5.equals(md5)){
+            if (prevResult && prevConfigMd5.equals(md5)) {
                 log.info("Operation aborted due to identical Configurations.");
                 return;
             }
@@ -64,8 +63,6 @@ public class DcaeConfigurationPolling implements Runnable {
             prevResult = false;
         } catch (CorrelationException e) {
             log.error("Failed to fetch DCAE configurations. " + e.getMessage(), e);
-        } catch (JsonProcessingException e) {
-            log.info("Failed to generate the MD5 information for new configurations.", e);
         }
         if (dcaeConfigurations != null) {
             RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
@@ -87,17 +84,13 @@ public class DcaeConfigurationPolling implements Runnable {
                 .readEntity(RuleQueryListResponse.class);
     }
 
-    private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
+    private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations)
+            throws CorrelationException {
         boolean suc = false;
         for (Rule rule : dcaeConfigurations.getDefaultRules()) {
             RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(rule);
             Client client = ClientBuilder.newClient(new ClientConfig());
-            String content = null;
-            try {
-                content = JacksonUtil.beanToJson(ruleCreateRequest);
-            } catch (JsonProcessingException e) {
-                throw new CorrelationException("Failed to convert the message object to a json string.", e);
-            }
+            String content = GsonUtil.beanToJson(ruleCreateRequest);
             WebTarget webTarget = client.target(url);
             Response response = webTarget.request(MediaType.APPLICATION_JSON)
                     .put(Entity.entity(content, MediaType.APPLICATION_JSON));
@@ -109,8 +102,8 @@ public class DcaeConfigurationPolling implements Runnable {
         return suc;
     }
 
-    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs){
-        ruleResult4APIs.forEach(correlationRule ->{
+    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs) {
+        ruleResult4APIs.forEach(correlationRule -> {
             Client client = ClientBuilder.newClient(new ClientConfig());
             WebTarget webTarget = client.target(url + "/" + correlationRule.getRuleId());
             webTarget.request(MediaType.APPLICATION_JSON).delete();
