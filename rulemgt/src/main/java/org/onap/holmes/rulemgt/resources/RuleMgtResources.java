@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.SwaggerDefinition;
-import java.io.IOException;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +38,7 @@ import net.sf.json.JSONObject;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.ExceptionUtil;
-import org.onap.holmes.common.utils.JacksonUtil;
+import org.onap.holmes.common.utils.GsonUtil;
 import org.onap.holmes.common.utils.LanguageUtil;
 import org.onap.holmes.common.utils.UserUtil;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
@@ -68,9 +67,10 @@ public class RuleMgtResources {
             response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse addCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "The request entity of the HTTP call, which comprises \"rulename\"(required), "
-                    + "\"loopcontrolname\"(required), \"content\"(required), \"enabled\"(required) "
-                    + "and \"description\"(optional)", required = true)
+            @ApiParam(value =
+                    "The request entity of the HTTP call, which comprises \"rulename\"(required), "
+                            + "\"loopcontrolname\"(required), \"content\"(required), \"enabled\"(required) "
+                            + "and \"description\"(optional)", required = true)
                     RuleCreateRequest ruleCreateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
@@ -90,13 +90,15 @@ public class RuleMgtResources {
     @ApiOperation(value = "Update an existing rule; deploy it to the Drools engine if it is enabled.", response = RuleAddAndUpdateResponse.class)
     @Timed
     public RuleAddAndUpdateResponse updateCorrelationRule(@Context HttpServletRequest request,
-            @ApiParam(value = "The request entity of the HTTP call, which comprises \"ruleid\"(required), "
-                    + "\"content\"(required), \"enabled\"(required) and \"description\"(optional)", required = true)
+            @ApiParam(value =
+                    "The request entity of the HTTP call, which comprises \"ruleid\"(required), "
+                            + "\"content\"(required), \"enabled\"(required) and \"description\"(optional)", required = true)
                     RuleUpdateRequest ruleUpdateRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
-            ruleChangeResponse = ruleMgtWrapper.updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
+            ruleChangeResponse = ruleMgtWrapper
+                    .updateCorrelationRule(UserUtil.getUserName(request), ruleUpdateRequest);
             log.info("update rule:" + ruleUpdateRequest.getRuleId() + " successful");
             return ruleChangeResponse;
         } catch (CorrelationException e) {
@@ -128,9 +130,10 @@ public class RuleMgtResources {
     @ApiOperation(value = "Query rules using certain criteria.", response = RuleQueryListResponse.class)
     @Timed
     public RuleQueryListResponse getCorrelationRules(@Context HttpServletRequest request,
-            @ApiParam(value = "A JSON string used as a query parameter, which comprises \"ruleid\"(optional), "
-                    + "\"rulename\"(optional), \"creator\"(optional), "
-                    + "\"modifier\"(optional) and \"enabled\"(optional). E.g. {\"ruleid\":\"rule_1484727187317\"}",
+            @ApiParam(value =
+                    "A JSON string used as a query parameter, which comprises \"ruleid\"(optional), "
+                            + "\"rulename\"(optional), \"creator\"(optional), "
+                            + "\"modifier\"(optional) and \"enabled\"(optional). E.g. {\"ruleid\":\"rule_1484727187317\"}",
                     required = false) @QueryParam("queryrequest") String ruleQueryRequest) {
         Locale locale = LanguageUtil.getLocale(request);
         RuleQueryListResponse ruleQueryListResponse;
@@ -138,7 +141,8 @@ public class RuleMgtResources {
         try {
             ruleQueryListResponse = ruleMgtWrapper
                     .getCorrelationRuleByCondition(ruleQueryCondition);
-            log.info("query rule successful by condition:" + JSONObject.fromObject(ruleQueryCondition));
+            log.info("query rule successful by condition:" + JSONObject
+                    .fromObject(ruleQueryCondition));
             return ruleQueryListResponse;
         } catch (CorrelationException e) {
             log.error("query rule failed,cause query condition conversion failure", e);
@@ -149,18 +153,13 @@ public class RuleMgtResources {
     private RuleQueryCondition getRuleQueryCondition(String queryRequest,
             HttpServletRequest request) {
         Locale locale = LanguageUtil.getLocale(request);
-        try {
-            RuleQueryCondition ruleQueryCondition = JacksonUtil
-                    .jsonToBean(queryRequest, RuleQueryCondition.class);
-            if (queryRequest == null) {
-                ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
-            } else if (queryRequest.indexOf("enabled") == -1) {
-                ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
-            }
-            return ruleQueryCondition;
-        } catch (IOException e) {
-            log.warn("queryRequest convert to json failed", e);
-            throw ExceptionUtil.buildExceptionResponse("The request format is invalid!");
+
+        RuleQueryCondition ruleQueryCondition = GsonUtil.jsonToBean(queryRequest, RuleQueryCondition.class);
+        if (queryRequest == null) {
+            ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
+        } else if (queryRequest.indexOf("enabled") == -1) {
+            ruleQueryCondition.setEnabled(RuleMgtConstant.STATUS_RULE_ALL);
         }
+        return ruleQueryCondition;
     }
 }
