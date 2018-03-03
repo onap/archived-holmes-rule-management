@@ -167,13 +167,13 @@
     "RuleQueryListResponse" : {
       "type" : "object",
       "properties" : {
-        "rules" : {
+        "correlationRules" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/RuleResult4API"
           }
         },
-        "totalcount" : {
+        "totalCount" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -211,6 +211,9 @@
         "updatetime" : {
           "type" : "string",
           "format" : "date-time"
+        },
+        "loopcontrolname" : {
+          "type" : "string"
         }
       }
     },
@@ -228,6 +231,9 @@
           "format" : "int32"
         },
         "ruleid" : {
+          "type" : "string"
+        },
+        "loopcontrolname" : {
           "type" : "string"
         }
       }
