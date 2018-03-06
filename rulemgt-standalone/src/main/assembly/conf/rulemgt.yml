@@ -9,12 +9,16 @@ apidescription: ZTE Holmes rule Management rest API
 
 server:
   type: simple
-  rootPath:  '/api/holmes-rule-mgmt/v1/*'
+  rootPath: '/api/holmes-rule-mgmt/v1/*'
   applicationContextPath: /
   adminContextPath: /admin
   connector:
-    type: http
+    type: https
     port: 9101
+    keyStorePath: /home/holmes/conf/holmes.keystore
+    keyStorePassword: holmes
+    validateCerts: false
+    validatePeers: false
 
 # Logging settings.
 logging:

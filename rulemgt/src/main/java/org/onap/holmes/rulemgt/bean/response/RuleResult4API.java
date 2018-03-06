@@ -15,30 +15,23 @@
  */
 package org.onap.holmes.rulemgt.bean.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
 @Setter
 @Getter
 public class RuleResult4API {
-    @JsonProperty(value = "ruleid")
     private String ruleId;
-    @JsonProperty(value = "rulename")
     private String ruleName;
     private String description;
     private String content;
-    @JsonProperty(value = "createtime")
     private Date createTime;
     private String creator;
-    @JsonProperty(value = "updatetime")
     private Date updateTime;
     private String modifier;
     private int enabled;
-    @JsonProperty(value = "loopcontrolname")
     private String closedControlLoopName;
 }
