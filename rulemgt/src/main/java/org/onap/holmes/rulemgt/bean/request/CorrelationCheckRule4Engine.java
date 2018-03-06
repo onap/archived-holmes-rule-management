@@ -22,6 +22,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CorrelationCheckRule4Engine {
-
     private String content;
 }

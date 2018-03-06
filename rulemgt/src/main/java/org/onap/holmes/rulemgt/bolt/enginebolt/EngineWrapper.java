@@ -16,10 +16,11 @@
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.http.HttpResponse;
 import org.jvnet.hk2.annotations.Service;
+import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
@@ -33,16 +34,16 @@ public class EngineWrapper {
     private EngineService engineService;
 
     public String deployEngine(CorrelationDeployRule4Engine correlationRule) throws CorrelationException {
-        Response response;
+        HttpResponse response;
         try {
             response = engineService.deploy(correlationRule);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule deployment RESTful API.", e);
         }
-        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Succeeded in calling the rule deployment RESTful API from the engine management service.");
             try {
-                JSONObject json = JSONObject.fromObject(response.readEntity(String.class));
+                JSONObject json = JSONObject.fromObject(HttpsUtils.extractResponseEntity(response));
                 return json.get(RuleMgtConstant.PACKAGE).toString();
             } catch (Exception e) {
                 throw new CorrelationException("Failed to parse the value returned by the engine management service.", e);
@@ -53,13 +54,13 @@ public class EngineWrapper {
     }
 
     public boolean deleteRuleFromEngine(String packageName) throws CorrelationException {
-        Response response;
+        HttpResponse response;
         try {
             response = engineService.delete(packageName);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule deleting RESTful API.", e);
         }
-        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Succeeded in calling the rule deleting RESTful API from the engine management service.");
             return true;
         } else {
@@ -70,17 +71,17 @@ public class EngineWrapper {
     public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine)
             throws CorrelationException {
         log.info("Rule Contents: " + correlationCheckRule4Engine.getContent());
-        Response response;
+        HttpResponse response;
         try {
             response = engineService.check(correlationCheckRule4Engine);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule verification RESTful API.", e);
         }
-        if (response.getStatus() == RuleMgtConstant.RESPONSE_STATUS_OK) {
+        if (response.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Succeeded in calling the rule verification RESTful API from the engine management service.");
             return true;
         } else {
-            log.info(response.getStatus() + " " + response.getStatusInfo() + " " + response.getEntity());
+            log.info(response.getStatusLine().getStatusCode() + " " + response.getEntity());
             throw new CorrelationException("Failed to verify the rule. The contents of the rule are invalid.");
         }
     }
