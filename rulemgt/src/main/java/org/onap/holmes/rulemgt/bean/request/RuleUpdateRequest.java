@@ -15,21 +15,20 @@
  */
 package org.onap.holmes.rulemgt.bean.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class RuleUpdateRequest {
-    @JsonProperty
+
     private String description;
-    @JsonProperty
+
     private String content;
-    @JsonProperty
+
     private int enabled;
-    @JsonProperty(value="ruleid")
+
     private String ruleId;
-    @JsonProperty(value = "loopcontrolname")
+
     private String loopControlName;
 }

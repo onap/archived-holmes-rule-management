@@ -15,7 +15,7 @@
  */
 package org.onap.holmes.rulemgt.bean.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,9 +23,9 @@ import lombok.Setter;
 @Setter
 public class RuleQueryCondition {
 
-    @JsonProperty(value = "ruleid")
+    @SerializedName(value = "ruleid")
     private String rid;
-    @JsonProperty(value = "rulename")
+    @SerializedName(value = "rulename")
     private String name;
     private int enabled;
     private String creator;

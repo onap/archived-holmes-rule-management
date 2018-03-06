@@ -16,6 +16,7 @@
 package org.onap.holmes.rulemgt.bean.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,12 +24,9 @@ import lombok.Setter;
 @Setter
 public class CorrelationDeployRule4Engine {
 
-    @JsonProperty(value = "content")
     private String content;
 
-    @JsonProperty(value = "engineid")
     private String engineId;
 
-    @JsonProperty(value = "loopcontrolname")
     private String loopControlName;
 }

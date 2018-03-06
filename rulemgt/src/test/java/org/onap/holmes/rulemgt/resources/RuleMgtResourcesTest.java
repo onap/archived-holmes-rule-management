@@ -16,7 +16,6 @@
 
 package org.onap.holmes.rulemgt.resources;
 
-import com.google.gson.JsonSyntaxException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import org.easymock.EasyMock;
@@ -148,7 +147,7 @@ public class RuleMgtResourcesTest {
 
     @Test
     public void getCorrelationRules_param_translate_exception() {
-        thrown.expect(JsonSyntaxException.class);
+        thrown.expect(WebApplicationException.class);
 
         String queryRequest = "this is error param";
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
@@ -161,6 +160,7 @@ public class RuleMgtResourcesTest {
 
     @Test
     public void getCorrelationRules_normal_request_string_null() throws Exception {
+        thrown.expect(WebApplicationException.class);
         EasyMock.expect(ruleMgtWrapper.getCorrelationRuleByCondition(EasyMock.anyObject(RuleQueryCondition.class)))
                 .andReturn(new RuleQueryListResponse());
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US").times(2);
