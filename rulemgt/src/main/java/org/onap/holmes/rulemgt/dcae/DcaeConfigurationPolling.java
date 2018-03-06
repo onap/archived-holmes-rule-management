@@ -13,20 +13,29 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
+import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.client.ClientConfig;
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.StringEntity;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.GsonUtil;
+import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
@@ -39,7 +48,7 @@ public class DcaeConfigurationPolling implements Runnable {
 
     private String hostname;
 
-    private String url = "http://127.0.0.1:9101/api/holmes-rule-mgmt/v1/rule";
+    private String url = "https://127.0.0.1:9101/api/holmes-rule-mgmt/v1/rule";
 
     public DcaeConfigurationPolling(String hostname) {
         this.hostname = hostname;
@@ -55,7 +64,7 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
             String md5 = Md5Util.md5(dcaeConfigurations);
-            if (prevResult && prevConfigMd5.equals(md5)) {
+            if (prevResult && prevConfigMd5.equals(md5)){
                 log.info("Operation aborted due to identical Configurations.");
                 return;
             }
@@ -63,9 +72,20 @@ public class DcaeConfigurationPolling implements Runnable {
             prevResult = false;
         } catch (CorrelationException e) {
             log.error("Failed to fetch DCAE configurations. " + e.getMessage(), e);
+        } catch (Exception e) {
+            log.info("Failed to generate the MD5 information for new configurations.", e);
         }
+        RuleQueryListResponse ruleQueryListResponse = null;
         if (dcaeConfigurations != null) {
-            RuleQueryListResponse ruleQueryListResponse = getAllCorrelationRules();
+            try {
+                ruleQueryListResponse = getAllCorrelationRules();
+            } catch (CorrelationException e) {
+                log.error("Failed to get right response!" + e.getMessage(), e);
+            } catch (IOException e) {
+                log.error("Failed to extract response entity. " + e.getMessage(), e);
+            }
+        }
+        if (ruleQueryListResponse != null) {
             List<RuleResult4API> ruleResult4APIs = ruleQueryListResponse.getCorrelationRules();
             deleteAllCorrelationRules(ruleResult4APIs);
             try {
@@ -77,24 +97,39 @@ public class DcaeConfigurationPolling implements Runnable {
         }
     }
 
-    private RuleQueryListResponse getAllCorrelationRules() {
-        Client client = ClientBuilder.newClient(new ClientConfig());
-        WebTarget webTarget = client.target(url);
-        return webTarget.request("application/json").get()
-                .readEntity(RuleQueryListResponse.class);
+    public RuleQueryListResponse getAllCorrelationRules() throws CorrelationException, IOException {
+              HashMap<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", MediaType.APPLICATION_JSON);
+        HttpResponse httpResponse = HttpsUtils.get(url, headers);
+        String response = HttpsUtils.extractResponseEntity(httpResponse);
+        return JSON.parseObject(response,RuleQueryListResponse.class);
     }
 
-    private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations)
-            throws CorrelationException {
+    private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
         boolean suc = false;
         for (Rule rule : dcaeConfigurations.getDefaultRules()) {
             RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(rule);
-            Client client = ClientBuilder.newClient(new ClientConfig());
-            String content = GsonUtil.beanToJson(ruleCreateRequest);
-            WebTarget webTarget = client.target(url);
-            Response response = webTarget.request(MediaType.APPLICATION_JSON)
-                    .put(Entity.entity(content, MediaType.APPLICATION_JSON));
-            suc = response.getStatus() == 200;
+            String content = "";
+            try {
+                content = GsonUtil.beanToJson(ruleCreateRequest);
+            } catch (Exception e) {
+                throw new CorrelationException("Failed to convert the message object to a json string.", e);
+            }
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", MediaType.APPLICATION_JSON);
+            headers.put("Accept", MediaType.APPLICATION_JSON);
+            HttpResponse httpResponse;
+            try {
+                httpResponse = HttpsUtils
+                        .put(url, headers, new HashMap<>(), new StringEntity(content));
+            } catch (UnsupportedEncodingException e) {
+                throw new CorrelationException("Failed to create https entity.", e);
+            } catch (Exception e) {
+                throw new CorrelationException(e.getMessage());
+            }
+            if (httpResponse != null) {
+                suc = httpResponse.getStatusLine().getStatusCode() == 200;
+            }
             if (!suc) {
                 break;
             }
@@ -102,11 +137,16 @@ public class DcaeConfigurationPolling implements Runnable {
         return suc;
     }
 
-    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs) {
-        ruleResult4APIs.forEach(correlationRule -> {
-            Client client = ClientBuilder.newClient(new ClientConfig());
-            WebTarget webTarget = client.target(url + "/" + correlationRule.getRuleId());
-            webTarget.request(MediaType.APPLICATION_JSON).delete();
+    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs){
+        ruleResult4APIs.forEach(correlationRule ->{
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", MediaType.APPLICATION_JSON);
+            try {
+                HttpsUtils.delete(url + "/" + correlationRule.getRuleId(), headers);
+            } catch (Exception e) {
+                log.warn("Failed to delete rule, the rule id is : " + correlationRule.getRuleId()
+                        + " exception messge is : " + e.getMessage(), e);
+            }
         });
     }
 

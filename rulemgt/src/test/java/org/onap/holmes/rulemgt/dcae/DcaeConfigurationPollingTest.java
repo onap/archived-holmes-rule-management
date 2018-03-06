@@ -15,15 +15,9 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
-
-import com.alibaba.fastjson.JSONException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.ws.rs.ProcessingException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -40,7 +34,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-@PrepareForTest({DcaeConfigurationPolling.class, MicroServiceConfig.class, ObjectMapper.class})
+@PrepareForTest({DcaeConfigurationPolling.class, MicroServiceConfig.class})
 @RunWith(PowerMockRunner.class)
 public class DcaeConfigurationPollingTest {
 
@@ -64,7 +58,7 @@ public class DcaeConfigurationPollingTest {
                 .thenReturn("host");
         PowerMock.createMock(DcaeConfigurationParser.class);
         PowerMock.expectPrivate(DcaeConfigurationParser.class, "parse", "host")
-                .andThrow(new CorrelationException("")).anyTimes();
+                .andThrow(new CorrelationException("tests")).anyTimes();
 
         PowerMock.replayAll();
         Whitebox.invokeMethod(daceConfigurationPolling, "getDcaeConfigurations");
@@ -94,7 +88,7 @@ public class DcaeConfigurationPollingTest {
     public void testDaceConfigurationPolling_addAllCorrelationRules_connection_exception()
             throws Exception {
         PowerMock.resetAll();
-        thrown.expect(ProcessingException.class);
+        thrown.expect(CorrelationException.class);
         DcaeConfigurations dcaeConfigurations = new DcaeConfigurations();
         Rule rule = new Rule("test", "test", "tset",1);
         dcaeConfigurations.getDefaultRules().add(rule);

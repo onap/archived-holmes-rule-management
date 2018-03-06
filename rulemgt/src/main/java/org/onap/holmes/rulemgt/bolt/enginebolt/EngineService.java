@@ -15,17 +15,14 @@
  */
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import java.util.HashMap;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.client.ClientConfig;
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.StringEntity;
 import org.jvnet.hk2.annotations.Service;
+import org.onap.holmes.common.utils.GsonUtil;
+import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
@@ -35,32 +32,31 @@ import org.onap.holmes.common.config.MicroServiceConfig;
 @Service
 public class EngineService {
 
-    protected Response delete(String packageName) throws IOException {
-        Client client = createClient();
-        WebTarget webTarget = client
-                .target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH + "/" + packageName);
-        return webTarget.request(MediaType.APPLICATION_JSON).delete();
+    protected HttpResponse delete(String packageName) throws Exception {
+        HashMap headers = createHeaders();
+        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
+        return HttpsUtils.delete(url, headers);
     }
 
-    private Client createClient() {
-        ClientConfig clientConfig = new ClientConfig();
-        return ClientBuilder.newClient(clientConfig);
+    protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
+            throws Exception {
+        String content = GsonUtil.beanToJson(correlationCheckRule4Engine);
+        HashMap headers = createHeaders();
+        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH;
+        return HttpsUtils.post(url, headers, new HashMap<>(), new StringEntity(content));
     }
 
-    protected Response check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
-            throws IOException {
-        Client client = createClient();
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(correlationCheckRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH);
-        return webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(content, MediaType.APPLICATION_JSON));
+    protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws Exception {
+        String content = GsonUtil.beanToJson(correlationDeployRule4Engine);
+        HashMap headers = createHeaders();
+        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH;
+        return HttpsUtils.put(url, headers, new HashMap<>(), new StringEntity(content));
     }
 
-    protected Response deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws IOException {
-        Client client = createClient();
-        ObjectMapper mapper = new ObjectMapper();
-        String content = mapper.writeValueAsString(correlationDeployRule4Engine);
-        WebTarget webTarget = client.target(MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH);
-        return webTarget.request(MediaType.APPLICATION_JSON).put(Entity.entity(content, MediaType.APPLICATION_JSON));
+    private HashMap<String, String> createHeaders() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", MediaType.APPLICATION_JSON);
+        headers.put("Accept", MediaType.APPLICATION_JSON);
+        return headers;
     }
 }

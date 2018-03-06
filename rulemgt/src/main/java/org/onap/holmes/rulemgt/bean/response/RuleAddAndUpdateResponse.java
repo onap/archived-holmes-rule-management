@@ -15,15 +15,11 @@
  */
 package org.onap.holmes.rulemgt.bean.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
 @Getter
 @Setter
 public class RuleAddAndUpdateResponse{
-    @JsonProperty(value="ruleid")
     private String ruleId;
 }

@@ -69,6 +69,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         msinfo.setUrl("/api/holmes-rule-mgmt/v1");
         msinfo.setProtocol("REST");
         msinfo.setVisualRange("0|1");
+        msinfo.setEnable_ssl(true);
         Set<Node> nodes = new HashSet<>();
         Node node = new Node();
         node.setIp(serviceAddrInfo[0]);

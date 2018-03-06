@@ -57,6 +57,7 @@ public class RuleMgtResourcesTest {
 
     @Test
     public void addCorrelationRule_correlation_exception() throws Exception {
+        PowerMock.resetAll();
         thrown.expect(WebApplicationException.class);
 
         final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
