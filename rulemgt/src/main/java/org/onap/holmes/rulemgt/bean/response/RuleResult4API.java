@@ -15,7 +15,6 @@
  */
 package org.onap.holmes.rulemgt.bean.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,5 +32,5 @@ public class RuleResult4API {
     private Date updateTime;
     private String modifier;
     private int enabled;
-    private String closedControlLoopName;
+    private String loopControlName;
 }
