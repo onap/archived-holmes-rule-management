@@ -25,6 +25,7 @@ import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.slf4j.MDC;
 
 @RegisterMapper(CorrelationRuleMapper.class)
 public abstract class CorrelationRuleDao {
@@ -62,6 +63,7 @@ public abstract class CorrelationRuleDao {
     }
 
     public CorrelationRule saveRule(CorrelationRule correlationRule) throws CorrelationException {
+        MDC.get("RequestId");
         try {
             addRule(correlationRule);
             return correlationRule;
@@ -96,6 +98,7 @@ public abstract class CorrelationRuleDao {
     }
 
     public CorrelationRule queryRuleByRuleName(String name) throws CorrelationException {
+        MDC.get("RequestId");
         try {
             return queryRuleByName(name);
         } catch (Exception e) {

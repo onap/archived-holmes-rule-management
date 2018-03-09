@@ -20,31 +20,37 @@ server:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: WARN
 
   # Logger-specific levels.
   loggers:
 
     # Sets the level for 'com.example.app' to DEBUG.
-    com.example: DEBUG
+    org.onap.holmes.rulemgt: DEBUG
   
   appenders:
     - type: console
-      threshold: INFO
+      threshold: ALL
       timeZone: UTC
-      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] - %m%n"
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] [%X{RequestId}] - %m%n"
+    - type: file
+      threshold: ERROR
+      logFormat: "%d^|^{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] [%X{RequestId}] - %m%n"
+      currentLogFilename: ../logs/rulemgt-relation-error.log
+      archivedLogFilenamePattern: ../logs/zip/rulemgt-relation-error-%d{yyyy-MM-dd}.log.gz
+      archivedFileCount: 7
+    - type: file
+      threshold: WARN
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] [%X{RequestId}] - %m%n"
+      currentLogFilename: ../logs/rulemgt-relation-warn.log
+      archivedLogFilenamePattern: ../logs/zip/rulemgt-relation-warn-%d{yyyy-MM-dd}.log.gz
+      archivedFileCount: 7
     - type: file
       threshold: INFO
-      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] - %m%n"
-      currentLogFilename: ../logs/fm-relation.log
-      archivedLogFilenamePattern: ../logs/zip/fm-relation-%d{yyyy-MM-dd}.log.gz
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] [%X{RequestId}] - %m%n"
+      currentLogFilename: ../logs/rulemgt-relation-info.log
+      archivedLogFilenamePattern: ../logs/zip/rulemgt-relation-info-%d{yyyy-MM-dd}.log.gz
       archivedFileCount: 7
-  #  - type: socketJson
-      threshold: INFO 
-  #    autoDiscover: false
-  #    logstashServiceName: logstash
-   #   logstashServiceVersion: v1
-
 #database
 database:
   driverClass: org.postgresql.Driver

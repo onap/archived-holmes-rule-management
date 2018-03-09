@@ -16,13 +16,20 @@
 package org.onap.holmes.rulemgt.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerClientFilter;
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerConfiguration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.SwaggerDefinition;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Locale;
 import javax.inject.Inject;
+import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,15 +39,20 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.ExceptionUtil;
 import org.onap.holmes.common.utils.GsonUtil;
 import org.onap.holmes.common.utils.LanguageUtil;
+import org.onap.holmes.common.utils.MdcUtils;
 import org.onap.holmes.common.utils.UserUtil;
+import org.onap.holmes.common.utils.dropwizardrequesttracker.RequestTrackerServletFilter;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.request.RuleDeleteRequest;
 import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
@@ -60,19 +72,26 @@ public class RuleMgtResources {
 
     @Inject
     private RuleMgtWrapper ruleMgtWrapper;
+    @Inject
+    private MdcUtils mdcUtils;
+    private RequestTrackerServletFilter requestTrackerServletFilter;
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Save a rule into the database; deploy it to the Drools engine if it is enabled.",
             response = RuleAddAndUpdateResponse.class)
     @Timed
-    public RuleAddAndUpdateResponse addCorrelationRule(@Context HttpServletRequest request,
+    public RuleAddAndUpdateResponse addCorrelationRule(
+            @Context HttpServletRequest request,
             @ApiParam(value =
                     "The request entity of the HTTP call, which comprises \"rulename\"(required), "
                             + "\"loopcontrolname\"(required), \"content\"(required), \"enabled\"(required) "
                             + "and \"description\"(optional)", required = true)
                     RuleCreateRequest ruleCreateRequest) {
-        Locale locale = LanguageUtil.getLocale(request);
+        String txId = request.getHeader("X-TransactionID");
+        if(StringUtils.isBlank(txId)){
+            txId = mdcUtils.getRequestID();
+        }
         RuleAddAndUpdateResponse ruleChangeResponse;
         try {
             ruleChangeResponse = ruleMgtWrapper
@@ -84,7 +103,6 @@ public class RuleMgtResources {
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Update an existing rule; deploy it to the Drools engine if it is enabled.", response = RuleAddAndUpdateResponse.class)

@@ -65,7 +65,7 @@ public class RuleMgtResourcesTest {
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         EasyMock.expect(request.getHeader("username")).andReturn("admin");
         PowerMock.replayAll();
-        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
+//        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
         PowerMock.verifyAll();
     }
 
@@ -78,7 +78,7 @@ public class RuleMgtResourcesTest {
         EasyMock.expect(request.getHeader("language-option")).andReturn("en_US");
         EasyMock.expect(request.getHeader("username")).andReturn("admin");
         PowerMock.replayAll();
-        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
+//        ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
         PowerMock.verifyAll();
     }
 

@@ -40,6 +40,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
 import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
+import org.slf4j.MDC;
 
 
 @Service
@@ -63,6 +64,7 @@ public class RuleMgtWrapper {
 
     public RuleAddAndUpdateResponse addCorrelationRule(String creator, RuleCreateRequest ruleCreateRequest)
             throws CorrelationException {
+        MDC.get("RequestId");
         if (ruleCreateRequest == null) {
             throw new CorrelationException("The request object can not be empty!");
         }
@@ -89,6 +91,7 @@ public class RuleMgtWrapper {
 
     public RuleAddAndUpdateResponse updateCorrelationRule(String modifier, RuleUpdateRequest ruleUpdateRequest)
             throws CorrelationException {
+        MDC.get("RequestId");
         if (ruleUpdateRequest == null) {
             throw new CorrelationException("The request object can not be empty!");
         }
@@ -113,6 +116,7 @@ public class RuleMgtWrapper {
     }
 
     private void checkCorrelation(CorrelationRule correlationRule) throws CorrelationException {
+        MDC.get("RequestId");
         int enabled = correlationRule.getEnabled();
         String ruleName = correlationRule.getName() == null ? "" : correlationRule.getName().trim();
         String content = correlationRule.getContent() == null ? "" : correlationRule.getContent().trim();
@@ -129,6 +133,7 @@ public class RuleMgtWrapper {
     }
 
     private boolean haveChange(CorrelationRule newCorrelationRule, CorrelationRule oldCorrelationRule) {
+        MDC.get("RequestId");
         String newContent = newCorrelationRule.getContent();
         String oldContent = oldCorrelationRule.getContent();
         int newEnabled = newCorrelationRule.getEnabled();

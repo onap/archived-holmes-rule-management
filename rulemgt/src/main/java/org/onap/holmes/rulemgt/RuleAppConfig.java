@@ -16,6 +16,7 @@
 package org.onap.holmes.rulemgt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerConfiguration;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import javax.validation.Valid;
@@ -35,6 +36,15 @@ public class RuleAppConfig extends Configuration {
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
+    private RequestTrackerConfiguration requestTrackerConfiguration = new RequestTrackerConfiguration();
+
+    public RequestTrackerConfiguration getRequestTrackerConfiguration() {
+        return requestTrackerConfiguration;
+    }
+
+    public void setRequestTrackerConfiguration(RequestTrackerConfiguration configuration) {
+        this.requestTrackerConfiguration = configuration;
+    }
 
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {

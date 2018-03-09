@@ -16,6 +16,10 @@
 
 package org.onap.holmes.rulemgt;
 
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerBundle;
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerClientFilter;
+import com.serviceenabled.dropwizardrequesttracker.RequestTrackerConfiguration;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
 import org.onap.holmes.common.exception.CorrelationException;
@@ -41,6 +46,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
 
     @Override
     public String getName() {
+
         return "Holmes Rule Management ActiveApp APP ";
     }
 
@@ -57,7 +63,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
 
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(
-                new DcaeConfigurationPolling(MicroServiceConfig.getEnv(MicroServiceConfig.HOSTNAME)), 0,
+                new DcaeConfigurationPolling(
+                        MicroServiceConfig.getEnv(MicroServiceConfig.HOSTNAME)), 0,
                 DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
     }
 
@@ -75,6 +82,19 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         node.setPort(serviceAddrInfo[1]);
         nodes.add(node);
         msinfo.setNodes(nodes);
+        log.info(node.toString());
         return msinfo;
+    }
+
+    @Override
+    public void initialize(Bootstrap<RuleAppConfig> bootstrap) {
+        super.initialize(bootstrap);
+        bootstrap.addBundle(new RequestTrackerBundle<RuleAppConfig>() {
+            @Override
+            public RequestTrackerConfiguration getRequestTrackerConfiguration(
+                    RuleAppConfig ruleAppConfig) {
+                return ruleAppConfig.getRequestTrackerConfiguration();
+            }
+        });
     }
 }
