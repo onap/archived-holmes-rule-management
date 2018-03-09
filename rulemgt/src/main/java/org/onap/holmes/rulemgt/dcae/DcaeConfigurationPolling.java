@@ -44,7 +44,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 @Slf4j
 public class DcaeConfigurationPolling implements Runnable {
 
-    public static long POLLING_PERIOD = 30 * 1000L;
+    public static final long POLLING_PERIOD = 30 * 1000L;
 
     private String hostname;
 

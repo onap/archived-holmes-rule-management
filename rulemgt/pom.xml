@@ -30,6 +30,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.onap.msb.java-sdk</groupId>
             <artifactId>msb-java-sdk</artifactId>
         </dependency>
@@ -150,7 +155,7 @@
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.15.0-GA</version>
+            <version>3.20.0-GA</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
