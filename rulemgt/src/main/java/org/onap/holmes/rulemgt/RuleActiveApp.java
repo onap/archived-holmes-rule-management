@@ -17,16 +17,19 @@
 package org.onap.holmes.rulemgt;
 
 import io.dropwizard.setup.Environment;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.DispatcherType;
 import lombok.extern.slf4j.Slf4j;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.MSBRegisterUtil;
+import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
 import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
@@ -59,6 +62,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         service.scheduleAtFixedRate(
                 new DcaeConfigurationPolling(MicroServiceConfig.getEnv(MicroServiceConfig.HOSTNAME)), 0,
                 DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
+        environment.servlets().addFilter("customFilter",new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
+                .allOf(DispatcherType.class),true,"/*");
     }
 
     private MicroServiceInfo createMicroServiceInfo() {
