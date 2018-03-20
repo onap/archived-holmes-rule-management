@@ -83,6 +83,11 @@
             <artifactId>stringtemplate</artifactId>
         </dependency>
         <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-validator</artifactId>
+          <version>5.1.3.Final</version>
+        </dependency>
+        <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
             <exclusions>
@@ -105,6 +110,10 @@
               <exclusion>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
               </exclusion>
             </exclusions>
         </dependency>
