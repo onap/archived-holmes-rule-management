@@ -34,10 +34,10 @@ public class EngineWrapper {
     @Inject
     private EngineService engineService;
 
-    public String deployEngine(CorrelationDeployRule4Engine correlationRule) throws CorrelationException {
+    public String deployEngine(CorrelationDeployRule4Engine correlationRule,String ip) throws CorrelationException {
         HttpResponse response;
         try {
-            response = engineService.deploy(correlationRule);
+            response = engineService.deploy(correlationRule, ip);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule deployment RESTful API.", e);
         }
@@ -55,10 +55,10 @@ public class EngineWrapper {
         }
     }
 
-    public boolean deleteRuleFromEngine(String packageName) throws CorrelationException {
+    public boolean deleteRuleFromEngine(String packageName,String ip) throws CorrelationException {
         HttpResponse response;
         try {
-            response = engineService.delete(packageName);
+            response = engineService.delete(packageName, ip);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule deleting RESTful API.", e);
         }
@@ -70,12 +70,12 @@ public class EngineWrapper {
         }
     }
 
-    public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine)
+    public boolean checkRuleFromEngine(CorrelationCheckRule4Engine correlationCheckRule4Engine,String ip)
             throws CorrelationException {
         log.info("Rule Contents: " + correlationCheckRule4Engine.getContent());
         HttpResponse response;
         try {
-            response = engineService.check(correlationCheckRule4Engine);
+            response = engineService.check(correlationCheckRule4Engine, ip);
         } catch (Exception e) {
             throw new CorrelationException("Failed to call the rule verification RESTful API.", e);
         }

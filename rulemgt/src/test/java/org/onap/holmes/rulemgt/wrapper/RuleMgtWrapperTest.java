@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
 import org.onap.holmes.common.api.entity.CorrelationRule;
@@ -43,6 +42,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
 import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
+import org.onap.holmes.rulemgt.send.Ip4AddingRule;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
@@ -64,6 +64,8 @@ public class RuleMgtWrapperTest {
 
     private CorrelationRuleDao correlationRuleDaoMock;
 
+    private Ip4AddingRule ip4AddingRuleMock;
+
     private static final String USER_NAME = "admin";
 
     @Before
@@ -75,11 +77,13 @@ public class RuleMgtWrapperTest {
         correlationRuleQueryDaoMock = PowerMock.createMock(CorrelationRuleQueryDao.class);
         dbDaoUtilMock = PowerMock.createMock(DbDaoUtil.class);
         correlationRuleDaoMock = PowerMock.createMock(CorrelationRuleDao.class);
+        ip4AddingRuleMock = PowerMock.createMock(Ip4AddingRule.class);
 
         Whitebox.setInternalState(ruleMgtWrapper, "daoUtil", dbDaoUtilMock);
         Whitebox.setInternalState(ruleMgtWrapper, "correlationRuleQueryDao", correlationRuleQueryDaoMock);
         Whitebox.setInternalState(ruleMgtWrapper, "engineWarpper", engineWrapperMock);
         Whitebox.setInternalState(ruleMgtWrapper, "correlationRuleDao", correlationRuleDaoMock);
+        Whitebox.setInternalState(ruleMgtWrapper,"ip4AddingRule", ip4AddingRuleMock);
 
         PowerMock.resetAll();
     }
@@ -165,9 +169,12 @@ public class RuleMgtWrapperTest {
         correlationRuleRet.setRid("rule_" + System.currentTimeMillis());
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRuleName(ruleName)).andReturn(null);
-        EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
+        EasyMock.expect(ip4AddingRuleMock.getEngineIp4AddRule()).andReturn("10.96.33.34");
+        EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)
+                , EasyMock.anyObject(String.class)))
                 .andReturn(true);
-        EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+        EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)
+                , EasyMock.anyObject(String.class)))
                 .andReturn("package-001");
         EasyMock.expect(correlationRuleDaoMock.saveRule(EasyMock.anyObject(CorrelationRule.class)))
                 .andReturn(correlationRuleRet);
@@ -198,15 +205,18 @@ public class RuleMgtWrapperTest {
         oldCorrelationRule.setPackageName("testName");
         oldCorrelationRule.setEnabled(1);
         oldCorrelationRule.setClosedControlLoopName("cl-name");
+        oldCorrelationRule.setEngineInstance("10.96.33.34");
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des2", "contetnt2", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
-        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName")).andReturn(true);
+        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName", "10.96.33.34")).andReturn(true);
         correlationRuleDaoMock.updateRule(EasyMock.anyObject(CorrelationRule.class));
         EasyMock.expectLastCall();
-        EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
+        EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)
+                , EasyMock.anyObject(String.class)))
                 .andReturn(true);
-        EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+        EasyMock.expect(engineWrapperMock.deployEngine(EasyMock.anyObject(CorrelationDeployRule4Engine.class)
+                , EasyMock.anyObject(String.class)))
                 .andReturn("packageName1");
         PowerMock.replayAll();
 
@@ -288,7 +298,8 @@ public class RuleMgtWrapperTest {
         correlationRule.setEnabled(1);
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid(ruleDeleteRequest.getRuleId()))
                 .andReturn(correlationRule);
-        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine(EasyMock.anyObject(String.class))).andReturn(true);
+        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine(EasyMock.anyObject(String.class)
+                , EasyMock.anyObject(String.class))).andReturn(true);
         correlationRuleDaoMock.deleteRule(EasyMock.anyObject(CorrelationRule.class));
         EasyMock.expectLastCall();
         PowerMock.replayAll();
