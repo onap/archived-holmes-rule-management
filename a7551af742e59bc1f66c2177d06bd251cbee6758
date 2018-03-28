@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_b84dad9b",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/bolt/enginebolt/EngineService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-03-28T02:04:29Z",
+      "side": 1,
+      "message": "Make the fields private static final.\nFor constants, variable names should be uppercase.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "a7551af742e59bc1f66c2177d06bd251cbee6758",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d8575925",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/msb/GetEngineIp.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-03-28T02:04:29Z",
+      "side": 1,
+      "message": "Improper class name.",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 24
+      },
+      "revId": "a7551af742e59bc1f66c2177d06bd251cbee6758",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9831d10d",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/send/AllocateRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-03-28T02:04:29Z",
+      "side": 1,
+      "message": "Improper class name",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 25
+      },
+      "revId": "a7551af742e59bc1f66c2177d06bd251cbee6758",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b834cdfb",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/send/GetEngineIp4AddRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-03-28T02:04:29Z",
+      "side": 1,
+      "message": "Improper class name.",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 32
+      },
+      "revId": "a7551af742e59bc1f66c2177d06bd251cbee6758",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_583b49eb",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/wrapper/QueryRule.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-03-28T02:04:29Z",
+      "side": 1,
+      "message": "Improper class name.",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 22
+      },
+      "revId": "a7551af742e59bc1f66c2177d06bd251cbee6758",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
