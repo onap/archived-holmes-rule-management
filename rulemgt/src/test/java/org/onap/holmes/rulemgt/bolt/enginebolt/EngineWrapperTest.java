@@ -64,12 +64,13 @@ public class EngineWrapperTest {
         thrown.expectMessage("Failed to call the rule deployment RESTful API.");
 
         EasyMock.expect(
-                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andThrow(
                         new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
 
         PowerMock.verifyAll();
     }
@@ -80,13 +81,14 @@ public class EngineWrapperTest {
         thrown.expectMessage("Failed to deploy the rule!");
 
         EasyMock.expect(
-                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
 
         PowerMock.verifyAll();
     }
@@ -100,14 +102,15 @@ public class EngineWrapperTest {
         thrown.expectMessage(
                 "Failed to parse the value returned by the engine management service.");
         EasyMock.expect(
-                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
         PowerMockito.when(HttpsUtils.extractResponseEntity(httpResponse)).thenReturn(content);
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
 
         PowerMock.verifyAll();
     }
@@ -118,14 +121,15 @@ public class EngineWrapperTest {
         String content = "{\"packageName\":\"test\"}";
         PowerMockito.mockStatic(HttpsUtils.class);
         EasyMock.expect(
-                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class)))
+                engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
         PowerMockito.when(HttpsUtils.extractResponseEntity(httpResponse)).thenReturn(content);
         PowerMock.replayAll();
 
-        String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine());
+        String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
 
         assertThat(result, equalTo("test"));
 
@@ -136,11 +140,12 @@ public class EngineWrapperTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage("Failed to call the rule deleting RESTful API.");
 
-        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class))).andThrow(
+        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class),
+                EasyMock.anyObject(String.class))).andThrow(
                 new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.deleteRuleFromEngine("");
+        engineWrapper.deleteRuleFromEngine("","10.96.33.34");
 
         PowerMock.verifyAll();
     }
@@ -150,28 +155,30 @@ public class EngineWrapperTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage("Failed to delete the rule!");
 
-        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class)))
+        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class),
+                EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
 
         PowerMock.replayAll();
 
-        engineWrapper.deleteRuleFromEngine("");
+        engineWrapper.deleteRuleFromEngine("","10.96.33.34");
 
         PowerMock.verifyAll();
     }
 
     @Test
     public void deleteRuleFromEngine_success() throws Exception {
-        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class)))
+        EasyMock.expect(engineServiceMock.delete(EasyMock.anyObject(String.class),
+                EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
 
         PowerMock.replayAll();
 
-        boolean result = engineWrapper.deleteRuleFromEngine("");
+        boolean result = engineWrapper.deleteRuleFromEngine("","10.96.33.34");
 
         assertThat(result, equalTo(true));
     }
@@ -182,12 +189,13 @@ public class EngineWrapperTest {
         thrown.expectMessage("Failed to call the rule verification RESTful API.");
 
         EasyMock.expect(
-                engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
+                engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andThrow(
                         new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine());
+        engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"10.96.33.34");
 
         PowerMock.verifyAll();
     }
@@ -195,14 +203,15 @@ public class EngineWrapperTest {
     @Test
     public void checkRuleFromEngine_success() throws Exception {
         EasyMock.expect(
-                engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class)))
+                engineServiceMock.check(EasyMock.anyObject(CorrelationCheckRule4Engine.class),
+                        EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
 
         PowerMock.replayAll();
 
-        boolean result = engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine());
+        boolean result = engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"10.96.33.34");
 
         assertThat(result, equalTo(true));
     }
