@@ -70,6 +70,23 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-lib-${linux64id}</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${linux64outputdir}/lib</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/rulemgt/target/lib</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-resources-${win64id}</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -91,6 +108,23 @@
                                 </resource>
                                 <resource>
                                     <directory>../rulemgt/src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-lib-${win64id}</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${win64outputdir}/lib</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/rulemgt/target/lib</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
