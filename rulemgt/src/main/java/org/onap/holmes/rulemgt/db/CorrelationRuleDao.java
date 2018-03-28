@@ -30,10 +30,10 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 public abstract class CorrelationRuleDao {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,CTRLLOOP,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID) VALUES (:name,:closedControlLoopName,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid)")
+    @SqlUpdate("INSERT INTO APLUS_RULE  (NAME,CTRLLOOP,DESCRIPTION,ENABLE,TEMPLATEID,ENGINETYPE,CREATOR,UPDATOR,PARAMS,CONTENT ,VENDOR,CREATETIME,UPDATETIME,ENGINEID,PACKAGE,RID, ENGINEINSTANCE) VALUES (:name,:closedControlLoopName,:description,:enabled,:templateID,:engineType,:creator,:modifier,:params,:content,:vendor,:createTime,:updateTime,:engineID,:packageName,:rid,:engineInstance)")
     protected abstract String addRule(@BindBean CorrelationRule correlationRule);
 
-    @SqlUpdate("UPDATE APLUS_RULE SET CTRLLOOP=:closedControlLoopName,DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime, PACKAGE=:packageName WHERE RID=:rid")
+    @SqlUpdate("UPDATE APLUS_RULE SET CTRLLOOP=:closedControlLoopName,DESCRIPTION=:description,ENABLE=:enabled,CONTENT=:content,UPDATOR=:modifier,UPDATETIME=:updateTime, PACKAGE=:packageName, ENGINEINSTANCE=:engineInstance WHERE RID=:rid")
     protected abstract int updateRuleByRid(@BindBean CorrelationRule correlationRule);
 
     @SqlUpdate("DELETE FROM APLUS_RULE WHERE RID=:rid")
@@ -50,6 +50,21 @@ public abstract class CorrelationRuleDao {
 
     @SqlQuery("SELECT * FROM APLUS_RULE WHERE NAME=:name")
     protected abstract CorrelationRule queryRuleByName(@Bind("name") String name);
+
+    @SqlQuery("SELECT * FROM APLUS_RULE WHERE enable=:enable")
+    public abstract List<CorrelationRule> queryRuleByEnable(@Bind("enable") int enable);
+
+    @SqlQuery("SELECT * FROM APLUS_RULE WHERE engineinstance=:engineinstance")
+    public abstract List<CorrelationRule> queryRuleByEngineInstance(@Bind("engineinstance") String engineinstance);
+
+    public List<CorrelationRule> queryRuleByRuleEngineInstance(String enginetype) {
+        return queryRuleByEngineInstance(enginetype);
+    }
+
+    public List<CorrelationRule> queryRuleByRuleEnable(int enable) {
+        return queryRuleByEnable(enable);
+    }
+
 
     private void deleteRule2DbInner(CorrelationRule correlationRule) {
         String name = correlationRule.getName() != null ? correlationRule.getName().trim() : "";

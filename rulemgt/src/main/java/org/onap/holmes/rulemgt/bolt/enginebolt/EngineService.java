@@ -32,24 +32,27 @@ import org.onap.holmes.common.config.MicroServiceConfig;
 @Service
 public class EngineService {
 
-    protected HttpResponse delete(String packageName) throws Exception {
+    private static final String PREFIX = "https://";
+    private static final String PORT = ":9102";
+
+    protected HttpResponse delete(String packageName, String ip) throws Exception {
         HashMap headers = createHeaders();
-        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
+        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
         return HttpsUtils.delete(url, headers);
     }
 
-    protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine)
+    protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine, String ip)
             throws Exception {
         String content = GsonUtil.beanToJson(correlationCheckRule4Engine);
         HashMap headers = createHeaders();
-        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH;
+        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         return HttpsUtils.post(url, headers, new HashMap<>(), new StringEntity(content));
     }
 
-    protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine) throws Exception {
+    protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine, String ip) throws Exception {
         String content = GsonUtil.beanToJson(correlationDeployRule4Engine);
         HashMap headers = createHeaders();
-        String url = MicroServiceConfig.getMsbServerAddrWithHttpPrefix() + RuleMgtConstant.ENGINE_PATH;
+        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         return HttpsUtils.put(url, headers, new HashMap<>(), new StringEntity(content));
     }
 

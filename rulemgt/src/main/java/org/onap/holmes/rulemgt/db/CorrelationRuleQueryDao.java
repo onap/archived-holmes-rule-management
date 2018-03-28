@@ -81,6 +81,7 @@ public class CorrelationRuleQueryDao {
         correlationRule.setVendor((String) value.get("vendor"));
         correlationRule.setPackageName((String) value.get("package"));
         correlationRule.setClosedControlLoopName((String) value.get("ctrlloop"));
+        correlationRule.setEngineInstance((String) value.get("engineInstance"));
         return correlationRule;
     }
 
