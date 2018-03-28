@@ -178,6 +178,18 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-classloading-xstream</artifactId>
             <version>1.6.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
