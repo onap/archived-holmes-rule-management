@@ -31,6 +31,7 @@ import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.MSBRegisterUtil;
 import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
+import org.onap.holmes.rulemgt.msb.MsbQuery;
 import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
@@ -64,6 +65,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
                 DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
         environment.servlets().addFilter("customFilter",new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
                 .allOf(DispatcherType.class),true,"/*");
+
+        new MsbQuery().startTimer();
     }
 
     private MicroServiceInfo createMicroServiceInfo() {

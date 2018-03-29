@@ -32,7 +32,7 @@ public class Ip4AddingRule {
     private RuleQueryWrapper ruleQueryWrapper;
     private List<String> engineService;
 
-    public void getIpList(List<String> ipList){
+    public void setIpList(List<String> ipList){
         engineService = ipList;
     }
 
