@@ -16,7 +16,10 @@
 package org.onap.holmes.rulemgt.msb;
 
 
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.ServiceEntity;
 import org.onap.holmes.common.api.entity.ServiceNode4Query;
@@ -30,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Slf4j
 public class EngineIpList {
 
     private String[] msbAddrInfo;
@@ -47,12 +51,22 @@ public class EngineIpList {
 
     public List<String> getServiceCount()throws Exception{
         String response;
+        CloseableHttpClient httpClient = null;
         try {
+            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils
-                    .get(url, new HashMap<>());
+                    .get(url, new HashMap<>(), httpClient);
             response = HttpsUtils.extractResponseEntity(httpResponse);
         } catch (Exception e) {
             throw e;
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close http client!");
+                }
+            }
         }
         ServiceEntity service = GsonUtil.jsonToBean(response, ServiceEntity.class);
         List<ServiceNode4Query> nodesList = service.getNodes();

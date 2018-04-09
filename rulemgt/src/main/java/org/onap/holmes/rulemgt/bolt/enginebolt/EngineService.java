@@ -15,11 +15,13 @@
  */
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
+import java.io.IOException;
 import java.util.HashMap;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.utils.GsonUtil;
 import org.onap.holmes.common.utils.HttpsUtils;
@@ -38,7 +40,13 @@ public class EngineService {
     protected HttpResponse delete(String packageName, String ip) throws Exception {
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
-        return HttpsUtils.delete(url, headers);
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            return HttpsUtils.delete(url, headers, httpClient);
+        } finally {
+            closeHttpClient(httpClient);
+        }
     }
 
     protected HttpResponse check(CorrelationCheckRule4Engine correlationCheckRule4Engine, String ip)
@@ -46,14 +54,36 @@ public class EngineService {
         String content = GsonUtil.beanToJson(correlationCheckRule4Engine);
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
-        return HttpsUtils.post(url, headers, new HashMap<>(), new StringEntity(content));
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            return HttpsUtils.post(url, headers, new HashMap<>(), new StringEntity(content), httpClient);
+        } finally {
+            closeHttpClient(httpClient);
+        }
     }
 
     protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine, String ip) throws Exception {
         String content = GsonUtil.beanToJson(correlationDeployRule4Engine);
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
-        return HttpsUtils.put(url, headers, new HashMap<>(), new StringEntity(content));
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            return HttpsUtils.put(url, headers, new HashMap<>(), new StringEntity(content),httpClient);
+        } finally {
+            closeHttpClient(httpClient);
+        }
+    }
+
+    private void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient != null) {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                log.warn("Failed to close http client!");
+            }
+        }
     }
 
     private HashMap<String, String> createHeaders() {

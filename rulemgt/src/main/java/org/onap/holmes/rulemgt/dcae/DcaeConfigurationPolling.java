@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
@@ -83,6 +84,8 @@ public class DcaeConfigurationPolling implements Runnable {
                 log.error("Failed to get right response!" + e.getMessage(), e);
             } catch (IOException e) {
                 log.error("Failed to extract response entity. " + e.getMessage(), e);
+            } catch (Exception e) {
+                log.error("Failed to build http client. " + e.getMessage(), e);
             }
         }
         if (ruleQueryListResponse != null) {
@@ -100,9 +103,15 @@ public class DcaeConfigurationPolling implements Runnable {
     public RuleQueryListResponse getAllCorrelationRules() throws CorrelationException, IOException {
               HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", MediaType.APPLICATION_JSON);
-        HttpResponse httpResponse = HttpsUtils.get(url, headers);
-        String response = HttpsUtils.extractResponseEntity(httpResponse);
-        return JSON.parseObject(response,RuleQueryListResponse.class);
+        CloseableHttpClient httpClient = null;
+        try {
+            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            HttpResponse httpResponse = HttpsUtils.get(url, headers, httpClient);
+            String response = HttpsUtils.extractResponseEntity(httpResponse);
+            return JSON.parseObject(response,RuleQueryListResponse.class);
+        } finally {
+            closeHttpClient(httpClient);
+        }
     }
 
     private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
@@ -119,13 +128,17 @@ public class DcaeConfigurationPolling implements Runnable {
             headers.put("Content-Type", MediaType.APPLICATION_JSON);
             headers.put("Accept", MediaType.APPLICATION_JSON);
             HttpResponse httpResponse;
+            CloseableHttpClient httpClient = null;
             try {
+                httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
                 httpResponse = HttpsUtils
-                        .put(url, headers, new HashMap<>(), new StringEntity(content));
+                        .put(url, headers, new HashMap<>(), new StringEntity(content), httpClient);
             } catch (UnsupportedEncodingException e) {
                 throw new CorrelationException("Failed to create https entity.", e);
             } catch (Exception e) {
                 throw new CorrelationException(e.getMessage());
+            } finally {
+                closeHttpClient(httpClient);
             }
             if (httpResponse != null) {
                 suc = httpResponse.getStatusLine().getStatusCode() == 200;
@@ -141,11 +154,15 @@ public class DcaeConfigurationPolling implements Runnable {
         ruleResult4APIs.forEach(correlationRule ->{
             HashMap<String, String> headers = new HashMap<>();
             headers.put("Content-Type", MediaType.APPLICATION_JSON);
+            CloseableHttpClient httpClient = null;
             try {
-                HttpsUtils.delete(url + "/" + correlationRule.getRuleId(), headers);
+                httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+                HttpsUtils.delete(url + "/" + correlationRule.getRuleId(), headers, httpClient);
             } catch (Exception e) {
                 log.warn("Failed to delete rule, the rule id is : " + correlationRule.getRuleId()
                         + " exception messge is : " + e.getMessage(), e);
+            } finally {
+                closeHttpClient(httpClient);
             }
         });
     }
@@ -158,5 +175,15 @@ public class DcaeConfigurationPolling implements Runnable {
         ruleCreateRequest.setDescription("");
         ruleCreateRequest.setEnabled(1);
         return ruleCreateRequest;
+    }
+
+    private void closeHttpClient(CloseableHttpClient httpClient) {
+        if (httpClient != null) {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                log.warn("Failed to close http client!");
+            }
+        }
     }
 }
