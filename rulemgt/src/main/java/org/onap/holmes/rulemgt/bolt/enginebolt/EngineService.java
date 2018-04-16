@@ -20,6 +20,9 @@ import java.util.HashMap;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.jvnet.hk2.annotations.Service;
@@ -41,10 +44,12 @@ public class EngineService {
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
         CloseableHttpClient httpClient = null;
+        HttpDelete httpDelete = new HttpDelete(url);
         try {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-            return HttpsUtils.delete(url, headers, httpClient);
+            return HttpsUtils.delete(httpDelete, headers, httpClient);
         } finally {
+            httpDelete.releaseConnection();
             closeHttpClient(httpClient);
         }
     }
@@ -55,10 +60,12 @@ public class EngineService {
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         CloseableHttpClient httpClient = null;
+        HttpPost httpPost = new HttpPost(url);
         try {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-            return HttpsUtils.post(url, headers, new HashMap<>(), new StringEntity(content), httpClient);
+            return HttpsUtils.post(httpPost, headers, new HashMap<>(), new StringEntity(content), httpClient);
         } finally {
+            httpPost.releaseConnection();
             closeHttpClient(httpClient);
         }
     }
@@ -68,9 +75,10 @@ public class EngineService {
         HashMap headers = createHeaders();
         String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         CloseableHttpClient httpClient = null;
+        HttpPut httpPut = new HttpPut(url);
         try {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-            return HttpsUtils.put(url, headers, new HashMap<>(), new StringEntity(content),httpClient);
+            return HttpsUtils.put(httpPut, headers, new HashMap<>(), new StringEntity(content),httpClient);
         } finally {
             closeHttpClient(httpClient);
         }

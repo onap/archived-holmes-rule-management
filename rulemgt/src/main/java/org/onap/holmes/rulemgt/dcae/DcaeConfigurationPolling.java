@@ -29,6 +29,9 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
@@ -104,12 +107,14 @@ public class DcaeConfigurationPolling implements Runnable {
               HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", MediaType.APPLICATION_JSON);
         CloseableHttpClient httpClient = null;
+        HttpGet httpGet = new HttpGet(url);
         try {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-            HttpResponse httpResponse = HttpsUtils.get(url, headers, httpClient);
+            HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
             String response = HttpsUtils.extractResponseEntity(httpResponse);
             return JSON.parseObject(response,RuleQueryListResponse.class);
         } finally {
+            httpGet.releaseConnection();
             closeHttpClient(httpClient);
         }
     }
@@ -129,15 +134,17 @@ public class DcaeConfigurationPolling implements Runnable {
             headers.put("Accept", MediaType.APPLICATION_JSON);
             HttpResponse httpResponse;
             CloseableHttpClient httpClient = null;
+            HttpPut httpPut = new HttpPut(url);
             try {
                 httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
                 httpResponse = HttpsUtils
-                        .put(url, headers, new HashMap<>(), new StringEntity(content), httpClient);
+                        .put(httpPut, headers, new HashMap<>(), new StringEntity(content), httpClient);
             } catch (UnsupportedEncodingException e) {
                 throw new CorrelationException("Failed to create https entity.", e);
             } catch (Exception e) {
                 throw new CorrelationException(e.getMessage());
             } finally {
+                httpPut.releaseConnection();
                 closeHttpClient(httpClient);
             }
             if (httpResponse != null) {
@@ -155,13 +162,15 @@ public class DcaeConfigurationPolling implements Runnable {
             HashMap<String, String> headers = new HashMap<>();
             headers.put("Content-Type", MediaType.APPLICATION_JSON);
             CloseableHttpClient httpClient = null;
+            HttpDelete httpDelete = new HttpDelete(url + "/" + correlationRule.getRuleId());
             try {
                 httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-                HttpsUtils.delete(url + "/" + correlationRule.getRuleId(), headers, httpClient);
+                HttpsUtils.delete(httpDelete, headers, httpClient);
             } catch (Exception e) {
                 log.warn("Failed to delete rule, the rule id is : " + correlationRule.getRuleId()
                         + " exception messge is : " + e.getMessage(), e);
             } finally {
+                httpDelete.releaseConnection();
                 closeHttpClient(httpClient);
             }
         });

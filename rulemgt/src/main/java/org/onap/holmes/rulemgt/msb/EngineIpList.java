@@ -19,6 +19,7 @@ package org.onap.holmes.rulemgt.msb;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.ServiceEntity;
@@ -52,14 +53,16 @@ public class EngineIpList {
     public List<String> getServiceCount()throws Exception{
         String response;
         CloseableHttpClient httpClient = null;
+        HttpGet httpGet = new HttpGet(url);
         try {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils
-                    .get(url, new HashMap<>(), httpClient);
+                    .get(httpGet, new HashMap<>(), httpClient);
             response = HttpsUtils.extractResponseEntity(httpResponse);
         } catch (Exception e) {
             throw e;
         } finally {
+            httpGet.releaseConnection();
             if (httpClient != null) {
                 try {
                     httpClient.close();
