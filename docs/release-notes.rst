@@ -14,12 +14,12 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 1.1.0
 --------------
 
-:Release Date: 2018-05-24
+:Release Date: 2018-06-07
 
 
 **New Features**
-In the Amsterdam release, Holmes is mainly intended to support the alarm
-correlation analysis for the VoLTE scenario. To get us there, Holmes provides
+In Beijing release, HOLMES is mainly intended to support the alarm
+correlation analysis for the VoLTE scenario. To get us there, HOLMES provides
 the following features:
 
 - `Rule Management <https://jira.onap.org/browse/HOLMES-4>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules.
@@ -35,10 +35,16 @@ N/A
 - If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
 - The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
 
-**Security Issues**
+**Security Notes**
 
-Holmes is following the CII Best Practices Badge program. Most of its vulnerability issues have been fixed in Beijing Release except for the issues brought in by jackson-databind which is introduced indirectly by third-party dependencies (namely Dropwizard). The impact analysis can be found at `Holmes Security/Vulnerability Threat Impact Analysis <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_
+HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_.
 
+Quick Links:
+ 	- `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+ 	
+ 	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+ 	
+ 	- `Project Vulnerability Review Table for HOLMES <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_
 
 **Upgrade Notes**
 
@@ -57,6 +63,37 @@ N/A
 
 N/A
 
+
+Version: 1.0.0
+--------------
+
+:Release Date: 2017-11-16
+
+
+**New Features**
+In the Amsterdam release, Holmes is mainly intended to support the alarm
+correlation analysis for the VoLTE scenario. To get us there, Holmes provides
+the following features:
+
+- `Rule Management <https://jira.onap.org/browse/HOLMES-4>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules.
+
+- `Engine Management <https://jira.onap.org/browse/HOLMES-5>`_ The feature is not exposed to the end user directly. It's mainly used internally by Holmes as a container for the execution of rules. It provides interface for rule verification and deployment/un-deployment.
+
+**Bug Fixes**
+
+This is the initial release.
+
+**Known Issues**
+
+If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+
+**Security Issues**
+
+N/A
+
+**Upgrade Notes**
+
+This is the inital release.
 ===========
 
 End of Release Notes
