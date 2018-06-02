@@ -1,0 +1,242 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This page shows all the APIs available in the Holmes rule management module.",
+    "version" : "v1",
+    "title" : "API Descriptions for Holmes Rule Management",
+    "termsOfService" : "http://www.github.com/kongchen/swagger-maven-plugin",
+    "contact" : {
+      "name" : "Guangrong Fu",
+      "email" : "fu.guangrong@zte.com.cn"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath" : "/api/holmes-rule-mgmt/v1/",
+  "tags" : [ {
+    "name" : "Health Check"
+  }, {
+    "name" : "Holmes Rule Management"
+  } ],
+  "paths" : {
+    "/healthcheck" : {
+      "get" : {
+        "tags" : [ "Health Check" ],
+        "summary" : "Interface for the health check of the rule management module for Holmes",
+        "description" : "",
+        "operationId" : "healthCheck",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/rule" : {
+      "get" : {
+        "tags" : [ "Holmes Rule Management" ],
+        "summary" : "Query rules using certain criteria.",
+        "description" : "",
+        "operationId" : "getCorrelationRules",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "queryrequest",
+          "in" : "query",
+          "description" : "A JSON string used as a query parameter, which comprises \"ruleId\"(optional), \"ruleName\"(optional), \"creator\"(optional), \"modifier\"(optional) and \"enabled\"(optional). E.g. {\"ruleId\":\"rule_1484727187317\"}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RuleQueryListResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Holmes Rule Management" ],
+        "summary" : "Update an existing rule; deploy it to the Drools engine if it is enabled.",
+        "description" : "",
+        "operationId" : "updateCorrelationRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The request entity of the HTTP call, which comprises \"ruleId\"(required), \"content\"(required), \"enabled\"(required) and \"description\"(optional)",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RuleUpdateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RuleAddAndUpdateResponse"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Holmes Rule Management" ],
+        "summary" : "Save a rule into the database; deploy it to the Drools engine if it is enabled.",
+        "description" : "",
+        "operationId" : "addCorrelationRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The request entity of the HTTP call, which comprises \"ruleName\"(required), \"loopControlName\"(required), \"content\"(required), \"enabled\"(required) and \"description\"(optional)",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RuleCreateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RuleAddAndUpdateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/rule/{ruleId}" : {
+      "delete" : {
+        "tags" : [ "Holmes Rule Management" ],
+        "summary" : "Remove a rule from Holmes.",
+        "description" : "",
+        "operationId" : "deleteCorrelationRule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "ruleId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "RuleAddAndUpdateResponse" : {
+      "type" : "object",
+      "properties" : {
+        "ruleId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RuleCreateRequest" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "enabled" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "ruleName" : {
+          "type" : "string"
+        },
+        "loopControlName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RuleQueryListResponse" : {
+      "type" : "object",
+      "properties" : {
+        "correlationRules" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleResult4API"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "RuleResult4API" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "creator" : {
+          "type" : "string"
+        },
+        "modifier" : {
+          "type" : "string"
+        },
+        "enabled" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "ruleId" : {
+          "type" : "string"
+        },
+        "ruleName" : {
+          "type" : "string"
+        },
+        "createtime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatetime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "loopControlName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RuleUpdateRequest" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "enabled" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "ruleId" : {
+          "type" : "string"
+        },
+        "loopControlName" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
