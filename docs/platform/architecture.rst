@@ -14,7 +14,7 @@ Holmes comprises three modules: the rule management module, the engine managemen
 ONAP-level Architecture
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Basically, Holmes itself is an independent component in ONAP, which means it could be deployed as an ONAP-level component. In the Amsterdam release, Holmes is more generally a DCAE analytic application. It is deployed by DCAE and run as an analytic application on top of it. Also, it could be considered as a filter of the Policy component because it reduces the number of the input messages of Policy.
+Basically, Holmes itself is an independent component in ONAP, which means it could be deployed as an ONAP-level component. In the Beijing release, Holmes is more generally a DCAE analytic application. It is deployed by DCAE and run as an analytic application on top of it. Also, it could be considered as a filter of the Policy component because it reduces the number of the input messages of Policy.
 
 .. image:: images/overall-architecture-in-onap.png
 
