@@ -14,17 +14,21 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 1.1.0
 --------------
 
-:Release Date: 2018-05-24
+:Release Date: 2018-06-07
 
 
 **New Features**
-In the Amsterdam release, Holmes is mainly intended to support the alarm
-correlation analysis for the VoLTE scenario. To get us there, Holmes provides
-the following features:
+In the Beijing release, Holmes provides no more functionalites than the Amsterdam release. Its main features remains like follows:
 
 - `Rule Management <https://jira.onap.org/browse/HOLMES-4>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules.
 
 - `Engine Management <https://jira.onap.org/browse/HOLMES-5>`_ The feature is not exposed to the end user directly. It's mainly used internally by Holmes as a container for the execution of rules. It provides interface for rule verification and deployment/un-deployment.
+
+Besides, Holmes has been enhanced to meet the platform maturity requirements. The enhancement mainly covers:
+
+- Scaling: Holmes supports horizontal scale-in/scale-out operations in case it is overloaded by too large amounts of data.
+
+- Security: Holmes has updated all its APIs to support the HTTPS protocol. 
 
 **Bug Fixes**
 
@@ -51,12 +55,46 @@ Holmes is following the CII Best Practices Badge program. Most of its vulnerabil
 
 **Deprecation Notes**
 
-N/A
+None of the HTTP APIs provided in the Amsterdam release are available in Beijing anymore.
+
 
 **Other**
 
 N/A
 
 ===========
+
+Version: 1.0.0
+--------------
+
+:Release Date: 2017-11-16
+
+
+**New Features**
+In the Amsterdam release, Holmes is mainly intended to support the alarm
+correlation analysis for the VoLTE scenario. To get us there, Holmes provides
+the following features:
+
+- `Rule Management <https://jira.onap.org/browse/HOLMES-4>`_ The feature provides interfaces for the users to create, query, update and delete rules. In this release, they are used along with the DCAE interfaces to accomplish the deployment (creation/update) of the control loop related rules.
+
+- `Engine Management <https://jira.onap.org/browse/HOLMES-5>`_ The feature is not exposed to the end user directly. It's mainly used internally by Holmes as a container for the execution of rules. It provides interface for rule verification and deployment/un-deployment.
+
+**Bug Fixes**
+
+This is the initial release.
+
+**Known Issues**
+
+If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+
+**Security Issues**
+
+N/A
+
+**Upgrade Notes**
+
+This is the inital release.
+===========
+
 
 End of Release Notes
