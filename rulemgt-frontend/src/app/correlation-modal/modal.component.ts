@@ -25,7 +25,7 @@ declare var $: any;
 })
 export class SifModalComponent implements OnInit {
     constructor(private modalServer: ModalService) { };
-    private modalTitle = 'modalTitleDefault';
+    modalTitle = 'modalTitleDefault';
     modalBodyMessage = 'modalBodyMessageDefault';
     closeBtnTitle = 'closeBtnTitleDefault';
 
