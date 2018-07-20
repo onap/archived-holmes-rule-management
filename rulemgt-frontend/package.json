@@ -1,0 +1,67 @@
+{
+  "name": "alarm-analysis",
+  "version": "1.0.0",
+  "description": "alarm-analysis",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/angular/angular.io/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "@angular/animations": "^4.4.6",
+    "@angular/common": "^4.2.4",
+    "@angular/compiler": "^4.2.4",
+    "@angular/core": "^4.2.4",
+    "@angular/flex-layout": "^2.0.0-beta.10-4905443",
+    "@angular/forms": "^4.2.4",
+    "@angular/http": "^4.2.4",
+    "@angular/platform-browser": "^4.2.4",
+    "@angular/platform-browser-dynamic": "^4.2.4",
+    "@angular/router": "^4.2.4",
+    "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.20",
+    "@ngx-translate/core": "^8.0.0",
+    "@ngx-translate/http-loader": "^2.0.0",
+    "awesome-typescript-loader": "^3.0.0-beta.18",
+    "bootstrap": "^3.3.7",
+    "core-js": "^2.4.1",
+    "ie-shim": "^0.1.0",
+    "json-load": "^1.0.1",
+    "jquery": "^3.2.1",
+    "primeng": "^2.0.0-rc.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "^5.4.2",
+    "to-string-loader": "^1.1.5",
+    "tslint-eslint-rules": "^3.4.0",
+    "zone.js": "^0.8.14"
+  },
+  "devDependencies": {
+    "@angular/cli": "^1.6.0",
+    "@angular/compiler-cli": "^4.2.4",
+    "@angular/language-service": "^4.2.4",
+    "@types/jasmine": "~2.5.53",
+    "@types/jasminewd2": "~2.0.2",
+    "@types/jquery": "^3.2.17",
+    "@types/node": "^6.0.114",
+    "codelyzer": "~2.0.0-beta.4",
+    "concurrently": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.10.1",
+    "html-loader": "0.4.4",
+    "protractor": "~5.1.2",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.2",
+    "ts-node": "~3.2.0",
+    "tslint": "~5.7.0",
+    "typescript": "~2.3.3",
+    "vrsource-tslint-rules": "^4.0.1"
+  }
+}
