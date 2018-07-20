@@ -30,6 +30,7 @@
     <name>holmes-rule-management</name>
     <modules>
         <module>rulemgt</module>
+        <module>rulemgt-frontend</module>
         <module>rulemgt-standalone</module>
     </modules>
 
