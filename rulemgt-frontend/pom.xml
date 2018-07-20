@@ -33,41 +33,46 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.5.0</version>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
         <executions>
           <execution>
-            <id>angular-cli install</id>
-            <configuration>
-              <workingDirectory>.</workingDirectory>
-              <executable>cmd</executable>
-              <arguments>
-                <argument>/c</argument>
-                <argument>"npm install --prefer-offline"</argument>
-              </arguments>
-            </configuration>
-            <phase>generate-resources</phase>
+            <id>install node and npm</id>
             <goals>
-              <goal>exec</goal>
+              <goal>install-node-and-npm</goal>
             </goals>
+            <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>angular-cli build</id>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
             <configuration>
-              <workingDirectory>.</workingDirectory>
-              <executable>cmd</executable>
-              <arguments>
-                <argument>/c</argument>
-                <argument>"ng build --prod"</argument>
-              </arguments>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>prod</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run-script prod</arguments>
+              <arguments>run-script prod</arguments>
             </configuration>
             <phase>generate-resources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
           </execution>
         </executions>
+        <configuration>
+          <skip>${skip.node.and.npm.installation}</skip>
+          <nodeVersion>v10.6.0</nodeVersion>
+          <npmVersion>6.1.0</npmVersion>
+          <installDirectory>./</installDirectory>
+          <workingDirectory>./</workingDirectory>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -111,4 +116,21 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <properties>
+        <skip.node.and.npm.installation>true</skip.node.and.npm.installation>
+      </properties>
+    </profile>
+    <profile>
+      <id>normal</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <skip.node.and.npm.installation>false</skip.node.and.npm.installation>
+      </properties>
+    </profile>
+  </profiles>
 </project>
