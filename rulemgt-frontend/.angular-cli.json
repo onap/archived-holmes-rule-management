@@ -20,14 +20,18 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "./assets/common/css/fileupload.css",
-        "./assets/common/css/popModal.css",
-        "./assets/framework/browser/css/open-ostyle.css",
-        "./assets/framework/browser/thirdparty/css/bootstrap.min.css",
-        "./assets/framework/browser/thirdparty/css/magic-check.css"
+        "assets/common/css/fileupload.css",
+        "assets/common/css/popModal.css",
+        "assets/framework/browser/css/open-ostyle.css",
+        "assets/framework/browser/thirdparty/css/bootstrap.min.css",
+        "assets/framework/browser/thirdparty/css/magic-check.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js"
+        "../node_modules/jquery/dist/jquery.min.js",
+        "assets/common/js/jQuery-File-Upload/js/jquery.ui.widget.js",
+        "assets/common/js/jQuery-File-Upload/js/vendor/jquery.ui.widget.js",
+        "assets/common/js/jQuery-File-Upload/js/jquery.iframe-transport.js",
+        "assets/common/js/jQuery-File-Upload/js/jquery.fileupload.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

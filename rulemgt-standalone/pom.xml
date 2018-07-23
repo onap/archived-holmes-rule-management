@@ -117,6 +117,26 @@
                             <overwrite>true</overwrite>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-nginx-conf-file</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/version</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/assembly/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>holmes.nginx.conf</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

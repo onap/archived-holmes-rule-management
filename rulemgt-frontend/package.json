@@ -1,7 +1,7 @@
 {
-  "name": "alarm-analysis",
+  "name": "holmes",
   "version": "1.0.0",
-  "description": "alarm-analysis",
+  "description": "holmes",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -38,7 +38,6 @@ export class RuleInfo implements OnInit {
             let msg = { title: 'exception_content_error', message: 'exception_package_error' };
             this.modalService.getmodalObservable.next(msg);
         } else {
-
             this.alarmRuleService.checkContent(this.queryRule.content)
                 .then(res => {
                     if (res.status == 200) {
