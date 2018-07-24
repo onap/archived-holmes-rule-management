@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --dev",
-    "prod": "ng build --prod --base-href /holmes/",
+    "prod": "ng build --prod --base-href /iui/holmes/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

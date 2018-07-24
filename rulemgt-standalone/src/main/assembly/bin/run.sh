@@ -81,7 +81,9 @@ sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf
 ./bin/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
 
 
-#Register the frontend to MSB
+#Register the fronten to MSB
+body='{"serviceName": "holmes", "version": "v1", "url": "/iui/holmes","protocol": "UI", "enable_ssl":"true", "visualRange":"0|1", "nodes": [ {"ip": "host_ip","port": "9104"}]}'
+curl -X POST -H "Content-Type: application/json" -d ${body/host_ip/"${HOSTNAME%:*}"} http://${MSB_ADDR}:10081/api/microservices/v1/services
 
 
 nginx -c /usr/local/openresty/nginx/conf/nginx.conf
