@@ -9,7 +9,7 @@
   <fileSets>
     <fileSet>
       <directory>dist</directory>
-      <outputDirectory>/holmes</outputDirectory>
+      <outputDirectory>/iui/holmes</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>
