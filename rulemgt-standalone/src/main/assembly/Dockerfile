@@ -1,48 +1,50 @@
-FROM ubuntu:16.04
+FROM openresty/openresty:alpine
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
 EXPOSE 9101 9104 9201
 
-#install openjdk-1.8
-#RUN sed -i 's#http://archive.ubuntu.com#http://mirrors.163.com#g' /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get install -y openjdk-8-jdk
-
-#configure the JDK
-RUN sed -i 's|#networkaddress.cache.ttl=-1|networkaddress.cache.ttl=10|' /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-ENV PATH $PATH:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin:/usr/lib/jvm/java-8-openjdk-amd64/bin
-ENV CLASSPATH .:${JAVA_HOME}/lib:${JRE_HOME}/lib
-ENV JRE_HOME ${JAVA_HOME}/jre
-
-#install neccessary tools
-RUN apt-get install -y bash curl vim
-
-#install nginx
-RUN apt-get install -y wget build-essential libtool libpcre3 libpcre3-dev zlib1g-dev openssl
-RUN wget http://nginx.org/download/nginx-1.14.0.tar.gz
-RUN tar -zxvf nginx-1.14.0.tar.gz
-RUN rm nginx-1.14.0.tar.gz
-WORKDIR /nginx-1.14.0
-RUN ./configure --prefix=/usr/local/nginx
-RUN make install
-RUN ln -s /usr/local/nginx/sbin/nginx /usr/bin/nginx
-RUN rm -rf /nginx-1.14.0
-ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/nginx/html
-ADD holmes.nginx.conf /usr/local/nginx/conf
-
-
 ENV HOSTNAME holmes-rule-mgmt
 
-#add holmes related resources to the docker image
+ENV LANG C.UTF-8
+
+#install java-1.8-openjdk
+
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
+
+ENV JAVA_ALPINE_VERSION 8.171.11-r0
+
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk8="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
+
+#install neccessary tools
+RUN apk upgrade \
+    && apk update \
+    && apk add --no-cache curl \
+    && apk add --no-cache postgresql-client=10.4-r0
+
+#add the frontend pacakge to the docker images
+RUN rm /etc/nginx/conf.d/default.conf
+ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html
+ADD nginx.conf /usr/local/openresty/nginx/conf
+
+#add the backend package to the docker image
 RUN mkdir /home/holmes
 WORKDIR /home/holmes
 ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
 RUN chmod 755 /home/holmes/bin/*.sh
 
-#install the postgres client
-RUN apt-get install -y postgresql-client-9.5 postgresql-contrib-9.5
-
-ENTRYPOINT /home/holmes/bin/run.sh
+CMD ["sh", "/home/holmes/bin/run.sh"]
 
