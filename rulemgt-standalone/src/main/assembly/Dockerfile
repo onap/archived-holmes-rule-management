@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
-EXPOSE 9101 9104
+EXPOSE 9101 9104 9201
 
 #install openjdk-1.8
 #RUN sed -i 's#http://archive.ubuntu.com#http://mirrors.163.com#g' /etc/apt/sources.list
