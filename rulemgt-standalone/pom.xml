@@ -130,7 +130,7 @@
                                     <directory>src/main/assembly/</directory>
                                     <filtering>false</filtering>
                                     <includes>
-                                        <include>holmes.nginx.conf</include>
+                                        <include>nginx.conf</include>
                                     </includes>
                                 </resource>
                             </resources>

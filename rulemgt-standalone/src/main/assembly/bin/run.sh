@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Copyright 2017 ZTE Corporation.
@@ -25,8 +25,8 @@ JAVA="$JAVA_HOME/bin/java"
 echo @JAVA@ $JAVA
 main_path=$RUNHOME/..
 cd $main_path
-JAVA_OPTS="-Xms50m -Xmx128m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9201"
-port=8312
+JAVA_OPTS="-Xms50m -Xmx128m"
+port=9201
 #JAVA_OPTS="$JAVA_OPTS -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=$port,server=y,suspend=n"
 echo @JAVA_OPTS@ $JAVA_OPTS
 
@@ -80,7 +80,10 @@ sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf
 
 ./bin/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
 
-#Start nginx
-nginx -c /usr/local/nginx/conf/holmes.nginx.conf
+
+#Register the frontend to MSB
+
+
+nginx -c /usr/local/openresty/nginx/conf/nginx.conf
 
 "$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
