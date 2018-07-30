@@ -24,9 +24,9 @@ declare var jQuery: any;
 
 @Component({
     selector: 'alarmRule',
-    templateUrl: './alarmRule.component.html',
-
+    templateUrl: './alarmRule.component.html'
 })
+
 export class AlarmRule implements OnInit {
     ruleModel: RuleModel;
     rules: RuleModel[];
@@ -35,7 +35,7 @@ export class AlarmRule implements OnInit {
     ruleName: string;
     enable_on = "enabled";
     enable_off = "disabled"
-    totalcount: number;
+    totalcount: number = 0;
     model: any;
     ruleRequest: RuleRequest;
     solution = 'ANGULAR';
