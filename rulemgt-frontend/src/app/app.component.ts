@@ -1,5 +1,5 @@
 /*
- Copyright 2017 ZTE Corporation.
+ Copyright 2018 ZTE Corporation.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'remote-config',
-    templateUrl: './pages/remote.component.html',
+    templateUrl: './pages/remote.component.html'
 })
 export class AppComponent implements OnInit {
     constructor(private translate: TranslateService) { }

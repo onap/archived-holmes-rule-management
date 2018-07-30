@@ -17,10 +17,12 @@
 <html>
 
 <head>
-    <!-- <base href=""> -->
+    <base href="/iui/holmes/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="./assets/thirdparty/js/jquery_1.12.4.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
 
     <style type="text/css">
         .header {
@@ -59,21 +61,20 @@
 
         .body {
             min-height: 500px;
-            height: 500px;
             padding: 0;
         }
 
         body {
             margin: 0;
-            overflow: auto;
         }
 
         iframe {
             margin: 0;
+            border: none;
         }
 
         .menu-item {
-            height: 135px;
+            height: 120px;
             color: #aaa;
             text-align: center;
         }
@@ -84,22 +85,22 @@
         }
 
         .menu-item-title {
-            height: 50px;
-            line-height: 50px;
+            height: 45px;
+            line-height: 25px;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
         }
 
         .menu-icon {
-            height: 85px;
-            line-height: 85px;
+            height: 75px;
+            line-height: 90px;
+            font-size: 35px;
         }
 
         .active {
             color: #FFF;
             background-color: #424e57;
         }
-
     </style>
 </head>
 
@@ -114,31 +115,41 @@
     </div>
     <div class="body">
         <div class="sidebar fl">
-            <div class="menu-item active">
+            <div class="menu-item active" id="rule-mgmt">
                 <div class="menu-icon">
-                    icon
+                    <i class="fas fa-file-alt"></i>
                 </div>
                 <div class="menu-item-title">Rules</div>
             </div>
         </div>
         <div class="main fl">
-            <iframe src="/iui/holmes/index.html"></iframe>
+            <iframe src="/iui/holmes/#/alarmRule"></iframe>
         </div>
     </div>
 
     <script type="text/javascript">
-        function adjustSizes() {
-            var height = $(window).height() - $(".header").height();
-                $(".sidebar").height(height);
-                $("iframe").height(height);
-                $("iframe").width($(window).width() - $(".sidebar").width());
+
+        var menus = {
+            "rule-mgmt": "/iui/holmes/#/alarmRule"
         }
 
-        $(function(){
-            $(window).on("resize", function(){
+        function adjustSizes() {
+            var height = $(window).height() - $(".header").outerHeight() - 4;
+            $(".sidebar").height(height);
+            $("iframe").height(height);
+            $(".main").height(height);
+            $("iframe").width($(window).width() - $(".sidebar").width());
+        }
+
+        $(function () {
+            $(window).on("resize", function () {
                 adjustSizes();
             });
             adjustSizes();
+
+            $(".menu-item").on("click", function () {
+                $("iframe")[0].src = menus[$(this).attr("id")];
+            })
         });
     </script>
 </body>
