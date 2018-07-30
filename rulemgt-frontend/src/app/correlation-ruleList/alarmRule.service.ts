@@ -69,7 +69,7 @@ export class AlarmRuleService {
         const url = `${this.ruleUrl}?queryrequest=${JSON.stringify(data)}`
         return this.http.get(url, { body: data, headers: this.headers })
             .toPromise()
-            .then(res => res.json().rules as RuleModel[])
+            .then(res => res.json().correlatoinRules as RuleModel[])
             .catch(this.handleError);
     }
 
@@ -88,7 +88,8 @@ export class AlarmRuleService {
             "ruleId": rule.ruleId,
             "description": rule.description,
             "content": rule.content,
-            "enabled": rule.enabled
+            "enabled": rule.enabled,
+            "loopControlName": rule.loopControlName
         }
         const url = `${this.ruleUrl}`
         return this.http
@@ -103,7 +104,8 @@ export class AlarmRuleService {
             "description": rule.description,
             "content": rule.content,
             "enabled": rule.enabled,
-            "ruleName": rule.ruleName
+            "ruleName": rule.ruleName,
+            "loopControlName": rule.loopControlName
         }
         return this.http.put(this.ruleUrl, JSON.stringify(ruledata), { headers: this.headers })
             .toPromise()
