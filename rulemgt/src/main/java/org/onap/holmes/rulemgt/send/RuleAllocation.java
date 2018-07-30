@@ -193,13 +193,8 @@ public class RuleAllocation {
             log.error("getEngineIp4AddRule failed !", e);
         }
 
-        List<Map.Entry<String, String>> list_Data = new ArrayList<Map.Entry<String, String>>(hashMap.entrySet());
-        Collections.sort(list_Data, new Comparator<Map.Entry<String, String>>() {
-            public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }
-        });
-
+        List<Map.Entry<String, String>> list_Data = new ArrayList<>(hashMap.entrySet());
+        Collections.sort(list_Data,(o1,o2) -> o1.getValue().compareTo(o2.getValue()));
         List<String> needList = new ArrayList<>();
         for (Map.Entry<String, String> map : list_Data) {
             String key = map.getKey();

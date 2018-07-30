@@ -51,33 +51,24 @@ public class EngineIpList {
     }
 
     public List<String> getServiceCount()throws Exception{
-        String response;
-        CloseableHttpClient httpClient = null;
-        HttpGet httpGet = new HttpGet(url);
-        try {
-            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
-            HttpResponse httpResponse = HttpsUtils
-                    .get(httpGet, new HashMap<>(), httpClient);
-            response = HttpsUtils.extractResponseEntity(httpResponse);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            httpGet.releaseConnection();
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    log.warn("Failed to close http client!");
-                }
-            }
-        }
-        ServiceEntity service = GsonUtil.jsonToBean(response, ServiceEntity.class);
-        List<ServiceNode4Query> nodesList = service.getNodes();
-        List<String> ipList = new ArrayList<>();
-        for(ServiceNode4Query node : nodesList){
-            ipList.add(node.getIp());
-        }
-        return ipList;
+		String response;
+		HttpGet httpGet = new HttpGet(url);
+		try (CloseableHttpClient httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT)) {
+			HttpResponse httpResponse = HttpsUtils.get(httpGet, new HashMap<>(), httpClient);
+			response = HttpsUtils.extractResponseEntity(httpResponse);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			httpGet.releaseConnection();
+
+		}
+		ServiceEntity service = GsonUtil.jsonToBean(response, ServiceEntity.class);
+		List<ServiceNode4Query> nodesList = service.getNodes();
+		List<String> ipList = new ArrayList<>();
+		for (ServiceNode4Query node : nodesList) {
+			ipList.add(node.getIp());
+		}
+		return ipList;
 
     }
 
