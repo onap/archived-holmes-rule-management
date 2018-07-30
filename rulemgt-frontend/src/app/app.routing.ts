@@ -1,5 +1,5 @@
 /*
- Copyright 2017 ZTE Corporation.
+ Copyright 2018 ZTE Corporation.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { ModuleWithProviders }  from '@angular/core';
+import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {AlarmRule} from './correlation-ruleList/alarmRule.component';
-import {RuleInfo} from './correlation-ruleInfo/ruleInfo.component'
+import { AlarmRule } from './correlation-ruleList/alarmRule.component';
+import { RuleInfo } from './correlation-ruleInfo/ruleInfo.component';
 const appRoutes: Routes = [
     {
         path: 'alarmRule',
-        component:AlarmRule
+        component: AlarmRule
     },
     {
         path: 'ruleInfo',
@@ -31,10 +31,10 @@ const appRoutes: Routes = [
         component: RuleInfo
     },
     {
-        path:'',
-        redirectTo:'alarmRule',
+        path: '',
+        redirectTo: 'alarmRule',
         pathMatch: 'full'
     },
 
 ];
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes,{ useHash: true });
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: true });

@@ -11,6 +11,13 @@
       <directory>dist</directory>
       <outputDirectory>/iui/holmes</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>src</directory>
+      <outputDirectory>/iui/holmes</outputDirectory>
+      <includes>
+        <include>default.html</include>
+      </includes>
+    </fileSet>
   </fileSets>
 </assembly>
 
