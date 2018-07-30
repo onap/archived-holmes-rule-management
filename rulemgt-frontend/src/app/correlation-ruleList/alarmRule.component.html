@@ -13,30 +13,38 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<div class="container-fluid" style="padding-top: 20px">
+<div class="container-fluid" style="padding: 40px 40px 0 40px">
     <form class="form-inline">
         <div class="form-body">
             <div class="row form-group col-xs-12">
                 <div class="col-xs-4">
-                    <label class="col-xs-3 control-label" style="padding-top: 8px">
-                        {{"common_status"|translate}}
-                    </label>
-                    <select #selection class="form-control" style="width: 60%" id="status" (change)="switch(selection.value)" [(ngModel)]="activeText"
-                        name="activestatus">
-                      <option *ngFor="let a of activeStatus" [value]="a">{{a|translate}}</option>
-                    </select>
+                    <div class="row">
+                        <label class="col-xs-3 col-md-2 control-label" style="padding-top: 8px">
+                            {{"common_status"|translate}}
+                        </label>
+                        <div class="col-xs-7">
+                            <select #selection class="form-control" id="status" (change)="switch(selection.value)" [(ngModel)]="activeText" name="activestatus"
+                                style="width:100%">
+                                <option *ngFor="let a of activeStatus" [value]="a">{{a|translate}}</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-xs-4">
-                    <label for="userName" class="col-xs-3 control-label" style="padding-top: 8px">
-                        <span>{{"common_keyword"|translate}}</span>
-                    </label>
-                    <input class="form-control ng-untouched ng-pristine ng-valid" style="width: 60%" placeholder='{{"field_rule_name_Add_Page"|translate}}'
-                        type="text" [(ngModel)]="ruleModel.ruleName" name="name">
+                    <div class="row">
+                        <label for="userName" class="col-xs-3 control-label" style="padding-top: 8px">
+                            <span>{{"common_keyword"|translate}}</span>
+                        </label>
+                        <div class="col-xs-7">
+                            <input class="form-control ng-untouched ng-pristine ng-valid" placeholder='{{"field_rule_name_Add_Page"|translate}}' type="text"
+                                [(ngModel)]="ruleModel.ruleName" name="name" style="width:100%">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="fmrule_btn_group display_table">
-                    <div class="inline">
+                <div class="fmrule_btn_group display_table col-xs-4">
+                    <div class="inline row">
                         <button id="batchDeleteButton" class="btn btn-primary" (click)="searchRules()">
                             <span class="glyphicon glyphicon-search" style="padding-top: 2px"></span>
                             <span>{{"common_query"|translate}}</span>
@@ -49,14 +57,12 @@
                 </div>
             </div>
 
-            <div class="row form-group col-xs-12" style="margin-top: 10px">
-                <div class="">
-                    <div class="inline">
-                        <button type="button" routerLink='/ruleInfo' class="btn btn-info">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    <span>{{"common_add"|translate}}</span>
+            <div class="row form-group" style="margin-top: 10px">
+                <div class="inline col-xs-12">
+                    <button type="button" routerLink='/ruleInfo' class="btn btn-info">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span>{{"common_add"|translate}}</span>
                     </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -76,30 +82,43 @@
                 </tr>
             </thead>
             <tbody>
+                <tr *ngIf="rules == null || rules.length === 0">
+                    <td colspan="6" style="text-align: center; background-color: white;">{{"nodata"|translate}}</td>
+                </tr>
                 <tr *ngFor="let rule of rules">
-                    <td><a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.rulename}}</a></td>
-                    <td [hidden]="rule.enabled === 1" style="text-align: center"><span value=1><img src="../../assets/thirdparty/images/round_off.png" alt=""></span></td>
-                    <td [hidden]="rule.enabled === 0" style="text-align: center"><span value=0><img src="../../assets/thirdparty/images/round_on.png" alt=""></span></td>
+                    <td>
+                        <a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.rulename}}</a>
+                    </td>
+                    <td [hidden]="rule.enabled === 1" style="text-align: center">
+                        <span value=1>
+                            <img src="../../assets/thirdparty/images/round_off.png" alt="">
+                        </span>
+                    </td>
+                    <td [hidden]="rule.enabled === 0" style="text-align: center">
+                        <span value=0>
+                            <img src="../../assets/thirdparty/images/round_on.png" alt="">
+                        </span>
+                    </td>
                     <td>{{rule.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>{{rule.creator}}</td>
                     <td>{{rule.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
                         <span (click)="updateRule(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                        <img src="../../assets/thirdparty/images/edit.png" alt="">
-                    </span>
+                            <img src="../../assets/thirdparty/images/edit.png" alt="">
+                        </span>
                         <span>
-                        
-                    </span>
-                        <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px"> 
-                        <img src="../../assets/thirdparty/images/on.png" alt="">
-                    </span>
+
+                        </span>
+                        <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
+                            <img src="../../assets/thirdparty/images/on.png" alt="">
+                        </span>
                         <span [hidden]="rule.enabled===0" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                        <img src="../../assets/thirdparty/images/off.png" alt="">
-                    </span>
+                            <img src="../../assets/thirdparty/images/off.png" alt="">
+                        </span>
 
                         <span class="" id={{rule.ruleId}} (click)="delete(rule)" style="cursor: pointer;margin: 0 5px">
-                         <img src="../../assets/thirdparty/images/delete.png" alt="">
-                    </span>
+                            <img src="../../assets/thirdparty/images/delete.png" alt="">
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -114,7 +133,7 @@
                 <button class="btn btnDefault btnmrg" data-popmodal-but="ok">
                     <span>{{"common_confirm"|translate}}</span>
                 </button>
-                 <button class="btn btnDefault btnmrg" type="button" data-popmodal-but="cancel">
+                <button class="btn btnDefault btnmrg" type="button" data-popmodal-but="cancel">
                     <span>{{"common_cancel"|translate}}</span>
                 </button>
             </div>
