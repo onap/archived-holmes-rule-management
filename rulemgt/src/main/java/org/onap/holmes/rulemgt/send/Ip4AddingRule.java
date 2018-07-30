@@ -38,7 +38,7 @@ public class Ip4AddingRule {
 
     public String getEngineIp4AddRule() {
         List<CorrelationRule> ipRuleList  = new ArrayList<>();
-        LinkedHashMap<String,Integer> linkedHashMap = new LinkedHashMap();
+        LinkedHashMap<String,Integer> linkedHashMap = new LinkedHashMap<>();
 
         try{
             for(String ip : engineService){
@@ -61,6 +61,7 @@ public class Ip4AddingRule {
                 ip = getKey;
             }
         }
+        
         return ip;
     }
 }
