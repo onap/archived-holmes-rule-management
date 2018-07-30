@@ -39,7 +39,7 @@ export class AlarmRule implements OnInit {
     model: any;
     ruleRequest: RuleRequest;
     solution = 'ANGULAR';
-    selection = 'A'
+    selection = 'A';
     activeStatus = ["option_all", "common_enabled", "common_disabled"];
 
     constructor(public _alarmRuleService: AlarmRuleService, private modalService: ModalService,
@@ -76,7 +76,7 @@ export class AlarmRule implements OnInit {
         return this._alarmRuleService
             .getRules()
             .then(rules => {
-                this.rules = rules.rules;
+                this.rules = rules.correlationRules;
                 this.totalcount = rules.totalcount;
             });
     }
