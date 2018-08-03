@@ -43,7 +43,7 @@ export class AlarmRule implements OnInit {
     activeStatus = ["option_all", "common_enabled", "common_disabled"];
 
     constructor(public _alarmRuleService: AlarmRuleService, private modalService: ModalService,
-        private router: Router) { };
+        private router: Router) { }
 
     switch(select: string): void {
         console.log(select);
@@ -56,7 +56,7 @@ export class AlarmRule implements OnInit {
             this.ruleModel.enabled = null;
         }
         this.setActiveText();
-    };
+    }
 
     setActiveText(): void {
         if (this.ruleModel.enabled == 1) {
@@ -70,18 +70,18 @@ export class AlarmRule implements OnInit {
             this.activeText = "option_all";
             this.ruleRequest.enabled = null;
         }
-    };
+    }
 
     getRules(): Promise<any> {
         return this._alarmRuleService
             .getRules()
             .then(rules => {
                 this.rules = rules.correlationRules;
-                this.totalcount = rules.totalcount;
+                this.totalcount = rules.totalCount;
             });
     }
 
-    searchRules(): void {
+    public searchRules(): void {
         if (this.ruleModel.enabled == null) {
             this.ruleRequest.enabled = null;
         }
@@ -95,15 +95,15 @@ export class AlarmRule implements OnInit {
                 this.totalcount = rules.length;
             });
     }
-    updateRule(rule: RuleModel): void {
+    public updateRule(rule: RuleModel): void {
         this.router.navigate(['ruleInfo/', rule.ruleId]);
     }
 
-    delete(rule: RuleModel): void {
+    public delete(rule: RuleModel): void {
         rule.enabled == 1 ? this.deleteActiveRule(rule) : this.deleteModel(rule.ruleId, this._alarmRuleService, this);
     }
 
-    on_off(rule: RuleModel) {
+    public on_off(rule: RuleModel) {
         rule.enabled == 0 ? rule.enabled = 1 : rule.enabled = 0;
         this._alarmRuleService
             .updateRule(rule)
@@ -112,14 +112,14 @@ export class AlarmRule implements OnInit {
             });
     }
 
-    reset(): void {
+    public reset(): void {
         this.ruleModel.ruleName = null;
         this.activeText = 'option_all';
         this.ruleModel.enabled = null;
         this.getRules();
     }
 
-    deleteActiveRule(rule: RuleModel): void {
+    public deleteActiveRule(rule: RuleModel): void {
         jQuery('#' + rule.ruleId).popModal({
             html: jQuery('#deleteActiveRuleContent'),
             placement: 'leftTop',
@@ -129,7 +129,7 @@ export class AlarmRule implements OnInit {
             },
         });
     }
-    deleteModel(ruleId: string, alarm: AlarmRuleService, obj: any): void {
+    public deleteModel(ruleId: string, alarm: AlarmRuleService, obj: any): void {
         jQuery('#' + ruleId).popModal({
             html: jQuery('#deleteTimingTaskContent'),
             placement: 'leftTop',
@@ -145,7 +145,7 @@ export class AlarmRule implements OnInit {
         });
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.activeText = 'option_all';
         this.ruleModel = {
             ruleId: null,
@@ -158,7 +158,7 @@ export class AlarmRule implements OnInit {
             modifier: null,
             enabled: 0,
             loopControlName: ''
-        }
+        };
         this.ruleRequest = {
             ruleId: null,
             ruleName: null,
@@ -166,7 +166,7 @@ export class AlarmRule implements OnInit {
             modifier: null,
             enabled: null,
             loopControlName: ''
-        }
+        };
         this.getRules();
     }
 }

@@ -87,16 +87,16 @@
                 </tr>
                 <tr *ngFor="let rule of rules">
                     <td>
-                        <a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.rulename}}</a>
+                        <a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.ruleName}}</a>
                     </td>
-                    <td [hidden]="rule.enabled === 1" style="text-align: center">
+                    <td [hidden]="rule.enabled === 0">
                         <span value=1>
-                            <img src="../../assets/thirdparty/images/round_off.png" alt="">
+                            <i class="fas fa-power-off" style="color:#4ac9ff;"></i>
                         </span>
                     </td>
-                    <td [hidden]="rule.enabled === 0" style="text-align: center">
+                    <td [hidden]="rule.enabled === 1">
                         <span value=0>
-                            <img src="../../assets/thirdparty/images/round_on.png" alt="">
+                            <i class="fas fa-power-off" style="color: #aaa;"></i>
                         </span>
                     </td>
                     <td>{{rule.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
@@ -104,20 +104,20 @@
                     <td>{{rule.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>
                         <span (click)="updateRule(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <img src="../../assets/thirdparty/images/edit.png" alt="">
+                            <i class="fas fa-pencil-alt" style="font-size: 14px;"></i>
                         </span>
                         <span>
 
                         </span>
-                        <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <img src="../../assets/thirdparty/images/on.png" alt="">
-                        </span>
                         <span [hidden]="rule.enabled===0" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <img src="../../assets/thirdparty/images/off.png" alt="">
+                            <i class="fas fa-toggle-on" style="font-size: 20px; color:#4ac9ff; vertical-align:-2px;"></i>
+                        </span>
+                        <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
+                            <i class="fas fa-toggle-off" style="font-size: 20px; color:black; vertical-align:-2px;" title="Switch On"></i>
                         </span>
 
                         <span class="" id={{rule.ruleId}} (click)="delete(rule)" style="cursor: pointer;margin: 0 5px">
-                            <img src="../../assets/thirdparty/images/delete.png" alt="">
+                            <i class="fas fa-times" style="color: rgba(255, 0, 0, 0.788);font-size:16px;vertical-align:-1px;"></i>
                         </span>
                     </td>
                 </tr>
