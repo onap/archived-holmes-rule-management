@@ -59,7 +59,7 @@ export class AlarmRuleService {
         const url = `${this.ruleUrl}?queryrequest=${queryrequest}`;
         return this.http.get(url, {headers:this.headers})
             .toPromise()
-            .then(res => res.json().rules as RuleModel)
+            .then(res => res.json().correlationRules as RuleModel[])
             .catch(this.handleError);
     }
 
@@ -69,7 +69,7 @@ export class AlarmRuleService {
         const url = `${this.ruleUrl}?queryrequest=${JSON.stringify(data)}`
         return this.http.get(url, { body: data, headers: this.headers })
             .toPromise()
-            .then(res => res.json().correlatoinRules as RuleModel[])
+            .then(res => res.json().correlationRules as RuleModel[])
             .catch(this.handleError);
     }
 

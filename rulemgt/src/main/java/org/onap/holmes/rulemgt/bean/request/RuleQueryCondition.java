@@ -23,9 +23,9 @@ import lombok.Setter;
 @Setter
 public class RuleQueryCondition {
 
-    @SerializedName(value = "ruleid")
+    @SerializedName(value = "ruleId")
     private String rid;
-    @SerializedName(value = "rulename")
+    @SerializedName(value = "ruleName")
     private String name;
     private int enabled;
     private String creator;
