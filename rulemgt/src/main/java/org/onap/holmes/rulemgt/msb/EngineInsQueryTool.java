@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 ZTE Corporation.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ package org.onap.holmes.rulemgt.msb;
 
 
 import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -35,22 +36,18 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class EngineIpList {
+public class EngineInsQueryTool {
 
-    private String[] msbAddrInfo;
-    private String ip;
-    private String port;
     private String url;
 
     @PostConstruct
-    public void init(){
-        msbAddrInfo = MicroServiceConfig.getMsbIpAndPort();
-        ip = msbAddrInfo[0];
-        port = msbAddrInfo[1];
-        url = "http://" + ip + ":" + port + "/api/microservices/v1/services/holmes-engine-mgmt/version/v1" ;
+    public void init() {
+        String[] msbAddrInfo = MicroServiceConfig.getMsbIpAndPort();
+        url = String.format("http://%s:%s/api/microservices/v1/services/holmes-engine-mgmt/version/v1",
+                msbAddrInfo[0], msbAddrInfo[1]);
     }
 
-    public List<String> getServiceCount()throws Exception{
+    public List<String> getInstanceList() throws Exception {
 		String response;
 		HttpGet httpGet = new HttpGet(url);
 		try (CloseableHttpClient httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT)) {

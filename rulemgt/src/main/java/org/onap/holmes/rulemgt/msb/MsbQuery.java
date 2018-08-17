@@ -18,7 +18,7 @@ package org.onap.holmes.rulemgt.msb;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
-import org.onap.holmes.rulemgt.send.RuleAllocation;
+import org.onap.holmes.rulemgt.send.RuleAllocator;
 import org.onap.holmes.rulemgt.send.Ip4AddingRule;
 import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
 
@@ -30,22 +30,22 @@ import java.util.TimerTask;
 @Slf4j
 public class MsbQuery {
 
-    private RuleAllocation ruleAllocation;
+    private RuleAllocator ruleAllocator;
 
     private Ip4AddingRule ip4AddingRule;
 
-    private EngineIpList engineIpList;
+    private EngineInsQueryTool engineInsQueryTool;
 
     private RuleMgtWrapper ruleMgtWrapper;
 
     private List<String> timerIpList;
 
     public MsbQuery() {
-        ruleAllocation = new RuleAllocation();
+        ruleAllocator = new RuleAllocator();
 
         ServiceLocator locator = ServiceLocatorHolder.getLocator();
         ip4AddingRule = locator.getService(Ip4AddingRule.class);
-        engineIpList = locator.getService(EngineIpList.class);
+        engineInsQueryTool = locator.getService(EngineInsQueryTool.class);
         ruleMgtWrapper = locator.getService(RuleMgtWrapper.class);
     }
 
@@ -70,11 +70,11 @@ public class MsbQuery {
 
             public void run() {
                 try {
-                    timerIpList = engineIpList.getServiceCount();
+                    timerIpList = engineInsQueryTool.getInstanceList();
                     log.info(String.format("There are %d engine instance(s) running currently.", timerIpList.size()));
 
                     ip4AddingRule.setIpList(timerIpList);
-                    ruleAllocation.judgeAndAllocateRule(timerIpList);
+                    ruleAllocator.allocateRules(timerIpList);
                 } catch (Exception e) {
                     log.error("The timing query engine instance failed ", e);
                 }
