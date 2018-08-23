@@ -4,7 +4,7 @@
  Github: https://github.com/vadimsva/popModal
  */
 /* popModal */
-(function ($) {
+;(function ($) {
     $.fn.popModal = function (method) {
         var elem = $(this),
             elemObj,

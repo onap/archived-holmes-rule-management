@@ -27,11 +27,11 @@
         "assets/framework/browser/thirdparty/css/magic-check.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js",
         "assets/common/js/jQuery-File-Upload/js/jquery.ui.widget.js",
         "assets/common/js/jQuery-File-Upload/js/vendor/jquery.ui.widget.js",
         "assets/common/js/jQuery-File-Upload/js/jquery.iframe-transport.js",
-        "assets/common/js/jQuery-File-Upload/js/jquery.fileupload.js"
+        "assets/common/js/jQuery-File-Upload/js/jquery.fileupload.js",
+        "assets/common/js/popModal.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

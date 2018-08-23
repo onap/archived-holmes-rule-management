@@ -13,12 +13,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { Subject } from 'rxjs';
-import { Injectable } from '@angular/core';
+import {Subject} from 'rxjs';
+import {Injectable} from '@angular/core';
+
 @Injectable()
 export class ModalService {
-    private modalObservable = new Subject();
-    get getmodalObservable() {
-        return this.modalObservable;
-    }
+  private openModalAnnouncedSource = new Subject<any>();
+  openModalAnnounced$ = this.openModalAnnouncedSource.asObservable();
+
+  announceOpenModal(message: any) {
+    this.openModalAnnouncedSource.next(message);
+  }
+
 }
