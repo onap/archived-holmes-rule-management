@@ -14,141 +14,131 @@
  limitations under the License.
 -->
 <div class="container-fluid" style="padding: 40px 40px 0 40px">
-    <form class="form-inline">
-        <div class="form-body">
-            <div class="row form-group col-xs-12">
-                <div class="col-xs-4">
-                    <div class="row">
-                        <label class="col-xs-3 col-md-2 control-label" style="padding-top: 8px">
-                            {{"common_status"|translate}}
-                        </label>
-                        <div class="col-xs-7">
-                            <select #selection class="form-control" id="status" (change)="switch(selection.value)" [(ngModel)]="activeText" name="activestatus"
-                                style="width:100%">
-                                <option *ngFor="let a of activeStatus" [value]="a">{{a|translate}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-4">
-                    <div class="row">
-                        <label for="userName" class="col-xs-3 control-label" style="padding-top: 8px">
-                            <span>{{"common_keyword"|translate}}</span>
-                        </label>
-                        <div class="col-xs-7">
-                            <input class="form-control ng-untouched ng-pristine ng-valid" placeholder='{{"field_rule_name_Add_Page"|translate}}' type="text"
-                                [(ngModel)]="ruleModel.ruleName" name="name" style="width:100%">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="fmrule_btn_group display_table col-xs-4">
-                    <div class="inline row">
-                        <button id="batchDeleteButton" class="btn btn-primary" (click)="searchRules()">
-                            <span class="glyphicon glyphicon-search" style="padding-top: 2px"></span>
-                            <span>{{"common_query"|translate}}</span>
-                        </button>
-                        <button class="btn btn-secondary" (click)="reset()" style="margin-left: 10px">
-                            <span class="glyphicon glyphicon-refresh"></span>
-                            <span>{{"common_reset"|translate}}</span>
-                        </button>
-                    </div>
-                </div>
+  <form class="form-inline">
+    <div class="form-body">
+      <div class="row form-group col-xs-12">
+        <div class="col-xs-4">
+          <div class="row">
+            <label class="col-xs-3 col-md-2 control-label" style="padding-top: 8px">
+              {{"common_status"|translate}}
+            </label>
+            <div class="col-xs-7">
+              <select #selection class="form-control" id="status" (change)="switch(selection.value)"
+                      [(ngModel)]="activeText" name="activestatus"
+                      style="width:100%">
+                <option *ngFor="let a of activeStatus" [value]="a">{{a|translate}}</option>
+              </select>
             </div>
-
-            <div class="row form-group" style="margin-top: 10px">
-                <div class="inline col-xs-12">
-                    <button type="button" routerLink='/ruleInfo' class="btn btn-info">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        <span>{{"common_add"|translate}}</span>
-                    </button>
-                </div>
-            </div>
+          </div>
         </div>
 
-    </form>
-    <div>
-        <div class="row form-group col-xs-12" style="margin-top: 20px">{{"common_total1"|translate}}{{totalcount}}{{"common_total2"|translate}}</div>
-        <table class="table table-bordered table-striped customtable table-hover">
-            <thead class="nf_thead">
-                <tr class="heading">
-                    <td>{{"field_rule_name_Add_Page"|translate}}</td>
-                    <td>{{"common_status"|translate}}</td>
-                    <td>{{"field_create_time"|translate}}</td>
-                    <td>{{"field_creator"|translate}}</td>
-                    <td>{{"field_update_time"|translate}}</td>
-                    <td>{{"common_operator"|translate}}</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngIf="rules == null || rules.length === 0">
-                    <td colspan="6" style="text-align: center; background-color: white;">{{"nodata"|translate}}</td>
-                </tr>
-                <tr *ngFor="let rule of rules">
-                    <td>
-                        <a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.ruleName}}</a>
-                    </td>
-                    <td [hidden]="rule.enabled === 0">
-                        <span value=1>
-                            <i class="fas fa-power-off" style="color:#4ac9ff;"></i>
-                        </span>
-                    </td>
-                    <td [hidden]="rule.enabled === 1">
-                        <span value=0>
-                            <i class="fas fa-power-off" style="color: #aaa;"></i>
-                        </span>
-                    </td>
-                    <td>{{rule.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                    <td>{{rule.creator}}</td>
-                    <td>{{rule.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                    <td>
-                        <span (click)="updateRule(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <i class="fas fa-pencil-alt" style="font-size: 14px;"></i>
-                        </span>
-                        <span>
-
-                        </span>
-                        <span [hidden]="rule.enabled===0" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <i class="fas fa-toggle-on" style="font-size: 20px; color:#4ac9ff; vertical-align:-2px;"></i>
-                        </span>
-                        <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px">
-                            <i class="fas fa-toggle-off" style="font-size: 20px; color:black; vertical-align:-2px;" title="Switch On"></i>
-                        </span>
-
-                        <span class="" id={{rule.ruleId}} (click)="delete(rule)" style="cursor: pointer;margin: 0 5px">
-                            <i class="fas fa-times" style="color: rgba(255, 0, 0, 0.788);font-size:16px;vertical-align:-1px;"></i>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="deleteTimingTaskDlg" style="display: none;">
-        <div id="deleteTimingTaskContent">
-            <div class="deletePromptMessage">
-                <span>{{"message_is_delete"|translate}}</span>
+        <div class="col-xs-4">
+          <div class="row">
+            <label class="col-xs-3 control-label" style="padding-top: 8px">
+              <span>{{"common_keyword"|translate}}</span>
+            </label>
+            <div class="col-xs-7">
+              <input class="form-control ng-untouched ng-pristine ng-valid"
+                     placeholder='{{"field_rule_name_Add_Page"|translate}}' type="text"
+                     [(ngModel)]="ruleModel.ruleName" name="name" style="width:100%">
             </div>
-            <div style="float:rightl;padding-top: 10px;margin-bottom: -20px" class="">
-                <button class="btn btnDefault btnmrg" data-popmodal-but="ok">
-                    <span>{{"common_confirm"|translate}}</span>
-                </button>
-                <button class="btn btnDefault btnmrg" type="button" data-popmodal-but="cancel">
-                    <span>{{"common_cancel"|translate}}</span>
-                </button>
-            </div>
+          </div>
         </div>
+
+        <div class="fmrule_btn_group display_table col-xs-4">
+          <div class="inline row">
+            <button id="batchDeleteButton" class="btn btn-primary" (click)="searchRules()">
+              <span class="glyphicon glyphicon-search" style="padding-top: 2px"></span>
+              <span>{{"common_query"|translate}}</span>
+            </button>
+            <button class="btn btn-secondary" (click)="reset()" style="margin-left: 10px">
+              <span class="glyphicon glyphicon-refresh"></span>
+              <span>{{"common_reset"|translate}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row form-group" style="margin-top: 10px">
+        <div class="inline col-xs-12">
+          <button type="button" routerLink='/ruleInfo' class="btn btn-info">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span>{{"common_add"|translate}}</span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div id="deleteActiveAlarmRuleDlg" style="display: none;">
-        <div id="deleteActiveRuleContent">
+  </form>
+  <div>
+    <div class="row form-group col-xs-12" style="margin-top: 20px">
+      {{"common_total1"|translate}}{{totalcount}}{{"common_total2"|translate}}
+    </div>
+    <table class="table table-bordered table-striped customtable table-hover">
+      <thead class="nf_thead">
+      <tr class="heading">
+        <td>{{"field_rule_name_Add_Page"|translate}}</td>
+        <td>{{"common_status"|translate}}</td>
+        <td>{{"field_create_time"|translate}}</td>
+        <td>{{"field_creator"|translate}}</td>
+        <td>{{"field_update_time"|translate}}</td>
+        <td>{{"common_operator"|translate}}</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="rules == null || rules.length === 0">
+        <td colspan="6" style="text-align: center; background-color: white;">{{"nodata"|translate}}</td>
+      </tr>
+      <tr *ngFor="let rule of rules">
+        <td>
+          <a routerLink="/ruleInfo/{{rule.ruleId}}&add">{{rule.ruleName}}</a>
+        </td>
+        <td [hidden]="rule.enabled === 0"><span value=1><i class="fas fa-power-off" style="color:#4ac9ff;"></i></span>
+        </td>
+        <td [hidden]="rule.enabled === 1"><span value=0><i class="fas fa-power-off" style="color: #aaa;"></i></span>
+        </td>
+        <td>{{rule.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td>{{rule.creator}}</td>
+        <td>{{rule.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td><span (click)="updateRule(rule); $event.stopPropagation()" style="cursor: pointer;margin: 0 5px"><i
+          class="fas fa-pencil-alt" style="font-size: 14px;"></i></span>
+          <span [hidden]="rule.enabled===0" class="" (click)="on_off(rule); $event.stopPropagation()"
+                style="cursor: pointer;margin: 0 5px">
+            <i class="fas fa-toggle-on" style="font-size: 20px; color:#4ac9ff; vertical-align:-2px;"></i>
+          </span>
+          <span [hidden]="rule.enabled===1" class="" (click)="on_off(rule); $event.stopPropagation()"
+                style="cursor: pointer;margin: 0 5px">
+            <i class="fas fa-toggle-off" style="font-size: 20px; color:black; vertical-align:-2px;"
+               title="Switch On"></i>
+          </span>
+          <span class="" id={{rule.ruleId}} (click)="delete(rule)" style="cursor: pointer;margin: 0 5px">
+            <i class="fas fa-times" style="color: rgba(255, 0, 0, 0.788);font-size:16px;vertical-align:-1px;"></i>
+          </span>
+          <div *ngIf="rule.showModal && rule.enabled !== 1" class="popover-card">
             <div class="deletePromptMessage">
-                <span>{{"warn_delete_info"|translate}}</span>
+              <span>{{"message_is_delete"|translate}}</span>
+            </div>
+            <div style="float:right;padding-top: 10px;" class="">
+              <button class="btn btnDefault btnmrg" (click)="deleteRule(rule.ruleId)">
+                <span>{{"common_confirm"|translate}}</span>
+              </button>
+              <button class="btn btnDefault btnmrg" type="button" (click)="cancelModal(rule.ruleId)">
+                <span>{{"common_cancel"|translate}}</span>
+              </button>
+            </div>
+          </div>
+          <div *ngIf="rule.showModal  && rule.enabled === 1" class="popover-card">
+            <div class="deletePromptMessage">
+              <span>{{"warn_delete_info"|translate}}</span>
             </div>
             <div style="float:right;padding-top:10px">
-                <button class="btn btnDefault btnmrg" data-popmodal-but="ok">
-                    <span>{{"common_confirm"|translate}}</span>
-                </button>
+              <button class="btn btnDefault btnmrg" (click)="cancelModal(rule.ruleId)">
+                <span>{{"common_confirm"|translate}}</span>
+              </button>
             </div>
-        </div>
-    </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>

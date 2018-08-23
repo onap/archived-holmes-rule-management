@@ -1,0 +1,6 @@
+.modal-position {
+  position: absolute;
+  z-index: 9999;
+  left: 200px;
+  top: 100px;
+}

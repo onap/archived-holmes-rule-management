@@ -13,31 +13,38 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { ModalService } from './modal.service';
-import { Msg } from './msg';
-declare var $: any;
+import {Component, OnInit} from '@angular/core';
+import {ModalService} from './modal.service';
+import {Msg} from './msg';
+
 @Component({
-
-    selector: 'sif-modal',
-    templateUrl: './modal.component.html',
-
+  selector: 'sif-modal',
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.css']
 })
 export class SifModalComponent implements OnInit {
-    constructor(private modalServer: ModalService) { };
-    modalTitle = 'modalTitleDefault';
-    modalBodyMessage = 'modalBodyMessageDefault';
-    closeBtnTitle = 'closeBtnTitleDefault';
 
-    ngOnInit(): void {
-        this.modalServer.getmodalObservable.subscribe((msg: Msg) => {
-            console.log('receive ' + msg);
-            this.modalTitle = msg.title || this.modalTitle;
-            this.modalBodyMessage = msg.message || this.modalBodyMessage;
-            this.closeBtnTitle = msg.btn || this.closeBtnTitle;
-            $('#myModal').modal('show');
-        });
-    }
+  modalTitle = 'modalTitleDefault';
+  modalBodyMessage = 'modalBodyMessageDefault';
+  closeBtnTitle = 'closeBtnTitleDefault';
 
+  showModal = false;
+
+  constructor(private modalServer: ModalService) {
+    this.modalServer.openModalAnnounced$.subscribe((msg: Msg) => {
+      console.log('receive ', msg);
+      this.modalTitle = msg.title || this.modalTitle;
+      this.modalBodyMessage = msg.message || this.modalBodyMessage;
+      this.closeBtnTitle = msg.btn || this.closeBtnTitle;
+      this.showModal = true;
+    });
+  };
+
+  ngOnInit(): void {
+  }
+
+  cancelModal(): void {
+    this.showModal = false;
+  }
 
 }
