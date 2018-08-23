@@ -1,0 +1,153 @@
+package org.onap.holmes.ccvpn;
+
+dialect "java"
+
+import org.onap.holmes.common.api.stat.VesAlarm;
+import org.onap.holmes.common.api.stat.AlarmAdditionalField;
+import org.onap.holmes.common.aai.AaiQuery4Ccvpn;
+import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.common.dmaap.entity.PolicyMsg;
+import org.onap.holmes.common.dmaap.DmaapService;
+import org.onap.holmes.common.utils.DroolsLog;
+import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
+function String getAdditionalField(VesAlarm a, String field) {
+	List<AlarmAdditionalField> fields = a.getAlarmAdditionalInformation();
+	for (AlarmAdditionalField f : fields) {
+		if (f.getName().equals(field)) {
+			return f.getValue();
+		}
+	}
+	return null;
+}
+
+function String getLogicLink(VesAlarm alarm) {
+	AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
+	return aai.getLogicLink(
+		getAdditionalField(alarm, "networkId"),
+		getAdditionalField(alarm, "node"),
+		getAdditionalField(alarm, "tp-id"),
+		getAdditionalField(alarm, "oper-status")
+	);
+}
+
+function boolean isCorrelated(VesAlarm a, VesAlarm b) {
+	String logicLinkA = getLogicLink(a);
+	if (logicLinkA == null)	{
+		return false;
+	}
+
+	String logicLinkB = getLogicLink(b);
+	if (logicLinkB == null) {
+		return false;
+	}
+
+	return logicLinkA.equals(logicLinkB);
+}
+
+function void updateAaiStatus(String networkId, String pnfName, String ifName,
+		String linkName, String status) {
+	AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
+	Map<String, Object> body = new HashMap<String, Object>(){
+		{
+			put("operational-status", status);
+		}
+	};
+	aai.updateLogicLinkStatus(linkName, body);
+	aai.updateTerminalPointStatus(networkId, pnfName, ifName, body);
+}
+
+function Map<String, Object> getAdditionalResourceInfo(String networkId, String pnfName, String ifName, String status) {
+	AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
+	JSONArray instances = aai.getServiceInstances(networkId, pnfName, ifName, status);
+
+	Map<String, Object> ret = new HashMap<String, Object>();
+
+	StringBuilder sb = new StringBuilder();
+	for(int i = 0; i < instances.size(); ++i) {
+		JSONObject o = instances.getJSONObject(i);
+		String name = instances.getJSONObject(i).getString("service-instance-name");
+		ret.put(name + ".input-parameters", "TBD");
+		sb.append(name).append(",");
+	}
+	ret.put("service-instance.service-instance-name", sb.substring(0, sb.length() -1).toString());
+	ret.put("vserver.vserver-name", "TBD");
+
+	return ret;
+}
+
+function PolicyMsg createPolicyMsg(VesAlarm alarm) {
+	PolicyMsg m = new PolicyMsg();
+	m.setPolicyVersion("1.0.0.5");
+	m.setPolicyName("CCVPN");
+	m.setPolicyScope("service=SOTNService,type=SampleType,closedLoopControlName=CL-CCVPN-d925ed73-8231-4d02-9545-db4e101f88f8");
+	m.setClosedLoopControlName(DmaapService.loopControlNames.get("org.onap.holmes.ccvpn"));
+	m.setRequestID(UUID.randomUUID().toString());
+	m.setClosedLoopAlarmStart(alarm.getStartEpochMicrosec());
+	m.setClosedLoopAlarmEnd(alarm.getLastEpochMicrosec());
+	m.setTarget("vserver.vserver-name");
+	m.setAai(getAdditionalResourceInfo(
+		getAdditionalField(alarm, "networkId"),
+		getAdditionalField(alarm, "node"),
+		getAdditionalField(alarm, "tp-id"),
+		getAdditionalField(alarm, "oper-status")
+	));
+
+	DmaapService.alarmUniqueRequestID.put(alarm.getEventId(), m.getRequestID());
+
+	return m;
+}
+
+rule "Update AAI Information"
+	no-loop true
+	salience 300
+	when
+		$a: VesAlarm(eventName.indexOf("Fault_Route_Status") != -1)
+	then
+	updateAaiStatus (
+		getAdditionalField($a, "networkId"),
+		getAdditionalField($a, "node"),
+		getAdditionalField($a, "tp-id"),
+		getAdditionalField($a, getLogicLink($a)),
+		getAdditionalField($a, "oper-status")
+	);
+end
+
+rule "Set Up Correlation"
+	no-loop true
+	salience 200
+	when
+		$a: VesAlarm($id: eventId, eventName.indexOf("Fault_Route_Status") != -1)
+		$b: VesAlarm(eventId != $id, eventName.indexOf("Fault_Route_Status") != -1)
+	then
+	    if (isCorrelated($a, $b)){
+	        PolicyMsg msg = createPolicyMsg($a);
+	        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+	        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+	    }
+end
+
+rule "Clear Alarms"
+	no-loop true
+	salience 100
+	when
+		$a: VesAlarm(alarmIsCleared == 1, eventName.indexOf("Fault_Route_Status") != -1)
+	then
+		if (DmaapService.alarmUniqueRequestID.containsKey($a.getEventId())) {
+			DmaapService.alarmUniqueRequestID.remove($a.getEventId());
+		}
+
+		//TODO: send alarm clearing message to Policy - for now it's not needed.
+		//...
+
+		retract($a);
+end
