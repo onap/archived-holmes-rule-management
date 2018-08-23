@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_854cf271",
+        "filename": "rulemgt-frontend/src/app/correlation-modal/modal.component.css",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-08-23T10:12:43Z",
+      "side": 1,
+      "message": "License information is missing.",
+      "revId": "c3174ff5c34c9c4ccdfa1316cb5f8a36121217c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_a547ae4a",
+        "filename": "rulemgt-frontend/src/app/correlation-ruleList/alarmRule.component.css",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-08-23T10:12:43Z",
+      "side": 1,
+      "message": "License information is missing.",
+      "revId": "c3174ff5c34c9c4ccdfa1316cb5f8a36121217c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_4576daa5",
+        "filename": "rulemgt-frontend/src/index.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2018-08-23T10:12:43Z",
+      "side": 1,
+      "message": "Remove useless comments.",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 29
+      },
+      "revId": "c3174ff5c34c9c4ccdfa1316cb5f8a36121217c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
