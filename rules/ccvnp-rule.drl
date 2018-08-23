@@ -75,12 +75,14 @@ function Map<String, Object> getAdditionalResourceInfo(String networkId, String 
 	StringBuilder sb = new StringBuilder();
 	for(int i = 0; i < instances.size(); ++i) {
 		JSONObject o = instances.getJSONObject(i);
-		String name = instances.getJSONObject(i).getString("service-instance-name");
-		ret.put(name + ".input-parameters", "TBD");
+		String name = o.getString("service-instance-name");
+		ret.put(name + ".input-parameters", o.getString("input-parameters"));
 		sb.append(name).append(",");
 	}
 	ret.put("service-instance.service-instance-name", sb.substring(0, sb.length() -1).toString());
 	ret.put("vserver.vserver-name", "TBD");
+	ret.put("globalSubscriberId", instances.getJSONObject(0).getString("globalSubscriberId"));
+	ret.put("serviceType", instances.getJSONObject(0).getString("serviceType"));
 
 	return ret;
 }
