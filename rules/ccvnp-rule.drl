@@ -115,33 +115,40 @@ rule "Update AAI Information"
 	when
 		$a: VesAlarm(eventName.indexOf("Fault_Route_Status") != -1)
 	then
-	updateAaiStatus (
-		getAdditionalField($a, "networkId"),
-		getAdditionalField($a, "node"),
-		getAdditionalField($a, "tp-id"),
-		getLogicLink($a),
-		getAdditionalField($a, "oper-status")
-	);
+		updateAaiStatus (
+			getAdditionalField($a, "networkId"),
+			getAdditionalField($a, "node"),
+			getAdditionalField($a, "tp-id"),
+			getLogicLink($a),
+			getAdditionalField($a, "oper-status")
+		);
 end
 
 rule "Set Up Correlation"
 	no-loop true
 	salience 200
 	when
-		$a: VesAlarm($id: eventId, $start: startEpochMicrosec, eventName.indexOf("Fault_Route_Status") != -1)
-		$b: VesAlarm(eventId != $id, eventName.indexOf("Fault_Route_Status") != -1, Math.abs(startEpochMicrosec - $start) < 60000)
+		$a: VesAlarm($id: eventId, 
+						$start: startEpochMicrosec, 
+						eventName.indexOf("Fault_Route_Status") != -1)
+		$b: VesAlarm(eventId != $id, 
+						eventName.indexOf("Fault_Route_Status") != -1, 
+						Math.abs(startEpochMicrosec - $start) < 60000)
 	then
-	    if (isCorrelated($a, $b)){
-	    	// If any of the alarms have been marked as root, a policy message has ever been created and sent. Do NOT send it again.
-	    	if ($a.getRootFlag() != 1 && $b.getRootFlag() != 1) {
-		    	PolicyMsg msg = createPolicyMsg($a);     
-		        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
-		        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
-	    	}
-	        $a.setRootFlag(1);
-	        $b.setRootFlag(1);
-	        update($a);
-	        update($b);
+		if ("down".equalsIgnoreCase(getAdditionalField($a, "oper-status")) 
+				&& "down".equalsIgnoreCase(getAdditionalField($b, "oper-status"))) {
+		    if (isCorrelated($a, $b)){
+		    	// If any of the alarms have been marked as root, a policy message has ever been created and sent. Do NOT send it again.
+		    	if ($a.getRootFlag() != 1 && $b.getRootFlag() != 1) {
+			    	PolicyMsg msg = createPolicyMsg($a);
+			        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+			        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+		    	}
+		        $a.setRootFlag(1);
+		        $b.setRootFlag(1);
+		        update($a);
+		        update($b);
+		    }
 	    }
 end
 
@@ -149,14 +156,16 @@ rule "Clear Alarms"
 	no-loop true
 	salience 100
 	when
-		$a: VesAlarm(alarmIsCleared == 1, eventName.indexOf("Fault_Route_Status") != -1)
+		$a: VesAlarm(eventName.indexOf("Fault_Route_Status") != -1)
 	then
-		if (DmaapService.alarmUniqueRequestID.containsKey($a.getEventId())) {
-			DmaapService.alarmUniqueRequestID.remove($a.getEventId());
+		if ("up".equalsIgnoreCase(getAdditionalField($a, "oper-status"))) {
+			if (DmaapService.alarmUniqueRequestID.containsKey($a.getEventId())) {
+				DmaapService.alarmUniqueRequestID.remove($a.getEventId());
+			}
+	
+			//TODO: send alarm clearing message to Policy - for now it's not needed.
+	        //...
+	
+			retract($a);
 		}
-
-		//TODO: send alarm clearing message to Policy - for now it's not needed.
-        //...
-
-		retract($a);
 end
