@@ -13,160 +13,149 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ModalService } from '../correlation-modal/modal.service';
-import { RuleModel } from './alarmRule';
-import { RuleRequest } from './ruleRequest';
-import { Router } from '@angular/router';
-import { Http, Response, Jsonp, Headers, RequestOptions } from '@angular/http';
-import { AlarmRuleService } from './alarmRule.service';
+import {Component, OnInit} from '@angular/core';
+import {ModalService} from '../correlation-modal/modal.service';
+import {RuleModel} from './alarmRule';
+import {RuleRequest} from './ruleRequest';
+import {Router} from '@angular/router';
+import {AlarmRuleService} from './alarmRule.service';
+
 declare var jQuery: any;
 
 @Component({
-    selector: 'alarmRule',
-    templateUrl: './alarmRule.component.html'
+  selector: 'alarmRule',
+  templateUrl: './alarmRule.component.html',
+  styleUrls: ['./alarmRule.component.css']
 })
-
 export class AlarmRule implements OnInit {
-    ruleModel: RuleModel;
-    rules: RuleModel[];
-    queryRule: RuleModel;
-    activeText: string;
-    ruleName: string;
-    enable_on = "enabled";
-    enable_off = "disabled"
-    totalcount: number = 0;
-    model: any;
-    ruleRequest: RuleRequest;
-    solution = 'ANGULAR';
-    selection = 'A';
-    activeStatus = ["option_all", "common_enabled", "common_disabled"];
+  ruleModel: RuleModel;
+  rules: any[];
+  queryRule: RuleModel;
+  activeText: string;
+  ruleName: string;
+  enable_on = "enabled";
+  enable_off = "disabled"
+  totalcount: number = 0;
+  model: any;
+  ruleRequest: RuleRequest;
+  solution = 'ANGULAR';
+  selection = 'A';
+  activeStatus = ["option_all", "common_enabled", "common_disabled"];
 
-    constructor(public _alarmRuleService: AlarmRuleService, private modalService: ModalService,
-        private router: Router) { }
+  constructor(public _alarmRuleService: AlarmRuleService, private modalService: ModalService,
+              private router: Router) {
+  }
 
-    switch(select: string): void {
-        console.log(select);
-        if (select == "common_enabled") {
-            this.ruleModel.enabled = 1;
-        } else if (select == "common_disabled") {
-            this.ruleModel.enabled = 0;
-        } else {
+  switch(select: string): void {
+    console.log(select);
+    if (select == "common_enabled") {
+      this.ruleModel.enabled = 1;
+    } else if (select == "common_disabled") {
+      this.ruleModel.enabled = 0;
+    } else {
 
-            this.ruleModel.enabled = null;
-        }
-        this.setActiveText();
+      this.ruleModel.enabled = null;
     }
+    this.setActiveText();
+  }
 
-    setActiveText(): void {
-        if (this.ruleModel.enabled == 1) {
-            this.activeText = "common_enabled";
-            this.ruleRequest.enabled = 1;
-        }
-        else if (this.ruleModel.enabled == 0) {
-            this.activeText = "common_disabled";
-            this.ruleRequest.enabled = 0;
-        } else {
-            this.activeText = "option_all";
-            this.ruleRequest.enabled = null;
-        }
+  setActiveText(): void {
+    if (this.ruleModel.enabled == 1) {
+      this.activeText = "common_enabled";
+      this.ruleRequest.enabled = 1;
     }
+    else if (this.ruleModel.enabled == 0) {
+      this.activeText = "common_disabled";
+      this.ruleRequest.enabled = 0;
+    } else {
+      this.activeText = "option_all";
+      this.ruleRequest.enabled = null;
+    }
+  }
 
-    getRules(): Promise<any> {
-        return this._alarmRuleService
-            .getRules()
-            .then(rules => {
-                this.rules = rules.correlationRules;
-                this.totalcount = rules.totalCount;
-            });
-    }
+  getRules(): void {
+    this._alarmRuleService.getRules().then(rules => {
+      this.rules = rules.correlationRules;
+      this.rules.map(x => x['showModal'] = false);
+      console.log(this.rules);
+      this.totalcount = rules.totalCount;
+    });
+  }
 
-    public searchRules(): void {
-        if (this.ruleModel.enabled == null) {
-            this.ruleRequest.enabled = null;
-        }
-        this.ruleRequest.ruleName = this.ruleModel.ruleName;
-        console.log(this.ruleRequest.enabled, this.ruleRequest.ruleName);
+  public searchRules(): void {
+    if (this.ruleModel.enabled == null) {
+      this.ruleRequest.enabled = null;
+    }
+    this.ruleRequest.ruleName = this.ruleModel.ruleName;
+    console.log(this.ruleRequest.enabled, this.ruleRequest.ruleName);
 
-        this._alarmRuleService
-            .searchrules(this.ruleRequest)
-            .then(rules => {
-                this.rules = rules;
-                this.totalcount = rules.length;
-            });
-    }
-    public updateRule(rule: RuleModel): void {
-        this.router.navigate(['ruleInfo/', rule.ruleId]);
-    }
+    this._alarmRuleService
+      .searchrules(this.ruleRequest)
+      .then(rules => {
+        this.rules = rules;
+        this.totalcount = rules.length;
+      });
+  }
 
-    public delete(rule: RuleModel): void {
-        rule.enabled == 1 ? this.deleteActiveRule(rule) : this.deleteModel(rule.ruleId, this._alarmRuleService, this);
-    }
+  public updateRule(rule: RuleModel): void {
+    this.router.navigate(['ruleInfo/', rule.ruleId]);
+  }
 
-    public on_off(rule: RuleModel) {
-        rule.enabled == 0 ? rule.enabled = 1 : rule.enabled = 0;
-        this._alarmRuleService
-            .updateRule(rule)
-            .then(res => {
-                rule = res;
-            });
-    }
+  public delete(rule: any): void {
+    rule.showModal = true;
+  }
 
-    public reset(): void {
-        this.ruleModel.ruleName = null;
-        this.activeText = 'option_all';
-        this.ruleModel.enabled = null;
-        this.getRules();
-    }
+  public on_off(rule: RuleModel) {
+    rule.enabled == 0 ? rule.enabled = 1 : rule.enabled = 0;
+    this._alarmRuleService
+      .updateRule(rule)
+      .then(res => {
+        rule = res;
+      });
+  }
 
-    public deleteActiveRule(rule: RuleModel): void {
-        jQuery('#' + rule.ruleId).popModal({
-            html: jQuery('#deleteActiveRuleContent'),
-            placement: 'leftTop',
-            showCloseBut: false,
-            onDocumentClickClose: true,
-            onOkBut: function () {
-            },
-        });
-    }
-    public deleteModel(ruleId: string, alarm: AlarmRuleService, obj: any): void {
-        jQuery('#' + ruleId).popModal({
-            html: jQuery('#deleteTimingTaskContent'),
-            placement: 'leftTop',
-            showCloseBut: false,
-            onDocumentClickClose: true,
-            onOkBut: function () {
-                jQuery('#deleteTimingTaskDlg').append(jQuery('#deleteTimingTaskContent'));
-                alarm.delete(ruleId);
-                obj.getRules();
-            },
-            onCancelBut: function () {
-            }
-        });
-    }
+  public reset(): void {
+    this.ruleModel.ruleName = null;
+    this.activeText = 'option_all';
+    this.ruleModel.enabled = null;
+    this.getRules();
+  }
 
-    public ngOnInit(): void {
-        this.activeText = 'option_all';
-        this.ruleModel = {
-            ruleId: null,
-            ruleName: null,
-            description: '',
-            content: null,
-            createTime: null,
-            creator: null,
-            updateTime: null,
-            modifier: null,
-            enabled: 0,
-            loopControlName: ''
-        };
-        this.ruleRequest = {
-            ruleId: null,
-            ruleName: null,
-            creator: null,
-            modifier: null,
-            enabled: null,
-            loopControlName: ''
-        };
-        this.getRules();
-    }
+  deleteRule(ruleId: string): void {
+    this._alarmRuleService.delete(ruleId).then(() => {
+      this.cancelModal(ruleId);
+      this.getRules();
+    }).catch(() => {
+      this.cancelModal(ruleId);
+    })
+  }
+
+  cancelModal(ruleId: string): void {
+    this.rules.find(x => x.ruleId === ruleId).showModal = false;
+  }
+
+  public ngOnInit(): void {
+    this.activeText = 'option_all';
+    this.ruleModel = {
+      ruleId: null,
+      ruleName: null,
+      description: '',
+      content: null,
+      createTime: null,
+      creator: null,
+      updateTime: null,
+      modifier: null,
+      enabled: 0,
+      loopControlName: ''
+    };
+    this.ruleRequest = {
+      ruleId: null,
+      ruleName: null,
+      creator: null,
+      modifier: null,
+      enabled: null,
+      loopControlName: ''
+    };
+    this.getRules();
+  }
 }

@@ -13,113 +13,113 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Headers, Http} from '@angular/http';
 
 
-import { RuleModel } from './alarmRule';
-import { RuleRequest } from './ruleRequest';
-import { Router } from '@angular/router';
-import { ModalService } from '../correlation-modal/modal.service';
+import {RuleModel} from './alarmRule';
+import {RuleRequest} from './ruleRequest';
 
 @Injectable()
 export class AlarmRuleService {
-    private ruleUrl = "/api/holmes-rule-mgmt/v1/rule";
-    private headers = new Headers({ 'Content-Type': 'application/json' });
-    constructor(private http: Http, private modalService: ModalService, private router: Router) { }
+  private ruleUrl = "/api/holmes-rule-mgmt/v1/rule";
+  private headers = new Headers({'Content-Type': 'application/json'});
 
-    getRules(): Promise<any> {
-        return this.http.get(this.ruleUrl)
-            .toPromise()
-            .then(res => res.json())
-            .catch(this.handleError);
-    }
+  constructor(private http: Http) {
+  }
 
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
-        return Promise.reject(error._body || error);
-    }
+  getRules(): Promise<any> {
+    return this.http.get(this.ruleUrl)
+      .toPromise()
+      .then(res => res.json())
+      .catch(this.handleError);
+  }
 
-    search(ruleId: string): Promise<RuleModel> {
-        if (typeof (ruleId) == "string") {
-            let rule = [{
-                ruleId: null,
-                ruleName: null,
-                description: null,
-                content: null,
-                createtime: null,
-                creator: null,
-                updatetime: null,
-                modifier: null,
-                enabled: 0,
-            }]
-        }
-        let data = { 'ruleId': ruleId };
-        var queryrequest = JSON.stringify(data);
-        const url = `${this.ruleUrl}?queryrequest=${queryrequest}`;
-        return this.http.get(url, {headers:this.headers})
-            .toPromise()
-            .then(res => res.json().correlationRules as RuleModel[])
-            .catch(this.handleError);
-    }
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error);
+    return Promise.reject(error._body || error);
+  }
 
-    searchrules(rule: RuleRequest): Promise<RuleModel[]> {
-        let data = { ruleName: rule.ruleName, enabled: rule.enabled }
-        console.log(JSON.stringify(data));
-        const url = `${this.ruleUrl}?queryrequest=${JSON.stringify(data)}`
-        return this.http.get(url, { body: data, headers: this.headers })
-            .toPromise()
-            .then(res => res.json().correlationRules as RuleModel[])
-            .catch(this.handleError);
+  search(ruleId: string): Promise<RuleModel> {
+    if (typeof (ruleId) == "string") {
+      let rule = [{
+        ruleId: null,
+        ruleName: null,
+        description: null,
+        content: null,
+        createtime: null,
+        creator: null,
+        updatetime: null,
+        modifier: null,
+        enabled: 0,
+      }]
     }
+    let data = {'ruleId': ruleId};
+    var queryrequest = JSON.stringify(data);
+    const url = `${this.ruleUrl}?queryrequest=${queryrequest}`;
+    return this.http.get(url, {headers: this.headers})
+      .toPromise()
+      .then(res => res.json().correlationRules as RuleModel[])
+      .catch(this.handleError);
+  }
 
-    checkContent(ruleContent: string): Promise<any> {
-        const url = "/api/holmes-engine-mgmt/v1/rule";
-        let data = { content: ruleContent };
-        return this.http
-            .post(url, JSON.stringify(data), { headers: this.headers })
-            .toPromise()
-            .then(res => res)
-            .catch(error => error);
-    }
+  searchrules(rule: RuleRequest): Promise<RuleModel[]> {
+    let data = {ruleName: rule.ruleName, enabled: rule.enabled}
+    console.log(JSON.stringify(data));
+    const url = `${this.ruleUrl}?queryrequest=${JSON.stringify(data)}`
+    return this.http.get(url, {body: data, headers: this.headers})
+      .toPromise()
+      .then(res => res.json().correlationRules as RuleModel[])
+      .catch(this.handleError);
+  }
 
-    updateRule(rule: RuleModel): Promise<any> {
-        let rules = {
-            "ruleId": rule.ruleId,
-            "description": rule.description,
-            "content": rule.content,
-            "enabled": rule.enabled,
-            "loopControlName": rule.loopControlName
-        }
-        const url = `${this.ruleUrl}`
-        return this.http
-            .post(url, JSON.stringify(rules), { headers: this.headers })
-            .toPromise()
-            .then(res => res)
-            .catch(error => error)
-    }
+  checkContent(ruleContent: string): Promise<any> {
+    const url = "/api/holmes-engine-mgmt/v1/rule";
+    let data = {content: ruleContent};
+    return this.http
+      .post(url, JSON.stringify(data), {headers: this.headers})
+      .toPromise()
+      .then(res => res)
+      .catch(error => error);
+  }
 
-    save(rule: RuleModel): Promise<any> {
-        let ruledata = {
-            "description": rule.description,
-            "content": rule.content,
-            "enabled": rule.enabled,
-            "ruleName": rule.ruleName,
-            "loopControlName": rule.loopControlName
-        }
-        return this.http.put(this.ruleUrl, JSON.stringify(ruledata), { headers: this.headers })
-            .toPromise()
-            .then(res => res)
-            .catch(error => error);
+  updateRule(rule: RuleModel): Promise<any> {
+    let rules = {
+      "ruleId": rule.ruleId,
+      "description": rule.description,
+      "content": rule.content,
+      "enabled": rule.enabled,
+      "loopControlName": rule.loopControlName
     }
+    const url = `${this.ruleUrl}`
+    return this.http
+      .post(url, JSON.stringify(rules), {headers: this.headers})
+      .toPromise()
+      .then(res => res)
+      .catch(error => error)
+  }
 
-    public delete(ruleId: string): Promise<void> {
-        const url = `${this.ruleUrl}` + '/' + ruleId;
-        return this.http.delete(url, { headers: this.headers })
-            .toPromise()
-            .then(res => {
-               
-            })
-            .catch(this.handleError);
+  save(rule: RuleModel): Promise<any> {
+    let ruledata = {
+      "description": rule.description,
+      "content": rule.content,
+      "enabled": rule.enabled,
+      "ruleName": rule.ruleName,
+      "loopControlName": rule.loopControlName
     }
+    return this.http.put(this.ruleUrl, JSON.stringify(ruledata), {headers: this.headers})
+      .toPromise()
+      .then(res => res)
+      .catch(error => error);
+  }
+
+  public delete(ruleId: string): Promise<void> {
+    const url = `${this.ruleUrl}` + '/' + ruleId;
+    return this.http.delete(url, {headers: this.headers})
+      .toPromise()
+      .then(res => {
+
+      })
+      .catch(this.handleError);
+  }
 }
