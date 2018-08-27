@@ -27,6 +27,7 @@
         "assets/framework/browser/thirdparty/css/magic-check.css"
       ],
       "scripts": [
+        "../node_modules/jquery/dist/jquery.js",
         "assets/common/js/jQuery-File-Upload/js/jquery.ui.widget.js",
         "assets/common/js/jQuery-File-Upload/js/vendor/jquery.ui.widget.js",
         "assets/common/js/jQuery-File-Upload/js/jquery.iframe-transport.js",
