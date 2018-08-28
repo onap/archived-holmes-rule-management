@@ -54,8 +54,7 @@ function boolean isCorrelated(VesAlarm a, VesAlarm b) {
 	return logicLinkA.equals(logicLinkB);
 }
 
-function void updateAaiStatus(String networkId, String pnfName, String ifName,
-		String linkName, String status) {
+function void updateAaiLinkStatus(String linkName, String status) {
 	AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
 	Map<String, Object> body = new HashMap<String, Object>(){
 		{
@@ -63,6 +62,15 @@ function void updateAaiStatus(String networkId, String pnfName, String ifName,
 		}
 	};
 	aai.updateLogicLinkStatus(linkName, body);
+}
+
+function void updateAaiTpStatus(String networkId, String pnfName, String ifName, String status) {
+	AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
+	Map<String, Object> body = new HashMap<String, Object>(){
+		{
+			put("operational-status", status);
+		}
+	};
 	aai.updateTerminalPointStatus(networkId, pnfName, ifName, body);
 }
 
@@ -119,11 +127,10 @@ rule "Update AAI Information"
 	when
 		$a: VesAlarm(eventName.indexOf("Fault_Route_Status") != -1)
 	then
-		updateAaiStatus (
+		updateAaiTpStatus (
 			getAdditionalField($a, "networkId"),
 			getAdditionalField($a, "node"),
 			getAdditionalField($a, "tp-id"),
-			getLogicLink($a),
 			getAdditionalField($a, "oper-status")
 		);
 end
@@ -139,14 +146,16 @@ rule "Set Up Correlation"
 						eventName.indexOf("Fault_Route_Status") != -1, 
 						Math.abs(startEpochMicrosec - $start) < 60000)
 	then
-		if ("down".equalsIgnoreCase(getAdditionalField($a, "oper-status")) 
-				&& "down".equalsIgnoreCase(getAdditionalField($b, "oper-status"))) {
+		String status = "down";
+		if (status.equalsIgnoreCase(getAdditionalField($a, "oper-status")) 
+				&& status.equalsIgnoreCase(getAdditionalField($b, "oper-status"))) {
 		    if (isCorrelated($a, $b)){
 		    	// If any of the alarms have been marked as root, a policy message has ever been created and sent. Do NOT send it again.
 		    	if ($a.getRootFlag() != 1 && $b.getRootFlag() != 1) {
 			    	PolicyMsg msg = createPolicyMsg($a);
 			        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
 			        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+			        updateAaiLinkStatus(getLogicLink($a), status);
 		    	}
 		        $a.setRootFlag(1);
 		        $b.setRootFlag(1);
