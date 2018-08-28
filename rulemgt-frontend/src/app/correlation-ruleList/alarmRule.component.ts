@@ -20,8 +20,6 @@ import {RuleRequest} from './ruleRequest';
 import {Router} from '@angular/router';
 import {AlarmRuleService} from './alarmRule.service';
 
-declare var jQuery: any;
-
 @Component({
   selector: 'alarmRule',
   templateUrl: './alarmRule.component.html',
