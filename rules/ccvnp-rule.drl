@@ -36,7 +36,7 @@ function String getLogicLink(VesAlarm alarm) {
 		getAdditionalField(alarm, "networkId"),
 		getAdditionalField(alarm, "node"),
 		getAdditionalField(alarm, "tp-id"),
-		getAdditionalField(alarm, "oper-status")
+		null
 	);
 }
 
