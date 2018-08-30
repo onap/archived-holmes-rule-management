@@ -1,11 +1,11 @@
 /**
  * Copyright 2017 ZTE Corporation.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -21,12 +21,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -68,8 +70,8 @@ public class DcaeConfigurationPolling implements Runnable {
         try {
             dcaeConfigurations = DcaeConfigurationQuery.getDcaeConfigurations(hostname);
             String md5 = Md5Util.md5(dcaeConfigurations);
-            if (prevResult && prevConfigMd5.equals(md5)){
-                log.info("Operation aborted due to identical Configurations.");
+            if (prevResult && prevConfigMd5.equals(md5)) {
+                log.info("Operation aborted due to identical configurations.");
                 return;
             }
             prevConfigMd5 = md5;
@@ -104,7 +106,7 @@ public class DcaeConfigurationPolling implements Runnable {
     }
 
     public RuleQueryListResponse getAllCorrelationRules() throws CorrelationException, IOException {
-              HashMap<String, String> headers = new HashMap<>();
+        HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", MediaType.APPLICATION_JSON);
         CloseableHttpClient httpClient = null;
         HttpGet httpGet = new HttpGet(url);
@@ -112,7 +114,7 @@ public class DcaeConfigurationPolling implements Runnable {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
             String response = HttpsUtils.extractResponseEntity(httpResponse);
-            return JSON.parseObject(response,RuleQueryListResponse.class);
+            return JSON.parseObject(response, RuleQueryListResponse.class);
         } finally {
             httpGet.releaseConnection();
             closeHttpClient(httpClient);
@@ -157,8 +159,8 @@ public class DcaeConfigurationPolling implements Runnable {
         return suc;
     }
 
-    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs){
-        ruleResult4APIs.forEach(correlationRule ->{
+    private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs) {
+        ruleResult4APIs.forEach(correlationRule -> {
             HashMap<String, String> headers = new HashMap<>();
             headers.put("Content-Type", MediaType.APPLICATION_JSON);
             CloseableHttpClient httpClient = null;
