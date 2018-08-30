@@ -68,7 +68,7 @@ export class AlarmRule implements OnInit {
             this.ruleRequest.enabled = 0;
         } else {
             this.activeText = "option_all";
-            this.ruleRequest.enabled = null;
+            this.ruleRequest.enabled = 2;
         }
     }
 
