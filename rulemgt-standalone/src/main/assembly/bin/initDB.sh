@@ -22,7 +22,7 @@ password=$2
 dbname=$3
 port=$4
 host=$5
-echo "start init holmes rulemgt db"
+echo "Initializing the holmes rule management database..."
 main_path=$HOME/..
 
 sed -i "s|DBNAME|$dbname|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
@@ -42,8 +42,8 @@ sql_result=$?
 unset PGPASSWORD
 echo "sql_result=$sql_result"
 if [ $sql_result != 0 ] ; then
-   echo "failed to init rulemgt database!"
+   echo "Failed to initialize the database!"
    exit 1
 fi
-echo "init rulemgt success!"
+echo "The database is initialized successfully!"
 exit 0
