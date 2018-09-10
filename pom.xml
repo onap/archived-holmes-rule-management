@@ -56,7 +56,7 @@
         <jaxrs.consumer.version>5.0</jaxrs.consumer.version>
         <slf4j.version>1.7.25</slf4j.version>
         <quartz.version>2.2.1</quartz.version>
-        <postgres.jdbc.driver.version>42.1.1</postgres.jdbc.driver.version>
+        <postgres.jdbc.driver.version>42.2.5</postgres.jdbc.driver.version>
 
 
         <packagename>onap-holmes-rulemgt</packagename>
