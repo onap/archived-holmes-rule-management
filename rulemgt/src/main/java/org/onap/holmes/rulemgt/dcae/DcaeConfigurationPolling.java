@@ -14,6 +14,7 @@
 package org.onap.holmes.rulemgt.dcae;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -114,7 +115,7 @@ public class DcaeConfigurationPolling implements Runnable {
             httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
             String response = HttpsUtils.extractResponseEntity(httpResponse);
-            return JSON.parseObject(response, RuleQueryListResponse.class);
+            return JSONObject.parseObject(response, RuleQueryListResponse.class);
         } finally {
             httpGet.releaseConnection();
             closeHttpClient(httpClient);

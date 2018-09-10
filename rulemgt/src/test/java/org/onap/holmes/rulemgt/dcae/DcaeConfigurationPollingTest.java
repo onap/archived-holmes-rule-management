@@ -42,7 +42,6 @@ import org.powermock.reflect.Whitebox;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
@@ -50,7 +49,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.easymock.PowerMock.*;
 
-@PrepareForTest({HttpsUtils.class, DcaeConfigurationQuery.class, DcaeConfigurationPolling.class})
+@PrepareForTest({HttpsUtils.class, DcaeConfigurationQuery.class})
 @SuppressStaticInitializationFor("org.onap.holmes.common.utils.HttpsUtils")
 @RunWith(PowerMockRunner.class)
 public class DcaeConfigurationPollingTest {
@@ -58,14 +57,15 @@ public class DcaeConfigurationPollingTest {
     @org.junit.Rule
     public ExpectedException thrown = ExpectedException.none();
 
+
     @Test
     public void run() throws Exception {
         DcaeConfigurations dcaeConfigurations = new DcaeConfigurations();
         dcaeConfigurations.addDefaultRule(new Rule("test", "clName", "contents", 1));
         mockStatic(DcaeConfigurationQuery.class);
         expect(DcaeConfigurationQuery.getDcaeConfigurations(anyObject(String.class))).andReturn(dcaeConfigurations);
-        DcaeConfigurationPolling dcaeConfigurationPolling = createPartialMock(DcaeConfigurationPolling.class,
-                "getAllCorrelationRules");
+        DcaeConfigurationPolling dcaeConfigurationPolling = new DcaeConfigurationPolling("localhost");
+
         Whitebox.setInternalState(dcaeConfigurationPolling, "url", "http://127.0.0.1");
 
         RuleQueryListResponse ruleQueryListResponse = new RuleQueryListResponse();
@@ -76,10 +76,16 @@ public class DcaeConfigurationPollingTest {
         };
         ruleQueryListResponse.setCorrelationRules(ruleResult4APIList);
         ruleQueryListResponse.setTotalCount(ruleResult4APIList.size());
-        expect(dcaeConfigurationPolling.getAllCorrelationRules()).andReturn(ruleQueryListResponse);
 
         CloseableHttpClient clientMock = createMock(CloseableHttpClient.class);
         HttpResponse httpResponseMock = createMock(HttpResponse.class);
+        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.get(anyObject(HttpGet.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
+                .andReturn(httpResponseMock);
+        expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn(JSONObject.toJSONString(ruleQueryListResponse));
+        clientMock.close();
+        expectLastCall();
+
         expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.delete(anyObject(HttpDelete.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
@@ -155,19 +161,13 @@ public class DcaeConfigurationPollingTest {
 
     @Test
     public void getAllCorrelationRules() throws Exception {
-        Map<String, Object> responseObj = new HashMap(){
-            {
-                put("correlationRules", new ArrayList<String>());
-                put("totalCount", 0);
-            }
-        };
 
         CloseableHttpClient clientMock = createMock(CloseableHttpClient.class);
         HttpResponse httpResponseMock = createMock(HttpResponse.class);
         expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.get(anyObject(HttpGet.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
-        expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn(JSONObject.toJSONString(responseObj));
+        expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn("{\"correlationRules\": [], \"totalCount\": 0}");
         clientMock.close();
         expectLastCall();
 

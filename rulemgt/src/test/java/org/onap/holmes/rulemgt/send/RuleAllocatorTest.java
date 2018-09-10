@@ -36,7 +36,7 @@ import org.onap.holmes.rulemgt.wrapper.RuleQueryWrapper;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,17 +44,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.onap.holmes.rulemgt.send.RuleAllocator.ENABLE;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ServiceLocator.class, RuleMgtWrapper.class, RuleQueryWrapper.class, EngineWrapper.class,
-        EngineInsQueryTool.class, DbDaoUtil.class, RuleAllocator.class, ServiceLocatorHolder.class})
+        EngineInsQueryTool.class, DbDaoUtil.class, ServiceLocatorHolder.class})
 public class RuleAllocatorTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
 
     private RuleMgtWrapper ruleMgtWrapperMock;
     private RuleQueryWrapper ruleQueryWrapperMock;
