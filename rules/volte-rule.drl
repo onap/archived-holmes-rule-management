@@ -1,0 +1,84 @@
+package org.onap.holmes.droolsRule;
+
+import org.onap.holmes.common.dmaap.DmaapService;
+import org.onap.holmes.common.api.stat.VesAlarm;
+import org.onap.holmes.common.aai.CorrelationUtil;
+import org.onap.holmes.common.dmaap.entity.PolicyMsg;
+import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+import org.onap.holmes.common.utils.DroolsLog;
+ 
+
+rule "Relation_analysis_Rule"
+salience 200
+no-loop true
+    when
+        $root : VesAlarm(alarmIsCleared == 0,
+            $sourceId: sourceId, sourceId != null && !sourceId.equals(""),
+			$sourceName: sourceName, sourceName != null && !sourceName.equals(""),
+			$startEpochMicrosec: startEpochMicrosec,
+            eventName in ("Fault_MultiCloud_VMFailure"),
+            $eventId: eventId)
+        $child : VesAlarm( eventId != $eventId, parentId == null,
+            CorrelationUtil.getInstance().isTopologicallyRelated(sourceId, $sourceId, $sourceName),
+            eventName in ("Fault_IMSSBC_Backup MPU is down"),
+            startEpochMicrosec < $startEpochMicrosec + 600000000 && startEpochMicrosec > $startEpochMicrosec - 600000000 )
+    then
+		DroolsLog.printInfo("Correlation Identified: Root: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName() +"; Child: ID=" + $child.getEventId() + ", Event Name=" + $child.getEventName());
+		$child.setParentId($root.getEventId());
+		update($child);
+end
+
+rule "root_has_child_handle_Rule"
+salience 150
+no-loop true
+	when
+		$root : VesAlarm(alarmIsCleared == 0, rootFlag == 0, $eventId: eventId)
+		$child : VesAlarm(eventId != $eventId, parentId == $eventId)
+	then
+		DroolsLog.printInfo("Root alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
+		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, $child, "org.onap.holmes.droolsRule");
+        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+		$root.setRootFlag(1);
+		update($root);
+end
+
+rule "root_no_child_handle_Rule"
+salience 100
+no-loop true
+    when
+        $root : VesAlarm(alarmIsCleared == 0, rootFlag == 0,
+            sourceId != null && !sourceId.equals(""),
+			sourceName != null && !sourceName.equals(""),
+            eventName in ("Fault_MultiCloud_VMFailure"))
+    then
+		DroolsLog.printInfo("New alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
+		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
+        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+		$root.setRootFlag(1);
+		update($root);
+end
+
+rule "root_cleared_handle_Rule"
+salience 100
+no-loop true
+    when
+        $root : VesAlarm(alarmIsCleared == 1, rootFlag == 1)
+    then
+		DroolsLog.printInfo("Alarm cleared: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
+		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
+        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+		retract($root);
+end
+
+rule "child_handle_Rule"
+salience 100
+no-loop true
+    when
+        $child : VesAlarm(alarmIsCleared == 1, rootFlag == 0)
+    then
+		DroolsLog.printInfo("Alarm cleared: ID=" + $child.getEventId() + ", Event Name=" + $child.getEventName());
+		retract($child);
+end
