@@ -10,6 +10,58 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Version: 1.2.0
+--------------
+
+:Release Date: 2018-11-xx
+
+
+**New Features**
+In the Casablanca release, Holmes provides its own GUI for rule management tasks:
+
+- `UI Deployment <https://jira.onap.org/browse/HOLMES-96>`_ This feature provides a graphic user interface for the sake of easiness of rule management. It mainly provides a rule list view and a rule editing page. Users could get an overview of all rules that have been added to Holmes and create/modify them easily by using the GUI provided by this feature.
+
+Besides, Holmes has been enhanced to be CCVPN use case supportive. CCVPN related assistant tools are added to the common library of Holmes.
+
+**Bug Fixes**
+
+- `HOLMES-156 <https://jira.onap.org/browse/HOLMES-156>`_ Rules can not be deployed after they've been added/removed from then engine.
+- `HOLMES-133 <https://jira.onap.org/browse/HOLMES-133>`_ Don't rely on key word 'import' when extracting package name from rule.
+- `HOLMES-130 <https://jira.onap.org/browse/HOLMES-130>`_ Holmes can not be successfully registered to MSB when trying to register itself with a health check parameter.
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_.
+
+Quick Links:
+    - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+     
+ 	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+ 	
+ 	- `Project Vulnerability Review Table for HOLMES <https://wiki.onap.org/pages/viewpage.action?pageId=41422564>`_
+
+
+**Upgrade Notes**
+
+N/A
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+===========
+
 
 Version: 1.1.0
 --------------
@@ -44,7 +96,7 @@ N/A
 HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_.
 
 Quick Links:
- 	- `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+     - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
  	
  	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
  	
