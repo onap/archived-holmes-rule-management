@@ -1,0 +1,347 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoControls';
+  src: url('fonts/font-icons/icon-controls.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-controls.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-controls.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-controls.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-controls.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-controls-"] {
+  font-family: 'icoControls' !important;
+}
+.icon-controls-add-maximize:before {
+  content: "\e900";
+}
+.icon-controls-add-maximizeL:before {
+  content: "\e901";
+}
+.icon-controls-approval:before {
+  content: "\e902";
+}
+.icon-controls-approvalL:before {
+  content: "\e903";
+}
+.icon-controls-audiolang:before {
+  content: "\e904";
+}
+.icon-controls-brightnessmedium:before {
+  content: "\e905";
+}
+.icon-controls-brightnessminimum:before {
+  content: "\e906";
+}
+.icon-controls-check:before {
+  content: "\e907";
+}
+.icon-controls-checkboxchecked:before {
+  content: "\e908";
+}
+.icon-controls-checkboxcheckedL:before {
+  content: "\e909";
+}
+.icon-controls-clickthrough:before {
+  content: "\e90a";
+}
+.icon-controls-clickthroughL:before {
+  content: "\e90b";
+}
+.icon-controls-contrast:before {
+  content: "\e90c";
+}
+.icon-controls-contrastL:before {
+  content: "\e90d";
+}
+.icon-controls-control:before {
+  content: "\e90e";
+}
+.icon-controls-controlL:before {
+  content: "\e90f";
+}
+.icon-controls-controls:before {
+  content: "\e910";
+}
+.icon-controls-cursor:before {
+  content: "\e911";
+}
+.icon-controls-cursorL:before {
+  content: "\e912";
+}
+.icon-controls-digitalaudiooutput:before {
+  content: "\e913";
+}
+.icon-controls-down:before {
+  content: "\e914";
+}
+.icon-controls-downL:before {
+  content: "\e915";
+}
+.icon-controls-eject:before {
+  content: "\e916";
+}
+.icon-controls-ejectL:before {
+  content: "\e917";
+}
+.icon-controls-errorL:before {
+  content: "\e918";
+}
+.icon-controls-exitfullscreen:before {
+  content: "\e919";
+}
+.icon-controls-exitfullscreenL:before {
+  content: "\e91a";
+}
+.icon-controls-fastforward:before {
+  content: "\e91b";
+}
+.icon-controls-fastforwardL:before {
+  content: "\e91c";
+}
+.icon-controls-fourwaycontroller:before {
+  content: "\e91d";
+}
+.icon-controls-fourwaycontrollerL:before {
+  content: "\e91e";
+}
+.icon-controls-fullscreen:before {
+  content: "\e91f";
+}
+.icon-controls-fullscreenL:before {
+  content: "\e920";
+}
+.icon-controls-futureprogramming:before {
+  content: "\e921";
+}
+.icon-controls-gear:before {
+  content: "\e922";
+}
+.icon-controls-gearL:before {
+  content: "\e923";
+}
+.icon-controls-keyboard:before {
+  content: "\e924";
+}
+.icon-controls-left:before {
+  content: "\e925";
+}
+.icon-controls-leftL:before {
+  content: "\e926";
+}
+.icon-controls-magnifyingglass:before {
+  content: "\e927";
+}
+.icon-controls-magnifyingglassL:before {
+  content: "\e928";
+}
+.icon-controls-moreapplications:before {
+  content: "\e929";
+}
+.icon-controls-moreapplicationsL:before {
+  content: "\e92a";
+}
+.icon-controls-mutespeakers:before {
+  content: "\e92b";
+}
+.icon-controls-mutespeakersL:before {
+  content: "\e92c";
+}
+.icon-controls-numberpad:before {
+  content: "\e92d";
+}
+.icon-controls-optionsoff:before {
+  content: "\e92e";
+}
+.icon-controls-optionsoffL:before {
+  content: "\e92f";
+}
+.icon-controls-optionson:before {
+  content: "\e930";
+}
+.icon-controls-optionsonL:before {
+  content: "\e931";
+}
+.icon-controls-pastprogramming:before {
+  content: "\e932";
+}
+.icon-controls-pause:before {
+  content: "\e933";
+}
+.icon-controls-pauseL:before {
+  content: "\e934";
+}
+.icon-controls-playalt:before {
+  content: "\e935";
+}
+.icon-controls-playaltL:before {
+  content: "\e936";
+}
+.icon-controls-playpause:before {
+  content: "\e937";
+}
+.icon-controls-playpauseL:before {
+  content: "\e938";
+}
+.icon-controls-pointer:before {
+  content: "\e939";
+}
+.icon-controls-pointerL:before {
+  content: "\e93a";
+}
+.icon-controls-poweroff:before {
+  content: "\e93b";
+}
+.icon-controls-poweroffline:before {
+  content: "\e93c";
+}
+.icon-controls-poweronoff:before {
+  content: "\e93d";
+}
+.icon-controls-poweronoffL:before {
+  content: "\e93e";
+}
+.icon-controls-rec:before {
+  content: "\e93f";
+}
+.icon-controls-recL:before {
+  content: "\e940";
+}
+.icon-controls-record:before {
+  content: "\e941";
+}
+.icon-controls-recordingspace:before {
+  content: "\e942";
+}
+.icon-controls-recordingspaceL:before {
+  content: "\e943";
+}
+.icon-controls-recordseries:before {
+  content: "\e944";
+}
+.icon-controls-restricted:before {
+  content: "\e945";
+}
+.icon-controls-restrictedL:before {
+  content: "\e946";
+}
+.icon-controls-rewind:before {
+  content: "\e947";
+}
+.icon-controls-rewindL:before {
+  content: "\e948";
+}
+.icon-controls-right:before {
+  content: "\e949";
+}
+.icon-controls-rightL:before {
+  content: "\e94a";
+}
+.icon-controls-seriesrecording:before {
+  content: "\e94b";
+}
+.icon-controls-seriesrecordingcancelled:before {
+  content: "\e94c";
+}
+.icon-controls-seriesrecordingcompleted:before {
+  content: "\e94d";
+}
+.icon-controls-seriesrecordingscheduled:before {
+  content: "\e94e";
+}
+.icon-controls-settingsconnectedactivity:before {
+  content: "\e94f";
+}
+.icon-controls-settingsconnectedactivityL:before {
+  content: "\e950";
+}
+.icon-controls-singlerecording:before {
+  content: "\e951";
+}
+.icon-controls-singlerecordingscheduled:before {
+  content: "\e952";
+}
+.icon-controls-skipbackstartover:before {
+  content: "\e953";
+}
+.icon-controls-skipbackstartoverL:before {
+  content: "\e954";
+}
+.icon-controls-skipforward:before {
+  content: "\e955";
+}
+.icon-controls-skipforwardL:before {
+  content: "\e956";
+}
+.icon-controls-slow:before {
+  content: "\e957";
+}
+.icon-controls-slowL:before {
+  content: "\e958";
+}
+.icon-controls-speaker:before {
+  content: "\e959";
+}
+.icon-controls-speakerL:before {
+  content: "\e95a";
+}
+.icon-controls-speakeroffline:before {
+  content: "\e95b";
+}
+.icon-controls-statusokay:before {
+  content: "\e95c";
+}
+.icon-controls-statusokayL:before {
+  content: "\e95d";
+}
+.icon-controls-stop:before {
+  content: "\e95e";
+}
+.icon-controls-stopL:before {
+  content: "\e95f";
+}
+.icon-controls-stoprecording:before {
+  content: "\e960";
+}
+.icon-controls-subtractminimize:before {
+  content: "\e961";
+}
+.icon-controls-subtractminimizeL:before {
+  content: "\e962";
+}
+.icon-controls-upL:before {
+  content: "\e963";
+}
+.icon-controls-upPRIMARY:before {
+  content: "\e964";
+}
+.icon-controls-volumedown:before {
+  content: "\e965";
+}
+.icon-controls-volumedownL:before {
+  content: "\e966";
+}
+.icon-controls-volumeup:before {
+  content: "\e967";
+}
+.icon-controls-volumeupL:before {
+  content: "\e968";
+}
+.icon-controls-x-closePRIMARY:before {
+  content: "\e969";
+}
+.icon-controls-zoomin:before {
+  content: "\e96a";
+}
+.icon-controls-zoominL:before {
+  content: "\e96b";
+}
+.icon-controls-zoomout:before {
+  content: "\e96c";
+}
+.icon-controls-zoomoutL:before {
+  content: "\e96d";
+}
+.icon-controls-fourwaycontroller2:before {
+  content: "\e96e";
+}
+.icon-controls-fourwaycontroller2L:before {
+  content: "\e96f";
+}

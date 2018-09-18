@@ -13,12 +13,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import {Component, OnInit} from '@angular/core';
-import {ModalService} from '../correlation-modal/modal.service';
-import {RuleModel} from './alarmRule';
-import {RuleRequest} from './ruleRequest';
-import {Router} from '@angular/router';
-import {AlarmRuleService} from './alarmRule.service';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { ModalService } from '../correlation-modal/modal.service';
+import { RuleModel } from './alarmRule';
+import { RuleRequest } from './ruleRequest';
+import { Router } from '@angular/router';
+import { AlarmRuleService } from './alarmRule.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'alarmRule',
@@ -41,7 +42,7 @@ export class AlarmRule implements OnInit {
   activeStatus = ["option_all", "common_enabled", "common_disabled"];
 
   constructor(public _alarmRuleService: AlarmRuleService, private modalService: ModalService,
-              private router: Router) {
+    private router: Router, private ele: ElementRef) {
   }
 
   switch(select: string): void {
@@ -155,5 +156,12 @@ export class AlarmRule implements OnInit {
       loopControlName: ''
     };
     this.getRules();
+
+    this.ele.nativeElement.querySelector('.container-fluid').style.height = window.innerHeight + 'px';
+    Observable.fromEvent(window, 'resize')
+      .debounceTime(100)
+      　　.subscribe(() => {
+        this.ele.nativeElement.querySelector('.container-fluid').style.height = window.innerHeight + 'px';
+      　　});
   }
 }
