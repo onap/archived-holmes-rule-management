@@ -62,7 +62,7 @@ export class RuleInfo implements OnInit {
       creator: null,
       updateTime: null,
       modifier: null,
-      enabled: 0,
+      enabled: 1,
       loopControlName: ''
     };
 

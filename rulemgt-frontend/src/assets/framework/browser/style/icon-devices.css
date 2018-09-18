@@ -1,0 +1,500 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoDevices';
+  src: url('fonts/font-icons/icon-devices.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-devices.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-devices.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-devices.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-devices.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-devices-"] {
+  font-family: 'icoDevices' !important;
+}
+.icon-devices-accessories:before {
+  content: "\e900";
+}
+.icon-devices-accessoriesL:before {
+  content: "\e901";
+}
+.icon-devices-battery:before {
+  content: "\e902";
+}
+.icon-devices-batterycharging:before {
+  content: "\e903";
+}
+.icon-devices-batterychargingL:before {
+  content: "\e904";
+}
+.icon-devices-batteryempty:before {
+  content: "\e905";
+}
+.icon-devices-batteryemptyL:before {
+  content: "\e906";
+}
+.icon-devices-batteryL:before {
+  content: "\e907";
+}
+.icon-devices-batterylow:before {
+  content: "\e908";
+}
+.icon-devices-batterylowL:before {
+  content: "\e909";
+}
+.icon-devices-bluetoothspeakers:before {
+  content: "\e90a";
+}
+.icon-devices-bluetoothspeakersL:before {
+  content: "\e90b";
+}
+.icon-devices-cable:before {
+  content: "\e90c";
+}
+.icon-devices-cableL:before {
+  content: "\e90d";
+}
+.icon-devices-callerid:before {
+  content: "\e90e";
+}
+.icon-devices-calleridannounce:before {
+  content: "\e90f";
+}
+.icon-devices-calleridannounceL:before {
+  content: "\e910";
+}
+.icon-devices-calleridL:before {
+  content: "\e911";
+}
+.icon-devices-camera:before {
+  content: "\e912";
+}
+.icon-devices-cameraL:before {
+  content: "\e913";
+}
+.icon-devices-cameraprivacy:before {
+  content: "\e914";
+}
+.icon-devices-cctv:before {
+  content: "\e915";
+}
+.icon-devices-cctvL:before {
+  content: "\e916";
+}
+.icon-devices-cdL:before {
+  content: "\e917";
+}
+.icon-devices-deviceecosystem:before {
+  content: "\e918";
+}
+.icon-devices-deviceecosystemL:before {
+  content: "\e919";
+}
+.icon-devices-digitallifecontroller:before {
+  content: "\e91a";
+}
+.icon-devices-digitalsignage:before {
+  content: "\e91b";
+}
+.icon-devices-digitalsignageL:before {
+  content: "\e91c";
+}
+.icon-devices-directv:before {
+  content: "\e91d";
+}
+.icon-devices-directvL:before {
+  content: "\e91e";
+}
+.icon-devices-directvsupport:before {
+  content: "\e91f";
+}
+.icon-devices-directvsupportL:before {
+  content: "\e920";
+}
+.icon-devices-easyinstallation:before {
+  content: "\e921";
+}
+.icon-devices-easyinstallationL:before {
+  content: "\e922";
+}
+.icon-devices-expandable10handsets:before {
+  content: "\e923";
+}
+.icon-devices-expandable10handsetsL:before {
+  content: "\e924";
+}
+.icon-devices-expandable16stations:before {
+  content: "\e925";
+}
+.icon-devices-expandable16stationsL:before {
+  content: "\e926";
+}
+.icon-devices-fastmemory:before {
+  content: "\e927";
+}
+.icon-devices-fastmemoryL:before {
+  content: "\e928";
+}
+.icon-devices-featurephone:before {
+  content: "\e929";
+}
+.icon-devices-featurephoneL:before {
+  content: "\e92a";
+}
+.icon-devices-frontrearcamera:before {
+  content: "\e92b";
+}
+.icon-devices-frontrearcameraL:before {
+  content: "\e92c";
+}
+.icon-devices-gps:before {
+  content: "\e92d";
+}
+.icon-devices-gpsL:before {
+  content: "\e92e";
+}
+.icon-devices-handsetlifter:before {
+  content: "\e92f";
+}
+.icon-devices-handsetlifterL:before {
+  content: "\e930";
+}
+.icon-devices-headsetcompat:before {
+  content: "\e931";
+}
+.icon-devices-headsetcompatL:before {
+  content: "\e932";
+}
+.icon-devices-homephone:before {
+  content: "\e933";
+}
+.icon-devices-homephoneL:before {
+  content: "\e934";
+}
+.icon-devices-informationtransfer:before {
+  content: "\e935";
+}
+.icon-devices-informationtransferL:before {
+  content: "\e936";
+}
+.icon-devices-inputkeyboard:before {
+  content: "\e937";
+}
+.icon-devices-inputkeyboardL:before {
+  content: "\e938";
+}
+.icon-devices-keychainremote:before {
+  content: "\e939";
+}
+.icon-devices-keychainremoteL:before {
+  content: "\e93a";
+}
+.icon-devices-landlinephonesupport:before {
+  content: "\e93b";
+}
+.icon-devices-landlinephonesupportL:before {
+  content: "\e93c";
+}
+.icon-devices-laptop:before {
+  content: "\e93d";
+}
+.icon-devices-laptopL:before {
+  content: "\e93e";
+}
+.icon-devices-mediastack:before {
+  content: "\e93f";
+}
+.icon-devices-mediastackL:before {
+  content: "\e940";
+}
+.icon-devices-memorycard:before {
+  content: "\e941";
+}
+.icon-devices-memorycardL:before {
+  content: "\e942";
+}
+.icon-devices-meterdashboard:before {
+  content: "\e943";
+}
+.icon-devices-meterdashboardL:before {
+  content: "\e944";
+}
+.icon-devices-microphone:before {
+  content: "\e945";
+}
+.icon-devices-microphoneL:before {
+  content: "\e946";
+}
+.icon-devices-mobileapp:before {
+  content: "\e947";
+}
+.icon-devices-mobileappL:before {
+  content: "\e948";
+}
+.icon-devices-mobilesmartphone:before {
+  content: "\e949";
+}
+.icon-devices-mobilesmartphoneL:before {
+  content: "\e94a";
+}
+.icon-devices-mouse:before {
+  content: "\e94b";
+}
+.icon-devices-mouseL:before {
+  content: "\e94c";
+}
+.icon-devices-multiviewcamera:before {
+  content: "\e94d";
+}
+.icon-devices-multiviewcameraL:before {
+  content: "\e94e";
+}
+.icon-devices-multiviewcameraprivacyL:before {
+  content: "\e94f";
+}
+.icon-devices-mutemic:before {
+  content: "\e950";
+}
+.icon-devices-mutemicL:before {
+  content: "\e951";
+}
+.icon-devices-phonecase:before {
+  content: "\e952";
+}
+.icon-devices-phonecaseL:before {
+  content: "\e953";
+}
+.icon-devices-plugin:before {
+  content: "\e954";
+}
+.icon-devices-pluginL:before {
+  content: "\e955";
+}
+.icon-devices-printer:before {
+  content: "\e956";
+}
+.icon-devices-printerL:before {
+  content: "\e957";
+}
+.icon-devices-projector:before {
+  content: "\e958";
+}
+.icon-devices-ptt:before {
+  content: "\e959";
+}
+.icon-devices-pttL:before {
+  content: "\e95a";
+}
+.icon-devices-refurbisheddevice:before {
+  content: "\e95b";
+}
+.icon-devices-refurbisheddeviceL:before {
+  content: "\e95c";
+}
+.icon-devices-remote:before {
+  content: "\e95d";
+}
+.icon-devices-remoteL:before {
+  content: "\e95e";
+}
+.icon-devices-residentialgateway:before {
+  content: "\e95f";
+}
+.icon-devices-tablet:before {
+  content: "\e960";
+}
+.icon-devices-tabletL:before {
+  content: "\e961";
+}
+.icon-devices-touchscreen:before {
+  content: "\e962";
+}
+.icon-devices-touchscreenL:before {
+  content: "\e963";
+}
+.icon-devices-tv:before {
+  content: "\e964";
+}
+.icon-devices-tvL:before {
+  content: "\e965";
+}
+.icon-devices-tvreceiver:before {
+  content: "\e966";
+}
+.icon-devices-usbdrive:before {
+  content: "\e967";
+}
+.icon-devices-usbdriveL:before {
+  content: "\e968";
+}
+.icon-devices-uversetv:before {
+  content: "\e969";
+}
+.icon-devices-uversetvL:before {
+  content: "\e96a";
+}
+.icon-devices-uversetvupport:before {
+  content: "\e96b";
+}
+.icon-devices-uversetvupportL:before {
+  content: "\e96c";
+}
+.icon-devices-uversevoicesupport:before {
+  content: "\e96d";
+}
+.icon-devices-uversevoicesupportL:before {
+  content: "\e96e";
+}
+.icon-devices-vibrationdevice:before {
+  content: "\e96f";
+}
+.icon-devices-video:before {
+  content: "\e970";
+}
+.icon-devices-videochat:before {
+  content: "\e971";
+}
+.icon-devices-videochatL:before {
+  content: "\e972";
+}
+.icon-devices-videoL:before {
+  content: "\e973";
+}
+.icon-devices-virtual:before {
+  content: "\e974";
+}
+.icon-devices-virtualcall:before {
+  content: "\e975";
+}
+.icon-devices-virtualcallL:before {
+  content: "\e976";
+}
+.icon-devices-virtualL:before {
+  content: "\e977";
+}
+.icon-devices-voipdeskphone:before {
+  content: "\e978";
+}
+.icon-devices-voipdeskphoneL:before {
+  content: "\e979";
+}
+.icon-devices-watchondevice:before {
+  content: "\e97a";
+}
+.icon-devices-watchondeviceL:before {
+  content: "\e97b";
+}
+.icon-devices-wearables:before {
+  content: "\e97c";
+}
+.icon-devices-wearablesL:before {
+  content: "\e97d";
+}
+.icon-devices-wifienableddevice:before {
+  content: "\e97e";
+}
+.icon-devices-wifienableddeviceL:before {
+  content: "\e97f";
+}
+.icon-devices-wirelessreceiver:before {
+  content: "\e980";
+}
+.icon-devices-workstation:before {
+  content: "\e981";
+}
+.icon-devices-workstationL:before {
+  content: "\e982";
+}
+.icon-devices-addcordlessheadset:before {
+  content: "\e983";
+}
+.icon-devices-addcordlessheadsetL:before {
+  content: "\e984";
+}
+.icon-devices-callerhistory:before {
+  content: "\e985";
+}
+.icon-devices-callerhistoryL:before {
+  content: "\e986";
+}
+.icon-devices-callerid2:before {
+  content: "\e987";
+}
+.icon-devices-callerid2L:before {
+  content: "\e988";
+}
+.icon-devices-callscreen:before {
+  content: "\e989";
+}
+.icon-devices-callscreenL:before {
+  content: "\e98a";
+}
+.icon-devices-calltransfer:before {
+  content: "\e98b";
+}
+.icon-devices-calltransferL:before {
+  content: "\e98c";
+}
+.icon-devices-connectivity:before {
+  content: "\e98d";
+}
+.icon-devices-connectivityL:before {
+  content: "\e98e";
+}
+.icon-devices-donotdisturbL:before {
+  content: "\e98f";
+}
+.icon-devices-drone:before {
+  content: "\e990";
+}
+.icon-devices-droneL:before {
+  content: "\e991";
+}
+.icon-devices-expandableheadset:before {
+  content: "\e992";
+}
+.icon-devices-expandableheadsetL:before {
+  content: "\e993";
+}
+.icon-devices-meterlow:before {
+  content: "\e994";
+}
+.icon-devices-meterlowL:before {
+  content: "\e995";
+}
+.icon-devices-multipleinstallation:before {
+  content: "\e996";
+}
+.icon-devices-multipleinstallationL:before {
+  content: "\e997";
+}
+.icon-devices-phonehandset:before {
+  content: "\e998";
+}
+.icon-devices-phonehandsetL:before {
+  content: "\e999";
+}
+.icon-devices-cameraofflineL:before {
+  content: "\e99a";
+}
+.icon-devices-hdcalling:before {
+  content: "\e99b";
+}
+.icon-devices-hdcallingL:before {
+  content: "\e99c";
+}
+.icon-devices-phonehandset2:before {
+  content: "\e99d";
+}
+.icon-devices-phonehandsetL2:before {
+  content: "\e99e";
+}
+.icon-devices-residentialgatewayL:before {
+  content: "\e99f";
+}
+.icon-devices-shredderL:before {
+  content: "\e800";
+}
+.icon-devices-simultaneous:before {
+  content: "\e9a0";
+}
+.icon-devices-simultaneousL:before {
+  content: "\e9a1";
+}

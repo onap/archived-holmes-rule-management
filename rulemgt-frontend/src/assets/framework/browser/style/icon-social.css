@@ -1,0 +1,65 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoSocial';
+  src: url('fonts/font-icons/icon-social.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-social.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-social.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-social.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-social.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-social-"] {
+  font-family: 'icoSocial' !important;
+}
+.icon-social-email:before {
+  content: "\e900";
+  color: #ea7400;
+}
+.icon-social-facebook:before {
+  content: "\e903";
+  color: #3b5999;
+}
+.icon-social-instagram:before {
+  content: "\e904";
+}
+.icon-social-linkedin:before {
+  content: "\e905";
+  color: #066c9a;
+}
+.icon-social-linkedinL:before {
+  content: "\e906";
+  color: #cccccc;
+}
+.icon-social-pinterest:before {
+  content: "\e907";
+  color: #bd081c;
+}
+.icon-social-pinterest:after {
+  content: "\e908";
+  margin-left: -1em;
+  color: #ffffff;
+}
+.icon-social-pinterestL:before {
+  content: "\e909";
+  color: #cdcdcd;
+}
+.icon-social-share-this:before {
+  content: "\e90a";
+}
+.icon-social-sms:before {
+  content: "\e90b";
+  color: #007a3e;
+}
+.icon-social-twitter:before {
+  content: "\e90c";
+  color: #2aa9e0;
+}
+.icon-social-twitterL:before {
+  content: "\e90d";
+}
+.icon-social-youtube:before {
+  content: "\e90e";
+  color: #cd201f;
+}
+.icon-social-youtube-full:before {
+  content: "\e90f";
+  color: #000000;
+}

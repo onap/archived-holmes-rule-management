@@ -19,12 +19,13 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css",
         "assets/common/css/fileupload.css",
         "assets/common/css/popModal.css",
-        "assets/framework/browser/css/open-ostyle.css",
         "assets/framework/browser/thirdparty/css/bootstrap.min.css",
-        "assets/framework/browser/thirdparty/css/magic-check.css"
+        "assets/framework/browser/style/b2b-angular.css",
+        "assets/framework/browser/style/font-icons.css",
+        "assets/framework/browser/thirdparty/css/magic-check.css",
+        "styles.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",

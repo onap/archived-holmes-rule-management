@@ -1,0 +1,74 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoLocation';
+  src: url('fonts/font-icons/icon-places.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-places.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-places.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-places.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-places.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-location-"] {
+  font-family: 'icoLocation' !important;
+}
+.icon-location-global:before {
+  content: "\e900";
+}
+.icon-location-globalL:before {
+  content: "\e901";
+}
+.icon-location-minus:before {
+  content: "\e902";
+}
+.icon-location-minusL:before {
+  content: "\e903";
+}
+.icon-location-plus:before {
+  content: "\e904";
+}
+.icon-location-plusL:before {
+  content: "\e905";
+}
+.icon-location-map:before {
+  content: "\e906";
+}
+.icon-location-mapL:before {
+  content: "\e907";
+}
+.icon-location-pinpoint:before {
+  content: "\e908";
+}
+.icon-location-pinpointL:before {
+  content: "\e909";
+}
+.icon-location-pointsofinterest:before {
+  content: "\e90a";
+}
+.icon-location-pointsofinterestL:before {
+  content: "\e90b";
+}
+.icon-location-position:before {
+  content: "\e90c";
+}
+.icon-location-positionL:before {
+  content: "\e90d";
+}
+.icon-location-unitedstates:before {
+  content: "\e90e";
+}
+.icon-location-unitedstatesL:before {
+  content: "\e90f";
+}
+.icon-location-addgeofence:before {
+  content: "\e910";
+}
+.icon-location-edit:before {
+  content: "\e911";
+}
+.icon-location-editmap:before {
+  content: "\e912";
+}
+.icon-location-geofence:before {
+  content: "\e913";
+}
+.icon-location-terrain:before {
+  content: "\e914";
+}

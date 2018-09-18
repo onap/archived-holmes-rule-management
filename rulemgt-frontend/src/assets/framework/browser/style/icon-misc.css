@@ -1,0 +1,275 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoMisc';
+  src: url('fonts/font-icons/icon-misc.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-misc.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-misc.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-misc.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-misc.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-misc-"] {
+  font-family: 'icoMisc' !important;
+}
+.icon-misc-alarmL:before {
+  content: "\e900";
+}
+.icon-misc-award:before {
+  content: "\e901";
+}
+.icon-misc-awardL:before {
+  content: "\e902";
+}
+.icon-misc-barrel:before {
+  content: "\e903";
+}
+.icon-misc-barrelL:before {
+  content: "\e904";
+}
+.icon-misc-brushL:before {
+  content: "\e905";
+}
+.icon-misc-bulb:before {
+  content: "\e906";
+}
+.icon-misc-bulbL:before {
+  content: "\e907";
+}
+.icon-misc-business:before {
+  content: "\e908";
+}
+.icon-misc-businesscontinuity:before {
+  content: "\e909";
+}
+.icon-misc-businesscontinuityL:before {
+  content: "\e90a";
+}
+.icon-misc-businessL:before {
+  content: "\e90b";
+}
+.icon-misc-calendar:before {
+  content: "\e90c";
+}
+.icon-misc-calendarL:before {
+  content: "\e90d";
+}
+.icon-misc-customersupport:before {
+  content: "\e90e";
+}
+.icon-misc-customersupportL:before {
+  content: "\e90f";
+}
+.icon-misc-datetime:before {
+  content: "\e910";
+}
+.icon-misc-datetimeL:before {
+  content: "\e911";
+}
+.icon-misc-dimmer:before {
+  content: "\e912";
+}
+.icon-misc-environmental:before {
+  content: "\e913";
+}
+.icon-misc-environmentalL:before {
+  content: "\e914";
+}
+.icon-misc-eraserL:before {
+  content: "\e915";
+}
+.icon-misc-feather:before {
+  content: "\e916";
+}
+.icon-misc-featherL:before {
+  content: "\e917";
+}
+.icon-misc-filter:before {
+  content: "\e918";
+}
+.icon-misc-hotwaterheater:before {
+  content: "\e919";
+}
+.icon-misc-housework:before {
+  content: "\e91a";
+}
+.icon-misc-ideation:before {
+  content: "\e91b";
+}
+.icon-misc-ideationL:before {
+  content: "\e91c";
+}
+.icon-misc-integration:before {
+  content: "\e91d";
+}
+.icon-misc-integrationL:before {
+  content: "\e91e";
+}
+.icon-misc-lawenforcement:before {
+  content: "\e91f";
+}
+.icon-misc-lawenforcementL:before {
+  content: "\e920";
+}
+.icon-misc-legaldepartment:before {
+  content: "\e921";
+}
+.icon-misc-legaldepartmentL:before {
+  content: "\e922";
+}
+.icon-misc-lightsoff:before {
+  content: "\e923";
+}
+.icon-misc-lightsoffL:before {
+  content: "\e924";
+}
+.icon-misc-lightson:before {
+  content: "\e925";
+}
+.icon-misc-magnet:before {
+  content: "\e926";
+}
+.icon-misc-magnetL:before {
+  content: "\e927";
+}
+.icon-misc-maintenance:before {
+  content: "\e928";
+}
+.icon-misc-maintenanceL:before {
+  content: "\e929";
+}
+.icon-misc-mortarboard:before {
+  content: "\e92a";
+}
+.icon-misc-mortarboardL:before {
+  content: "\e92b";
+}
+.icon-misc-oilandgas:before {
+  content: "\e92c";
+}
+.icon-misc-oilandgasL:before {
+  content: "\e92d";
+}
+.icon-misc-operations:before {
+  content: "\e92e";
+}
+.icon-misc-operationsL:before {
+  content: "\e92f";
+}
+.icon-misc-penL:before {
+  content: "\e930";
+}
+.icon-misc-piechart:before {
+  content: "\e931";
+}
+.icon-misc-piechartL:before {
+  content: "\e932";
+}
+.icon-misc-puzzle:before {
+  content: "\e933";
+}
+.icon-misc-puzzleL:before {
+  content: "\e934";
+}
+.icon-misc-stopwatchL:before {
+  content: "\e935";
+}
+.icon-misc-taget:before {
+  content: "\e936";
+}
+.icon-misc-tagetL:before {
+  content: "\e937";
+}
+.icon-misc-tempwatersensor:before {
+  content: "\e938";
+}
+.icon-misc-tempwatersensorL:before {
+  content: "\e939";
+}
+.icon-misc-time:before {
+  content: "\e93a";
+}
+.icon-misc-timeandmoney:before {
+  content: "\e93b";
+}
+.icon-misc-timeandmoneyL:before {
+  content: "\e93c";
+}
+.icon-misc-timeL:before {
+  content: "\e93d";
+}
+.icon-misc-timetrigger:before {
+  content: "\e93e";
+}
+.icon-misc-tools:before {
+  content: "\e93f";
+}
+.icon-misc-toolsL:before {
+  content: "\e940";
+}
+.icon-misc-trash:before {
+  content: "\e941";
+}
+.icon-misc-trashL:before {
+  content: "\e942";
+}
+.icon-misc-trophy:before {
+  content: "\e943";
+}
+.icon-misc-trophyL:before {
+  content: "\e944";
+}
+.icon-misc-utilities:before {
+  content: "\e945";
+}
+.icon-misc-utilitiesL:before {
+  content: "\e946";
+}
+.icon-misc-water:before {
+  content: "\e947";
+}
+.icon-misc-waterL:before {
+  content: "\e948";
+}
+.icon-misc-pen:before {
+  content: "\e949";
+}
+.icon-misc-clothespin:before {
+  content: "\e94a";
+}
+.icon-misc-clothespinL:before {
+  content: "\e94b";
+}
+.icon-misc-farming:before {
+  content: "\e94c";
+}
+.icon-misc-farmingL:before {
+  content: "\e94d";
+}
+.icon-misc-mug:before {
+  content: "\e94e";
+}
+.icon-misc-mugL:before {
+  content: "\e94f";
+}
+.icon-misc-party:before {
+  content: "\e950";
+}
+.icon-misc-stopwatch:before {
+  content: "\e951";
+}
+.icon-misc-tree:before {
+  content: "\e952";
+}
+.icon-misc-treeL:before {
+  content: "\e953";
+}
+.icon-misc-verified:before {
+  content: "\e954";
+}
+.icon-misc-waterbottle:before {
+  content: "\e955";
+}
+.icon-misc-waterbottleL:before {
+  content: "\e956";
+}
+.icon-misc-gripper:before {
+  content: "\e957";
+}

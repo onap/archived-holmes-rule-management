@@ -1,0 +1,218 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoArrows';
+  src: url('fonts/font-icons/icon-arrows.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-arrows.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-arrows.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-arrows.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-arrows.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-arrows-"] {
+  font-family: 'icoArrows' !important;
+}
+.icon-arrows-left-arrow:before {
+  content: "\e900";
+}
+.icon-arrows-curved-arrow:before {
+  content: "\e901";
+}
+.icon-arrows-curved-arrowL:before {
+  content: "\e902";
+}
+.icon-arrows-decrease:before {
+  content: "\e903";
+}
+.icon-arrows-decreaseL:before {
+  content: "\e904";
+}
+.icon-arrows-download:before {
+  content: "\e905";
+}
+.icon-arrows-downloadL:before {
+  content: "\e906";
+}
+.icon-arrows-export:before {
+  content: "\e907";
+}
+.icon-arrows-exportL:before {
+  content: "\e908";
+}
+.icon-arrows-incoming-call:before {
+  content: "\e909";
+}
+.icon-arrows-incoming-callL:before {
+  content: "\e90a";
+}
+.icon-arrows-increase:before {
+  content: "\e90b";
+}
+.icon-arrows-increaseL:before {
+  content: "\e90c";
+}
+.icon-arrows-interaction:before {
+  content: "\e90d";
+}
+.icon-arrows-interactionL:before {
+  content: "\e90e";
+}
+.icon-arrows-multi-tasking:before {
+  content: "\e90f";
+}
+.icon-arrows-multi-taskingL:before {
+  content: "\e910";
+}
+.icon-arrows-outgoing-call:before {
+  content: "\e911";
+}
+.icon-arrows-outgoing-callL:before {
+  content: "\e912";
+}
+.icon-arrows-overnight:before {
+  content: "\e913";
+}
+.icon-arrows-overnightL:before {
+  content: "\e914";
+}
+.icon-arrows-quick-sync:before {
+  content: "\e915";
+}
+.icon-arrows-quick-syncL:before {
+  content: "\e916";
+}
+.icon-arrows-repeat-item:before {
+  content: "\e917";
+}
+.icon-arrows-repeat-itemL:before {
+  content: "\e918";
+}
+.icon-arrows-repeat-off:before {
+  content: "\e919";
+}
+.icon-arrows-repeat-offL:before {
+  content: "\e91a";
+}
+.icon-arrows-replay-restart:before {
+  content: "\e91b";
+}
+.icon-arrows-replay-restartL:before {
+  content: "\e91c";
+}
+.icon-arrows-reusable:before {
+  content: "\e91d";
+}
+.icon-arrows-reusableL:before {
+  content: "\e91e";
+}
+.icon-arrows-share:before {
+  content: "\e91f";
+}
+.icon-arrows-shareL:before {
+  content: "\e920";
+}
+.icon-arrows-shuffle:before {
+  content: "\e921";
+}
+.icon-arrows-shuffle-item:before {
+  content: "\e922";
+}
+.icon-arrows-shuffle-itemL:before {
+  content: "\e923";
+}
+.icon-arrows-shuffleL:before {
+  content: "\e924";
+}
+.icon-arrows-shuffle-off:before {
+  content: "\e925";
+}
+.icon-arrows-shuffle-offL:before {
+  content: "\e926";
+}
+.icon-arrows-skip-track:before {
+  content: "\e927";
+}
+.icon-arrows-skip-trackL:before {
+  content: "\e928";
+}
+.icon-arrows-straight-arrow:before {
+  content: "\e929";
+}
+.icon-arrows-straight-arrowL:before {
+  content: "\e92a";
+}
+.icon-arrows-transform:before {
+  content: "\e92b";
+}
+.icon-arrows-transformL:before {
+  content: "\e92c";
+}
+.icon-arrows-ultra-fast-speed:before {
+  content: "\e92d";
+}
+.icon-arrows-ultra-fast-speedL:before {
+  content: "\e92e";
+}
+.icon-arrows-update-refresh-sync:before {
+  content: "\e92f";
+}
+.icon-arrows-update-refresh-syncL:before {
+  content: "\e930";
+}
+.icon-arrows-upload:before {
+  content: "\e931";
+}
+.icon-arrows-uploadL:before {
+  content: "\e932";
+}
+.icon-arrows-sort-arrow:before {
+  content: "\e933";
+  color: #0568ae;
+}
+.icon-arrows-sort-arrow:after {
+  content: "\e934";
+  margin-left: -1em;
+  color: #ffffff;
+}
+.icon-arrows-sort-arrow.active:after {
+  color: #0568ae;
+}
+.icon-arrows-reminder-email:before {
+  content: "\e935";
+}
+.icon-arrows-sort-arrow.down {
+  transform: rotate(180deg);
+}
+.icon-arrows-curved-arrow2:before {
+  content: "\e936";
+}
+.icon-arrows-double-curved-arrow:before {
+  content: "\e937";
+}
+.icon-arrows-skip-back:before {
+  content: "\e938";
+}
+.icon-arrows-skip-forward:before {
+  content: "\e939";
+}
+.icon-arrows-sort:before {
+  content: "\e93a";
+}
+.icon-arrows-sort-ascending:before {
+  content: "\e93b";
+}
+.icon-arrows-sort-descending:before {
+  content: "\e93c";
+}
+.icon-arrows-trending-down:before {
+  content: "\e93d";
+}
+.icon-arrows-trending-up:before {
+  content: "\e93e";
+}
+.icon-arrows-vertical-arrow:before {
+  content: "\e93f";
+}
+.icon-arrows-vertical-arrowL:before {
+  content: "\e940";
+}
+.icon-arrows-vertical-arrow-down:before {
+  content: "\e941";
+}

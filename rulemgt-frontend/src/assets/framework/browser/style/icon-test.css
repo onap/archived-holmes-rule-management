@@ -1,0 +1,27 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoTest';
+  src: url('fonts/font-icons/icon-test.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-test.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-test.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-test.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-test.ttf?timestamp=@@timestamp') format('truetype'), url('fonts/font-icons/icon-test.svg?timestamp=@@timestamp#icotest') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-test-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icoTest' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  color: #009fdb;
+  font-size: 36px;
+  vertical-align: middle;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-test-arrow:before {
+  content: "\e900";
+}
