@@ -1,0 +1,110 @@
+/*! Global styles - v1.4.8 - Last updated: 2016-10-12. Copyright (c) 2016 AT&T Services, Inc.*/
+@font-face {
+  font-family: 'icoRetail';
+  src: url('fonts/font-icons/icon-retail.eot?timestamp=@@timestamp');
+  src: url('fonts/font-icons/icon-retail.eot?timestamp=@@timestamp#iefix') format('embedded-opentype'), url('fonts/font-icons/icon-retail.woff2?timestamp=@@timestamp') format('woff2'), url('fonts/font-icons/icon-retail.woff?timestamp=@@timestamp') format('woff'), url('fonts/font-icons/icon-retail.ttf?timestamp=@@timestamp') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*="icon-retail-"] {
+  font-family: 'icoRetail' !important;
+}
+.icon-retail-autopay:before {
+  content: "\e900";
+}
+.icon-retail-autopayL:before {
+  content: "\e901";
+}
+.icon-retail-costs:before {
+  content: "\e902";
+}
+.icon-retail-costsL:before {
+  content: "\e903";
+}
+.icon-retail-creditcard:before {
+  content: "\e904";
+}
+.icon-retail-creditcardL:before {
+  content: "\e905";
+}
+.icon-retail-gallery:before {
+  content: "\e906";
+}
+.icon-retail-galleryL:before {
+  content: "\e907";
+}
+.icon-retail-giftcard:before {
+  content: "\e908";
+}
+.icon-retail-giftcardL:before {
+  content: "\e909";
+}
+.icon-retail-hospitality:before {
+  content: "\e90a";
+}
+.icon-retail-hospitalityL:before {
+  content: "\e90b";
+}
+.icon-retail-hoteldining:before {
+  content: "\e90c";
+}
+.icon-retail-hoteldiningL:before {
+  content: "\e90d";
+}
+.icon-retail-new:before {
+  content: "\e90e";
+}
+.icon-retail-newL:before {
+  content: "\e90f";
+}
+.icon-retail-offers:before {
+  content: "\e910";
+}
+.icon-retail-offersL:before {
+  content: "\e911";
+}
+.icon-retail-rent:before {
+  content: "\e912";
+}
+.icon-retail-rentL:before {
+  content: "\e913";
+}
+.icon-retail-restaurant:before {
+  content: "\e914";
+}
+.icon-retail-restaurantL:before {
+  content: "\e915";
+}
+.icon-retail-retail:before {
+  content: "\e916";
+}
+.icon-retail-retailL:before {
+  content: "\e917";
+}
+.icon-retail-shoppingcart:before {
+  content: "\e918";
+}
+.icon-retail-shoppingcartL:before {
+  content: "\e919";
+}
+.icon-retail-yourstay1:before {
+  content: "\e91a";
+}
+.icon-retail-yourstay1L:before {
+  content: "\e91b";
+}
+.icon-retail-yourstay2:before {
+  content: "\e91c";
+}
+.icon-retail-yourstay2L:before {
+  content: "\e91d";
+}
+.icon-retail-yourstay3:before {
+  content: "\e91e";
+}
+.icon-retail-yourstay3L:before {
+  content: "\e91f";
+}
+.icon-retail-tag:before {
+  content: "\e920";
+}

@@ -46,13 +46,11 @@
         </div>
 
         <div class="fmrule_btn_group display_table col-xs-4">
-          <div class="inline row">
-            <button id="batchDeleteButton" class="btn btn-primary" (click)="searchRules()">
-              <span class="glyphicon glyphicon-search" style="padding-top: 2px"></span>
+          <div class="row">
+            <button id="batchDeleteButton" class="btn btn-primary btn-small" (click)="searchRules()">
               <span>{{"common_query"|translate}}</span>
             </button>
-            <button class="btn btn-secondary" (click)="reset()" style="margin-left: 10px">
-              <span class="glyphicon glyphicon-refresh"></span>
+            <button class="btn btn-small" (click)="reset()" style="margin-left: 10px">
               <span>{{"common_reset"|translate}}</span>
             </button>
           </div>
@@ -61,8 +59,7 @@
 
       <div class="row form-group" style="margin-top: 10px">
         <div class="inline col-xs-12">
-          <button type="button" routerLink='/ruleInfo' class="btn btn-info">
-            <span class="glyphicon glyphicon-plus"></span>
+          <button type="button" routerLink='/ruleInfo' class="btn btn-small">
             <span>{{"common_add"|translate}}</span>
           </button>
         </div>
@@ -70,19 +67,20 @@
     </div>
 
   </form>
+  
   <div>
     <div class="row form-group col-xs-12" style="margin-top: 20px">
       {{"common_total1"|translate}}{{totalcount}}{{"common_total2"|translate}}
     </div>
-    <table class="table table-bordered table-striped customtable table-hover">
+    <table>
       <thead class="nf_thead">
       <tr class="heading">
-        <td>{{"field_rule_name_Add_Page"|translate}}</td>
-        <td>{{"common_status"|translate}}</td>
-        <td>{{"field_create_time"|translate}}</td>
-        <td>{{"field_creator"|translate}}</td>
-        <td>{{"field_update_time"|translate}}</td>
-        <td>{{"common_operator"|translate}}</td>
+        <th>{{"field_rule_name_Add_Page"|translate}}</th>
+        <th>{{"common_status"|translate}}</th>
+        <th>{{"field_create_time"|translate}}</th>
+        <th>{{"field_creator"|translate}}</th>
+        <th>{{"field_update_time"|translate}}</th>
+        <th>{{"common_operator"|translate}}</th>
       </tr>
       </thead>
       <tbody>

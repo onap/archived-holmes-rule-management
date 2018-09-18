@@ -30,7 +30,7 @@ public class RuleActiveAppTest {
     }
 
     public static void main(String[] args) throws Exception {
-        String filePath = "C:\\correlation-rule.yml";
+        String filePath = "E:\\Codes\\ONAP\\holmes\\rule-management\\rulemgt-standalone\\src\\main\\assembly\\conf\\rulemgt.yml";
         new RuleActiveApp().run(new String[]{"server", filePath});
     }
 }
