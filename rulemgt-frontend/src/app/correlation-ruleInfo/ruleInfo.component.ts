@@ -13,12 +13,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-import {Component, OnInit} from '@angular/core';
-import {RuleModel} from '../correlation-ruleList/alarmRule';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {AlarmRuleService} from '../correlation-ruleList/alarmRule.service';
-import {ModalService} from '../correlation-modal/modal.service';
-import {NgModel} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { RuleModel } from '../correlation-ruleList/alarmRule';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AlarmRuleService } from '../correlation-ruleList/alarmRule.service';
+import { ModalService } from '../correlation-modal/modal.service';
+import { NgModel } from '@angular/forms';
 
 declare var $: any;
 
@@ -33,9 +33,9 @@ export class RuleInfo implements OnInit {
   addBottonStatus: boolean;
 
   constructor(private modalService: ModalService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private alarmRuleService: AlarmRuleService) {
+    private route: ActivatedRoute,
+    private router: Router,
+    private alarmRuleService: AlarmRuleService) {
   };
 
 
@@ -98,38 +98,37 @@ export class RuleInfo implements OnInit {
   update() {
     this.queryRule.enabled = $('input:radio:checked').val();
     if (!this.queryRule.content.startsWith('package ')) {
-      let msg = {title: 'exception_content_error', message: 'exception_package_error'};
+      let msg = { title: 'exception_content_error', message: 'exception_package_error' };
       this.modalService.announceOpenModal(msg);
     } else {
-      this.alarmRuleService.checkContent(this.queryRule.content)
+      this.alarmRuleService.checkContent(this.replacePkgName(this.queryRule.content))
         .then(res => {
           if (res.status == 200) {
             this.alarmRuleService.updateRule(this.queryRule)
               .then(res => {
                 if (res.status == 200) {
-                  let msg = {title: 'modalTitleUpdate', message: 'message_update_rule_success'};
+                  let msg = { title: 'modalTitleUpdate', message: 'message_update_rule_success' };
                   this.modalService.announceOpenModal(msg);
                   this.router.navigate(['alarmRule']);
                 } else if (res.status == 499) {
-                  let msg = {title: 'modalTitleUpdate', message: 'message_exception_rule_fail'};
+                  let msg = { title: 'modalTitleUpdate', message: 'message_exception_rule_fail' };
                   this.modalService.announceOpenModal(msg);
                 } else {
-                  let msg = {title: 'modalTitleUpdate', message: 'message_other_exception_rule_fail'};
+                  let msg = { title: 'modalTitleUpdate', message: 'message_other_exception_rule_fail' };
                   this.modalService.announceOpenModal(msg);
                 }
               }).catch(
               res => {
-                let msg = {title: 'modalTitleUpdate', message: 'message_other_exception_rule_fail'};
+                let msg = { title: 'modalTitleUpdate', message: 'message_other_exception_rule_fail' };
                 this.modalService.announceOpenModal(msg);
               }
-            );
-
+              );
           } else if (res.status == 499) {
-            let msg = {'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error'};
+            let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
             this.modalService.announceOpenModal(msg);
             return false;
           } else {
-            let msg = {'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail'};
+            let msg = { 'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail' };
             this.modalService.announceOpenModal(msg);
             return false;
           }
@@ -143,35 +142,35 @@ export class RuleInfo implements OnInit {
 
   save() {
     if (!this.queryRule.content || !this.queryRule.content.startsWith('package ')) {
-      let msg = {title: 'exception_content_error', message: 'exception_package_error'};
+      let msg = { title: 'exception_content_error', message: 'exception_package_error' };
       this.modalService.announceOpenModal(msg);
     } else {
       this.alarmRuleService.checkContent(this.queryRule.content).then(res => {
         if (res.status == 200) {
           this.alarmRuleService.save(this.queryRule).then(res => {
             if (res.status == 200) {
-              let msg = {title: 'modalTitleDefault', message: 'message_add_rule_success'};
+              let msg = { title: 'modalTitleDefault', message: 'message_add_rule_success' };
               this.modalService.announceOpenModal(msg);
               this.router.navigate(['alarmRule']);
             } else if (res.status == 499) {
-              let msg = {title: 'modalTitleDefault', message: 'message_rule_name_repeat_error'};
+              let msg = { title: 'modalTitleDefault', message: 'message_rule_name_repeat_error' };
               this.modalService.announceOpenModal(msg);
             } else {
-              let msg = {'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail'};
+              let msg = { 'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail' };
               this.modalService.announceOpenModal(msg);
             }
 
           }).catch(error => {
-            let msg = {title: 'modalTitleDefault', message: 'message_rule_name_repeat_error'};
+            let msg = { title: 'modalTitleDefault', message: 'message_rule_name_repeat_error' };
             this.modalService.announceOpenModal(msg);
           });
           return true;
         } else if (res.status == 499) {
-          let msg = {'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error'};
+          let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
           this.modalService.announceOpenModal(msg);
           return false;
         } else {
-          let msg = {'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail'};
+          let msg = { 'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail' };
           this.modalService.announceOpenModal(msg);
           return false;
         }
@@ -189,20 +188,20 @@ export class RuleInfo implements OnInit {
 
   checkContent(judge: string): void {
     if (!this.queryRule.content || !this.queryRule.content.startsWith('package ')) {
-      let msg = {title: 'exception_content_error', message: 'exception_package_error'};
+      let msg = { title: 'exception_content_error', message: 'exception_package_error' };
       this.modalService.announceOpenModal(msg);
     } else {
       this.alarmRuleService.checkContent(this.queryRule.content)
         .then(res => {
           if (res.status == 200) {
-            let msg = {'title': 'modalTitleCheck', message: 'message_checkContent_rule_success'};
+            let msg = { 'title': 'modalTitleCheck', message: 'message_checkContent_rule_success' };
             this.modalService.announceOpenModal(msg);
           } else if (res.status == 499) {
-            let msg = {'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error'};
+            let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
             this.modalService.announceOpenModal(msg);
             return false;
           } else {
-            let msg = {'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail'};
+            let msg = { 'title': 'modalTitleCheck', message: 'message_other_exception_rule_fail' };
             this.modalService.announceOpenModal(msg);
             return false;
           }
@@ -302,6 +301,16 @@ export class RuleInfo implements OnInit {
       $('#persent').text('0%');
       $(importDiv).fadeIn();
     }
+  }
+
+  replacePkgName (content: string): string {
+    let reg = /(package\s+[\w\d\.]+)(\s+|;).*/;
+    let groups = reg.exec(content);
+    let pkgName = groups[1];
+    if (pkgName == null) {
+      return content;
+    }
+    return content.replace(pkgName, pkgName + new Date().getTime());
   }
 
 }
