@@ -86,7 +86,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         Set<Node> nodes = new HashSet<>();
         Node node = new Node();
         node.setIp(serviceAddrInfo[0]);
-        node.setPort(serviceAddrInfo[1]);
+        node.setPort("9101");
         node.setCheckType("HTTP");
         node.setCheckUrl(String.format("https://%s:%s/api/holmes-rule-mgmt/v1/healthcheck", serviceAddrInfo[0], "9101"));
         node.setCheckTimeOut("60s");
