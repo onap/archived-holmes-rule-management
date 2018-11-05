@@ -2,7 +2,7 @@ FROM openresty/openresty:alpine
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
-EXPOSE 9101 9104 9201
+EXPOSE 9101 9104 9105 9201
 
 ENV HOSTNAME holmes-rule-mgmt
 
@@ -37,8 +37,13 @@ RUN apk upgrade \
 
 #add the frontend pacakge to the docker images
 RUN rm /etc/nginx/conf.d/default.conf
+RUN mkdir -p /etc/ssl/certs/
+RUN mkdir /etc/ssl/private
 ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html
 ADD nginx.conf /usr/local/openresty/nginx/conf
+ADD holmes-frontend.key /etc/ssl/private
+ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
+ADD dhparam.pem /etc/ssl/certs
 
 #add the backend package to the docker image
 RUN mkdir /home/holmes
