@@ -17,3 +17,6 @@ dependency-reduced-pom.xml
 # IntelliJ
 .idea/
 *.iml
+
+# NodeJS
+package-lock.json
