@@ -131,6 +131,8 @@
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>nginx.conf</include>
+                                        <include>**/holmes-frontend*.*</include>
+                                        <include>**/*.pem</include>
                                     </includes>
                                 </resource>
                             </resources>
