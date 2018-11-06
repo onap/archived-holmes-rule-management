@@ -82,10 +82,10 @@ sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf
 
 
 #Register the fronten to MSB
-body='{"serviceName":"holmes","version":"v1","url":"/iui/holmes","nodes":[{"ip":"host_ip","port":"9104","lb_server_params":"","checkType":"","checkUrl":"","checkInterval":"","checkTimeOut":"","ttl":"","ha_role":""}],"protocol":"UI","visualRange":"0|1","lb_policy":"","publish_port":"","namespace":"","network_plane_type":"","host":"","path":"","labels":[],"metadata":[]}'
-msg_body=${body/host_ip/"${HOSTNAME%:*}"}
-curl -X POST -H "Content-Type: application/json" -d ${msg_body} http://${MSB_ADDR}/api/msdiscover/v1/services?is_manual=true
-echo Registered UI to MSB.
+#body='{"serviceName":"holmes","version":"v1","url":"/iui/holmes","nodes":[{"ip":"host_ip","port":"9104","lb_server_params":"","checkType":"","checkUrl":"","checkInterval":"","checkTimeOut":"","ttl":"","ha_role":""}],"protocol":"UI","visualRange":"0|1","lb_policy":"","publish_port":"","namespace":"","network_plane_type":"","host":"","path":"","labels":[],"metadata":[]}'
+#msg_body=${body/host_ip/"${HOSTNAME%:*}"}
+#curl -X POST -H "Content-Type: application/json" -d ${msg_body} http://${MSB_ADDR}/api/msdiscover/v1/services?is_manual=true
+#echo Registered UI to MSB.
 
 
 nginx -c /usr/local/openresty/nginx/conf/nginx.conf
