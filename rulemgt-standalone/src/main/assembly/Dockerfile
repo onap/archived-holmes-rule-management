@@ -39,7 +39,7 @@ RUN apk upgrade \
 RUN rm /etc/nginx/conf.d/default.conf
 RUN mkdir -p /etc/ssl/certs/
 RUN mkdir /etc/ssl/private
-ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html
+ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
 ADD nginx.conf /usr/local/openresty/nginx/conf
 ADD holmes-frontend.key /etc/ssl/private
 ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
