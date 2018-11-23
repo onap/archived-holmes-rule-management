@@ -13,7 +13,7 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 1.2.0
 --------------
 
-:Release Date: 2018-11-xx
+:Release Date: 2018-11-30
 
 
 **New Features**
@@ -36,7 +36,7 @@ Besides, Holmes has been enhanced to be CCVPN use case supportive. CCVPN related
 
 **Security Issues**
 
-HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_.
+HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=41422564>`_.
 
 Quick Links:
     - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
