@@ -152,8 +152,6 @@ N/A
 
 **Upgrade Notes**
 
-This is the inital release.
-===========
-
+N/A
 
 End of Release Notes
