@@ -36,14 +36,14 @@ Besides, Holmes has been enhanced to be CCVPN use case supportive. CCVPN related
 
 **Security Issues**
 
-HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=41422564>`_.
+HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=45298796>`_.
 
 Quick Links:
     - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
      
  	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
  	
- 	- `Project Vulnerability Review Table for HOLMES <https://wiki.onap.org/pages/viewpage.action?pageId=41422564>`_
+ 	- `Project Vulnerability Review Table for HOLMES <https://wiki.onap.org/pages/viewpage.action?pageId=45298796>`_
 
 
 **Upgrade Notes**
@@ -96,7 +96,7 @@ N/A
 HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The HOLMES open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=28378012>`_.
 
 Quick Links:
-     - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+    - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
  	
  	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
  	
@@ -152,8 +152,7 @@ N/A
 
 **Upgrade Notes**
 
-This is the inital release.
-===========
+N/A
 
 
 End of Release Notes
