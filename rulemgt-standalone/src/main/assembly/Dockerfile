@@ -45,11 +45,17 @@ ADD holmes-frontend.key /etc/ssl/private
 ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
 ADD dhparam.pem /etc/ssl/certs
 
+#switch the user to holmes
+RUN addgroup -S holmes && adduser -S -G holmes holmes
+
 #add the backend package to the docker image
 RUN mkdir /home/holmes
 WORKDIR /home/holmes
 ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
+RUN chmod -R a+rw /home/holmes/
+RUN chmod -R a+rw /var/log/
 RUN chmod 755 /home/holmes/bin/*.sh
 
+USER holmes
 CMD ["sh", "/home/holmes/bin/run.sh"]
 
