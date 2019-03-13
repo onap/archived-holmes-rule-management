@@ -35,6 +35,8 @@ RUN apk upgrade \
     && apk add --no-cache curl \
     && apk add --no-cache postgresql-client=10.5-r0
 
+
+
 #add the frontend pacakge to the docker images
 RUN rm /etc/nginx/conf.d/default.conf
 RUN mkdir -p /etc/ssl/certs/
