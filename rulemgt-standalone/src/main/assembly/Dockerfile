@@ -46,6 +46,7 @@ ADD nginx.conf /usr/local/openresty/nginx/conf
 ADD holmes-frontend.key /etc/ssl/private
 ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
 ADD dhparam.pem /etc/ssl/certs
+RUN chmod -R 777 /usr/local/openresty/nginx/
 
 #switch the user to holmes
 RUN addgroup -S holmes && adduser -S -G holmes holmes

@@ -48,7 +48,7 @@
 
 
         <stringtemplate.version>3.2.1</stringtemplate.version>
-        <dropwizard.version>1.3.0</dropwizard.version>
+        <dropwizard.version>1.3.9</dropwizard.version>
         <reflections.version>0.9.9</reflections.version>
         <swagger.version>1.5.3</swagger.version>
         <lombok.version>1.16.8</lombok.version>
@@ -85,7 +85,7 @@
             <dependency>
                 <groupId>org.onap.holmes.common</groupId>
                 <artifactId>holmes-actions</artifactId>
-                <version>1.2.6</version>
+                <version>1.2.7</version>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard</groupId>
