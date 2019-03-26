@@ -34,6 +34,7 @@ RUN apk upgrade \
     && apk update \
     && apk add --no-cache curl \
     && apk add --no-cache postgresql-client=10.5-r0
+    && apk add --no-cache nss
 
 
 
