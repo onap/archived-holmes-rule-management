@@ -1,0 +1,81 @@
+package org.onap.holmes.ccvpn;
+ 
+dialect "java"
+
+    import org.onap.holmes.common.api.stat.VesAlarm;
+    import org.onap.holmes.common.api.stat.AlarmAdditionalField;
+    import org.onap.holmes.common.aai.AaiQuery4Ccvpn2;
+    import org.onap.holmes.common.exception.CorrelationException;
+    import org.onap.holmes.common.dmaap.entity.PolicyMsg;
+    import org.onap.holmes.common.dmaap.DmaapService;
+    import org.onap.holmes.common.utils.DroolsLog;
+    import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+
+    import com.alibaba.fastjson.JSONArray;
+    import com.alibaba.fastjson.JSONObject;
+
+    import java.util.List;
+    import java.util.Map;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.UUID;
+
+    function String getAdditionalField(VesAlarm a, String field) {
+    List<AlarmAdditionalField> fields = a.getAlarmAdditionalInformation();
+    for (AlarmAdditionalField f : fields) {
+        if (f.getName().equals(field)) {
+           return f.getValue();
+        }
+    }
+        return null;
+    }
+
+    function Map<String, Object> getAdditionalResourceInfo(VesAlarm a, String bandwidth) {
+        AaiQuery4Ccvpn2 aai = AaiQuery4Ccvpn2.newInstance();
+        JSONObject instance = aai.getServiceInstance(getAdditionalField(a, "siteService")); 
+        Map<String, Object> ret = new HashMap<String, Object>();
+        ret.put("service-instance.service-instance-id", instance.getString("service-instance-id")); 
+         ret.put("vserver.vserver-name", "TBD");
+         ret.put("globalSubscriberId", instance.getString("globalSubscriberId"));
+         ret.put("serviceType", instance.getString("serviceType"));
+         ret.put("vserver.is-closed-loop-disabled", "false");
+         ret.put("vserver.prov-status", "ACTIVE");
+         ret.put("bandwidth", bandwidth);
+         ret.put("bandwidth-change-time", getAdditionalField(a, "timestamp"));
+         ret.put("vnfId", instance.getString("vnfId"));
+         return ret;
+    }
+
+    function PolicyMsg createPolicyMsg(VesAlarm alarm, String bandwidth) {
+        PolicyMsg m = new PolicyMsg();
+        m.setPolicyVersion("2.0.0");
+        m.setPolicyName("ccvpn");
+        m.setPolicyScope("service=SOTNService,type=SampleType,closedLoopControlName=CL-CCVPN-d925ed73-8231-4d02-9545-db4e101f88f8");
+        m.setClosedLoopControlName(DmaapService.loopControlNames.get("org.onap.holmes.ccvpn"));
+        m.setRequestID(UUID.randomUUID().toString());
+        m.setClosedLoopAlarmStart(alarm.getStartEpochMicrosec());
+        m.setClosedLoopAlarmEnd(alarm.getLastEpochMicrosec());
+        m.setTarget("vserver.vserver-name");
+        m.setAai(getAdditionalResourceInfo(alarm, bandwidth));
+
+        DmaapService.alarmUniqueRequestID.put(alarm.getEventId(), m.getRequestID());
+
+         return m;
+    }
+
+    rule "Analyse traffic exception"
+        no-loop true
+         salience 200
+         when
+            $a: VesAlarm(eventName.indexOf("bandwidth") != -1, 
+                        rootFlag != 1)
+       then
+        String bandwidth = "5000";
+           if ("Abnormal".equalsIgnoreCase(getAdditionalField($a, "exceptionType"))) { 
+               bandwidth = "10000";
+           }
+        PolicyMsg msg = createPolicyMsg($a, bandwidth);
+        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+        $a.setRootFlag(1);
+    end
