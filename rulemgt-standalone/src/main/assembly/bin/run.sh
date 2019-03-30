@@ -70,12 +70,30 @@ if [ ! -z ${URL_JDBC} ] && [ `expr index $URL_JDBC :` != 0 ]; then
 fi
 echo DB_PORT=$DB_PORT
 
+if [ -z ${ENABLE_ENCRYPT} ]; then
+    export ENABLE_ENCRYPT=true
+fi
+echo ENABLE_ENCRYPT=$ENABLE_ENCRYPT
+
 KEY_PATH="$main_path/conf/holmes.keystore"
 KEY_PASSWORD="holmes"
-
 #HTTPS Configurations
 sed -i "s|keyStorePath:.*|keyStorePath: $KEY_PATH|" "$main_path/conf/rulemgt.yml"
 sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf/rulemgt.yml"
+
+if [ ${ENABLE_ENCRYPT} == true ]; then
+    sed -i "s|type:\s*https\?$|type: https|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?keyStorePath|keyStorePath|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?keyStorePassword|keyStorePassword|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?validateCerts|validateCerts|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?validatePeers|validatePeers|" "$main_path/conf/rulemgt.yml"
+else
+    sed -i 's|type:\s*https\?$|type: http|' "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?keyStorePath|#keyStorePath|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?keyStorePassword|#keyStorePassword|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?validateCerts|#validateCerts|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|#\?validatePeers|#validatePeers|" "$main_path/conf/rulemgt.yml"
+fi
 
 
 ./bin/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
@@ -88,7 +106,11 @@ sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf
 #echo Registered UI to MSB.
 
 
-nginx -c /usr/local/openresty/nginx/conf/nginx.conf
+if [ ${ENABLE_ENCRYPT} == true ]; then
+    nginx -c /usr/local/openresty/nginx/conf/nginx-https.conf
+else
+    nginx -c /usr/local/openresty/nginx/conf/nginx-http.conf
+fi
 echo nginx started.
 
 "$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
