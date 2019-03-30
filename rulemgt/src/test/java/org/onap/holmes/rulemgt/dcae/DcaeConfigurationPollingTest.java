@@ -79,20 +79,20 @@ public class DcaeConfigurationPollingTest {
 
         CloseableHttpClient clientMock = createMock(CloseableHttpClient.class);
         HttpResponse httpResponseMock = createMock(HttpResponse.class);
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.get(anyObject(HttpGet.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
         expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn(JSONObject.toJSONString(ruleQueryListResponse));
         clientMock.close();
         expectLastCall();
 
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.delete(anyObject(HttpDelete.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
         clientMock.close();
         expectLastCall();
 
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.put(anyObject(HttpPut.class), anyObject(HashMap.class), anyObject(HashMap.class),
                 anyObject(StringEntity.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
@@ -132,13 +132,13 @@ public class DcaeConfigurationPollingTest {
 
         CloseableHttpClient clientMock = createMock(CloseableHttpClient.class);
         HttpResponse httpResponseMock = createMock(HttpResponse.class);
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.delete(anyObject(HttpDelete.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
         clientMock.close();
         expectLastCall();
 
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.put(anyObject(HttpPut.class), anyObject(HashMap.class), anyObject(HashMap.class),
                 anyObject(StringEntity.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
@@ -164,7 +164,7 @@ public class DcaeConfigurationPollingTest {
 
         CloseableHttpClient clientMock = createMock(CloseableHttpClient.class);
         HttpResponse httpResponseMock = createMock(HttpResponse.class);
-        expect(HttpsUtils.getHttpClient(30000)).andReturn(clientMock);
+        expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.get(anyObject(HttpGet.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
         expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn("{\"correlationRules\": [], \"totalCount\": 0}");

@@ -13,19 +13,10 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
@@ -112,7 +103,7 @@ public class DcaeConfigurationPolling implements Runnable {
         CloseableHttpClient httpClient = null;
         HttpGet httpGet = new HttpGet(url);
         try {
-            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
             String response = HttpsUtils.extractResponseEntity(httpResponse);
             return JSONObject.parseObject(response, RuleQueryListResponse.class);
@@ -139,7 +130,7 @@ public class DcaeConfigurationPolling implements Runnable {
             CloseableHttpClient httpClient = null;
             HttpPut httpPut = new HttpPut(url);
             try {
-                httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+                httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
                 httpResponse = HttpsUtils
                         .put(httpPut, headers, new HashMap<>(), new StringEntity(content), httpClient);
             } catch (UnsupportedEncodingException e) {
@@ -167,7 +158,7 @@ public class DcaeConfigurationPolling implements Runnable {
             CloseableHttpClient httpClient = null;
             HttpDelete httpDelete = new HttpDelete(url + "/" + correlationRule.getRuleId());
             try {
-                httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+                httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
                 HttpsUtils.delete(httpDelete, headers, httpClient);
             } catch (Exception e) {
                 log.warn("Failed to delete rule, the rule id is : " + correlationRule.getRuleId()
