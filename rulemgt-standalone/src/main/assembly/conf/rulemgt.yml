@@ -15,7 +15,7 @@ server:
   connector:
     type: https
     port: 9101
-    keyStorePath: E:\Codes\ONAP\holmes\rule-management\rulemgt-standalone\src\main\assembly\conf\holmes.keystore
+    keyStorePath: /home/holmes/conf/holmes.keystore
     keyStorePassword: holmes
     validateCerts: false
     validatePeers: false
