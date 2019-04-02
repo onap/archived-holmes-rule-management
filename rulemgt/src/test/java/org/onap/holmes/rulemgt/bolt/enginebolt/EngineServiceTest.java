@@ -19,7 +19,6 @@ package org.onap.holmes.rulemgt.bolt.enginebolt;
 
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.HashMap;
@@ -27,8 +26,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.easymock.EasyMock;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,7 +75,7 @@ public class EngineServiceTest {
     public void testEngineService_closeHttpClient_ok() throws Exception {
         PowerMock.resetAll();
         CloseableHttpClient closeableHttpClient = HttpsUtils
-                .getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+                .getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
         Whitebox.invokeMethod(engineService, "closeHttpClient", closeableHttpClient);
     }
 

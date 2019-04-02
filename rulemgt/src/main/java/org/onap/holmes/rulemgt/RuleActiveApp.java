@@ -17,19 +17,11 @@
 package org.onap.holmes.rulemgt;
 
 import io.dropwizard.setup.Environment;
-
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.DispatcherType;
-
 import lombok.extern.slf4j.Slf4j;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
 import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.common.utils.MSBRegisterUtil;
 import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
@@ -37,6 +29,14 @@ import org.onap.holmes.rulemgt.msb.MsbQuery;
 import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
+
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
@@ -75,6 +75,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     }
 
     private MicroServiceInfo createMicroServiceInfo() {
+        String msbAddrTemplate = (HttpsUtils.isHttpsEnabled() ? "https" : "http")
+                + "://%s:%s/api/holmes-rule-mgmt/v1/healthcheck";
         String[] serviceAddrInfo = MicroServiceConfig.getMicroServiceIpAndPort();
         MicroServiceInfo msinfo = new MicroServiceInfo();
         msinfo.setServiceName("holmes-rule-mgmt");
@@ -82,13 +84,13 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         msinfo.setUrl("/api/holmes-rule-mgmt/v1");
         msinfo.setProtocol("REST");
         msinfo.setVisualRange("0|1");
-        msinfo.setEnable_ssl(true);
+        msinfo.setEnable_ssl(HttpsUtils.isHttpsEnabled());
         Set<Node> nodes = new HashSet<>();
         Node node = new Node();
         node.setIp(serviceAddrInfo[0]);
         node.setPort("9101");
         node.setCheckType("HTTP");
-        node.setCheckUrl(String.format("https://%s:%s/api/holmes-rule-mgmt/v1/healthcheck", serviceAddrInfo[0], "9101"));
+        node.setCheckUrl(String.format(msbAddrTemplate, serviceAddrInfo[0], "9101"));
         node.setCheckTimeOut("60s");
         node.setCheckInterval("60s");
         nodes.add(node);
@@ -96,3 +98,4 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         return msinfo;
     }
 }
+

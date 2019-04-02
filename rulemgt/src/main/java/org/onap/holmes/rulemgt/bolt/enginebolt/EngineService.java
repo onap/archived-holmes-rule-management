@@ -31,22 +31,22 @@ import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
-import org.onap.holmes.common.config.MicroServiceConfig;
 
 @Slf4j
 @Service
 public class EngineService {
 
-    private static final String PREFIX = "https://";
+    private static final String HTTPS = "https://";
+    private static final String HTTP = "http://";
     private static final String PORT = ":9102";
 
     protected HttpResponse delete(String packageName, String ip) throws Exception {
         HashMap headers = createHeaders();
-        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
+        String url = getRequestPref() + ip + PORT + RuleMgtConstant.ENGINE_PATH + "/" + packageName;
         CloseableHttpClient httpClient = null;
         HttpDelete httpDelete = new HttpDelete(url);
         try {
-            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
             return HttpsUtils.delete(httpDelete, headers, httpClient);
         } finally {
             httpDelete.releaseConnection();
@@ -58,11 +58,11 @@ public class EngineService {
             throws Exception {
         String content = GsonUtil.beanToJson(correlationCheckRule4Engine);
         HashMap headers = createHeaders();
-        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
+        String url = getRequestPref() + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         CloseableHttpClient httpClient = null;
         HttpPost httpPost = new HttpPost(url);
         try {
-            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
             return HttpsUtils.post(httpPost, headers, new HashMap<>(), new StringEntity(content), httpClient);
         } finally {
             httpPost.releaseConnection();
@@ -73,11 +73,11 @@ public class EngineService {
     protected HttpResponse deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine, String ip) throws Exception {
         String content = GsonUtil.beanToJson(correlationDeployRule4Engine);
         HashMap headers = createHeaders();
-        String url = PREFIX + ip + PORT + RuleMgtConstant.ENGINE_PATH;
+        String url = getRequestPref() + ip + PORT + RuleMgtConstant.ENGINE_PATH;
         CloseableHttpClient httpClient = null;
         HttpPut httpPut = new HttpPut(url);
         try {
-            httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT);
+            httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
             return HttpsUtils.put(httpPut, headers, new HashMap<>(), new StringEntity(content),httpClient);
         } finally {
             closeHttpClient(httpClient);
@@ -99,5 +99,9 @@ public class EngineService {
         headers.put("Content-Type", MediaType.APPLICATION_JSON);
         headers.put("Accept", MediaType.APPLICATION_JSON);
         return headers;
+    }
+
+    private String getRequestPref(){
+        return HttpsUtils.isHttpsEnabled() ? HTTPS : HTTP;
     }
 }

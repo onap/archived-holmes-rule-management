@@ -16,8 +16,6 @@
 package org.onap.holmes.rulemgt.msb;
 
 
-import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -50,7 +48,7 @@ public class EngineInsQueryTool {
     public List<String> getInstanceList() throws Exception {
 		String response;
 		HttpGet httpGet = new HttpGet(url);
-		try (CloseableHttpClient httpClient = HttpsUtils.getHttpClient(HttpsUtils.DEFUALT_TIMEOUT)) {
+		try (CloseableHttpClient httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT)) {
 			HttpResponse httpResponse = HttpsUtils.get(httpGet, new HashMap<>(), httpClient);
 			response = HttpsUtils.extractResponseEntity(httpResponse);
 		} catch (Exception e) {
