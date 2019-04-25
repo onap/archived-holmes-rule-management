@@ -1,0 +1,47 @@
+@startuml
+actor 用户 as user
+
+participant EMS as ems
+box "FMS" #EFEFEF
+participant 探针 as probe
+participant 客户端 as ui
+participant 服务端 as server
+participant RCA as rca
+end box
+database DB as db
+participant GI资源 as gi
+
+user -> probe: 创建并启动探针
+user -> rca: 创建并启动规则
+
+ [-> ems: 网元告警
+ ems -> probe: EMS告警
+ probe -> probe: 转换为FMS告警格式
+
+ probe -> server: 转换后的告警
+
+server -> gi: 资源查询
+gi --> server: 资源信息
+
+server -> server: 告警丰富
+
+server -> server: 告警规则处理
+
+server -> db: 告警存储
+
+server -> rca: 告警
+rca -> gi: 资源拓扑查询请求
+gi --> rca: 资源拓扑信息
+rca -> rca: 告警相关性分析
+rca -> server: 告警相关性分析结果
+server -> db: 告警相关性分析结果
+
+user -> ui: 告警查询/监控请求
+ui -> server: 告警查询
+server -> db: 告警查询
+db --> server: 告警查询结果
+server --> ui: 告警查询结果
+ui --> user: 告警查询结果
+
+
+@enduml
