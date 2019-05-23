@@ -4,15 +4,21 @@
 Logging & Diagnostic Information
 ---------------------------------
 
-In the Beijing release, the logs are kept inside the docekr containers, which means that you can get the log information only when the docker is still running. 
+In the Dublin release, the logs are kept inside the docker containers, which means that you can get the log information only when the docker is still running. 
 
 Where to Access Information
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Assume that the name of a running docker is *holmes-rule-mgmt*, the way to get the log is to run the command ``docker logs ${docker-name}`` in the command window:
 
-``sudo docker logs holmes-rule-mgmt``
+There are two ways for a user to get the logs.
 
-Then the logs will be displayed in the command window.
+
+* Assume that the name of a running docker is *holmes-rule-mgmt*, the way to get the log is to run the command ``docker logs ${docker-name}`` in the command window:
+
+  ``sudo docker logs holmes-rule-mgmt``
+
+  Then the logs will be displayed in the command window.
+  
+* Get into the docker containers by running ``sudo docker exec -it ${docker-name} sh``. Go to the path ``/var/log/ONAP/holmes/`` and find the logs there.
 
 Error / Warning Messages
 ^^^^^^^^^^^^^^^^^^^^^^^^

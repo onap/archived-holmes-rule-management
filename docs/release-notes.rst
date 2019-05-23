@@ -10,6 +10,53 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Version: 1.2.6
+--------------
+
+:Release Date: 2019-06-xx
+
+
+**New Features**
+Added some tools to support the extended CCVPN use case:
+
+- `UI Deployment <https://jira.onap.org/browse/HOLMES-96>`_ This feature provides a graphic user interface for the sake of easiness of rule management. It mainly provides a rule list view and a rule editing page. Users could get an overview of all rules that have been added to Holmes and create/modify them easily by using the GUI provided by this feature.
+
+**Bug Fixes**
+
+- `HOLMES-204 <https://jira.onap.org/browse/HOLMES-204>`_ Alarms can not be deleted from the DB when they get cleared.
+- `HOLMES-223 <https://jira.onap.org/browse/HOLMES-223>`_ The "ABATED" messages can not be generated in the control loop.
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, some of the items that remain open have been assessed for risk and determined to be false positive and the rest are planned to be resolved in the next release. 
+
+Quick Links:
+    - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+     
+ 	- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+
+
+**Upgrade Notes**
+
+N/A
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+===========
+
 Version: 1.2.0
 --------------
 
@@ -25,7 +72,7 @@ Besides, Holmes has been enhanced to be CCVPN use case supportive. CCVPN related
 
 **Bug Fixes**
 
-- `HOLMES-156 <https://jira.onap.org/browse/HOLMES-156>`_ Rules can not be deployed after they've been added/removed from then engine.
+- `HOLMES-156 <https://jira.onap.org/browse/HOLMES-156>`_ Rules can not be deployed after they've been added/removed from the engine.
 - `HOLMES-133 <https://jira.onap.org/browse/HOLMES-133>`_ Don't rely on key word 'import' when extracting package name from rule.
 - `HOLMES-130 <https://jira.onap.org/browse/HOLMES-130>`_ Holmes can not be successfully registered to MSB when trying to register itself with a health check parameter.
 
