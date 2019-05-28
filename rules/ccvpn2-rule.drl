@@ -1,4 +1,4 @@
-package org.onap.holmes.ccvpn;
+package org.onap.holmes.ccvpnBandwidth;
  
 dialect "java"
 
@@ -51,7 +51,7 @@ dialect "java"
         m.setPolicyVersion("2.0.0");
         m.setPolicyName("ccvpn");
         m.setPolicyScope("service=SOTNService,type=SampleType,closedLoopControlName=CL-CCVPN-d925ed73-8231-4d02-9545-db4e101f88f8");
-        m.setClosedLoopControlName(DmaapService.loopControlNames.get("org.onap.holmes.ccvpn"));
+        m.setClosedLoopControlName(DmaapService.loopControlNames.get("org.onap.holmes.ccvpnBandwidth"));
         m.setRequestID(UUID.randomUUID().toString());
         m.setClosedLoopAlarmStart(alarm.getStartEpochMicrosec());
         m.setClosedLoopAlarmEnd(alarm.getLastEpochMicrosec());
