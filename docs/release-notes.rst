@@ -13,13 +13,14 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 1.2.6
 --------------
 
-:Release Date: 2019-06-xx
+:Release Date: 2019-06-13
 
 
 **New Features**
 Added some tools to support the extended CCVPN use case:
 
-- `UI Deployment <https://jira.onap.org/browse/HOLMES-96>`_ This feature provides a graphic user interface for the sake of easiness of rule management. It mainly provides a rule list view and a rule editing page. Users could get an overview of all rules that have been added to Holmes and create/modify them easily by using the GUI provided by this feature.
+- `Rules for CCVEN Extension <https://jira.onap.org/browse/HOLMES-193>`_ This feature provides some rules for the extended CCVPN usecase. Users could use the rules as templates to develop their own rules.
+- `Updated AAI Assistant Tools for CCVPN Extension <https://jira.onap.org/browse/HOLMES-194>`_ Some tools related to the CCVPN usecase have been enhanced in order to support the extended CCVPN usecase.
 
 **Bug Fixes**
 
