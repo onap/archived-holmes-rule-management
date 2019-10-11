@@ -24,7 +24,7 @@
 
     <groupId>org.onap.holmes.rule-management</groupId>
     <artifactId>holmes-rulemgt-parent</artifactId>
-    <version>1.2.6-SNAPSHOT</version>
+    <version>1.2.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>holmes-rule-management</name>
     <modules>
@@ -85,7 +85,7 @@
             <dependency>
                 <groupId>org.onap.holmes.common</groupId>
                 <artifactId>holmes-actions</artifactId>
-                <version>1.2.10</version>
+                <version>1.2.13</version>
             </dependency>
             <dependency>
                 <groupId>io.dropwizard</groupId>
