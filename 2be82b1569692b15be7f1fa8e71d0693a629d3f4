@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb8e2b17_8dde41fc",
+        "filename": "releases/container-1.2.7.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 481
+      },
+      "writtenOn": "2019-10-15T17:09:16Z",
+      "side": 1,
+      "message": "Remove the \"onap\" prefix, we just need the name of the image\n\n\"onap\" is the org where this image belongs to and the job already adds it in the search.",
+      "range": {
+        "startLine": 8,
+        "startChar": 10,
+        "endLine": 8,
+        "endChar": 15
+      },
+      "revId": "2be82b1569692b15be7f1fa8e71d0693a629d3f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
