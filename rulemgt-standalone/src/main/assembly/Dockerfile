@@ -40,7 +40,7 @@ RUN apk upgrade \
 #add the frontend pacakge to the docker images
 RUN rm /etc/nginx/conf.d/default.conf
 RUN mkdir -p /etc/ssl/certs/
-RUN mkdir /etc/ssl/private
+#RUN mkdir /etc/ssl/private
 ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
 ADD nginx-https.conf /usr/local/openresty/nginx/conf
 ADD nginx-http.conf /usr/local/openresty/nginx/conf
