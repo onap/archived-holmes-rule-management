@@ -22,7 +22,7 @@ RUN { \
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
-ENV JAVA_ALPINE_VERSION 8.222.10-r1
+ENV JAVA_ALPINE_VERSION 8.222.10-r0
 
 RUN set -x \
 	&& apk add --no-cache \
@@ -33,7 +33,7 @@ RUN set -x \
 RUN apk upgrade \
     && apk update \
     && apk add --no-cache curl \
-    && apk add --no-cache postgresql-client=12.0-r0 \
+    && apk add --no-cache postgresql-client=11.5-r0 \
     && apk add --no-cache nss
 
 
