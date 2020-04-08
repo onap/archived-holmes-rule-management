@@ -1,5 +1,6 @@
 Offered APIs
 ------------
+.. _offeredapis:
 
 The rule management module provides the following APIs.
 
