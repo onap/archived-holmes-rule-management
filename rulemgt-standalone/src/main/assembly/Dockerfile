@@ -4,9 +4,24 @@ MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
 EXPOSE 9101 9104 9201
 
-ENV HOSTNAME holmes-rule-mgmt
+ENV HOSTNAME=holmes-rule-mgmt \
+    LANG=C.UTF-8 \
+    JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
+    PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin \
+    JAVA_ALPINE_VERSION=8.242.08-r0 \
+    PG_VERSION=12.2-r0
 
-ENV LANG C.UTF-8
+#add the backend package to the docker image
+WORKDIR /home/holmes
+ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
+
+#RUN mkdir /etc/ssl/private
+ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
+ADD nginx-https.conf /usr/local/openresty/nginx/conf
+ADD nginx-http.conf /usr/local/openresty/nginx/conf
+ADD holmes-frontend.key /etc/ssl/private
+ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
+ADD dhparam.pem /etc/ssl/certs
 
 #install java-1.8-openjdk
 
@@ -18,46 +33,25 @@ RUN { \
 		echo; \
 		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
 	} > /usr/local/bin/docker-java-home \
-	&& chmod +x /usr/local/bin/docker-java-home
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
-
-ENV JAVA_ALPINE_VERSION 8.222.10-r0
-
-RUN set -x \
-	&& apk add --no-cache \
-		openjdk8="$JAVA_ALPINE_VERSION" \
-	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
-
-#install neccessary tools
-RUN apk upgrade \
+	&& chmod +x /usr/local/bin/docker-java-home \
+	&& set -x \
+	&& apk upgrade \
     && apk update \
+    && apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" \
+    && [ "$JAVA_HOME" = "$(docker-java-home)" ]  \
+    #install neccessary tools
     && apk add --no-cache curl \
-    && apk add --no-cache postgresql-client=11.5-r0 \
-    && apk add --no-cache nss
-
-
-#add the frontend pacakge to the docker images
-RUN rm /etc/nginx/conf.d/default.conf
-RUN mkdir -p /etc/ssl/certs/
-#RUN mkdir /etc/ssl/private
-ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
-ADD nginx-https.conf /usr/local/openresty/nginx/conf
-ADD nginx-http.conf /usr/local/openresty/nginx/conf
-ADD holmes-frontend.key /etc/ssl/private
-ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
-ADD dhparam.pem /etc/ssl/certs
-RUN chmod -R 777 /usr/local/openresty/nginx/
-
-#switch the user to holmes
-RUN addgroup -S holmes && adduser -S -G holmes holmes
-
-#add the backend package to the docker image
-WORKDIR /home/holmes
-ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
-RUN chmod -R a+rw /home/holmes/
-RUN chmod -R a+rw /var/log/
-RUN chmod 755 /home/holmes/bin/*.sh
+    && apk add --no-cache postgresql-client="$PG_VERSION" \
+    && apk add --no-cache nss \
+    #add the frontend pacakge to the docker images
+    && rm /etc/nginx/conf.d/default.conf \
+    && mkdir -p /etc/ssl/certs/ \
+    && chmod -R 777 /usr/local/openresty/nginx/ \
+    #switch the user to holmes
+    && addgroup -S holmes && adduser -S -G holmes holmes \
+    && chmod -R a+rw /home/holmes/ \
+    && chmod -R a+rw /var/log/ \
+    && chmod 755 /home/holmes/bin/*.sh
 
 USER holmes
 CMD ["sh", "/home/holmes/bin/run.sh"]
