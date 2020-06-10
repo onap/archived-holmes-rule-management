@@ -45,7 +45,6 @@ RUN { \
     && apk add --no-cache nss \
     #add the frontend pacakge to the docker images
     && rm /etc/nginx/conf.d/default.conf \
-    && mkdir -p /etc/ssl/certs/ \
     && chmod -R 777 /usr/local/openresty/nginx/ \
     #switch the user to holmes
     && addgroup -S holmes && adduser -S -G holmes holmes \
