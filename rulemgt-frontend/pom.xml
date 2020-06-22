@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright 2018 ZTE Corporation.
+    Copyright 2018-2020 ZTE Corporation.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
     limitations under the License.
 
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -35,7 +36,7 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.6</version>
+        <version>1.10.0</version>
         <executions>
           <execution>
             <id>install node and npm</id>
@@ -51,6 +52,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
+              <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
               <arguments>install</arguments>
             </configuration>
           </execution>

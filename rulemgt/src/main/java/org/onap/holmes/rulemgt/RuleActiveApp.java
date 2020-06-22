@@ -17,7 +17,6 @@
 package org.onap.holmes.rulemgt;
 
 import io.dropwizard.setup.Environment;
-import lombok.extern.slf4j.Slf4j;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
 import org.onap.holmes.common.exception.CorrelationException;
@@ -29,6 +28,8 @@ import org.onap.holmes.rulemgt.msb.MsbQuery;
 import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
@@ -38,16 +39,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
+
+    private Logger log = LoggerFactory.getLogger(RuleActiveApp.class);
 
     public static void main(String[] args) throws Exception {
         new RuleActiveApp().run(args);
-    }
-
-    @Override
-    public String getName() {
-        return "Holmes Rule Management ActiveApp APP ";
     }
 
     @Override

@@ -97,7 +97,7 @@ public class CorrelationRuleQueryDao {
                 if (field.getName().contains("jacoco")) {
                     continue;
                 }
-                PropertyDescriptor pd = new PropertyDescriptor(field.getName(),
+                PropertyDescriptor pd = new PropertyDescriptor((String)field.getName(),
                         clazz);
                 Method getMethod = pd.getReadMethod();
                 Object o = getMethod.invoke(ruleQueryCondition);

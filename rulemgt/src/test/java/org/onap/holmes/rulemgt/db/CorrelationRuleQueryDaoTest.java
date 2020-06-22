@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +16,35 @@
 
 package org.onap.holmes.rulemgt.db;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.DbDaoUtil;
 import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
 import org.powermock.api.easymock.PowerMock;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
 
+import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({DbDaoUtil.class, Handle.class, Query.class})
 public class CorrelationRuleQueryDaoTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
     private DbDaoUtil dbDaoUtil;
 
     private Handle handle;

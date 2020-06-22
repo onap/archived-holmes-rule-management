@@ -2,13 +2,16 @@ FROM openresty/openresty:alpine
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
+# 9101 - service port
+# 9104 - GUI port
+# 9201 - debugging port
 EXPOSE 9101 9104 9201
 
 ENV HOSTNAME=holmes-rule-mgmt \
     LANG=C.UTF-8 \
-    JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
-    PATH=$PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin \
-    JAVA_ALPINE_VERSION=8.242.08-r0 \
+    JAVA_HOME=/usr/lib/jvm/java-11-openjdk \
+    PATH=$PATH:/usr/lib/jvm/java-11-openjdk/jre/bin:/usr/lib/jvm/java-11-openjdk/bin \
+    JAVA_ALPINE_VERSION=11.0.5_p10-r0 \
     PG_VERSION=12.2-r0
 
 #add the backend package to the docker image
@@ -19,11 +22,11 @@ ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
 ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
 ADD nginx-https.conf /usr/local/openresty/nginx/conf
 ADD nginx-http.conf /usr/local/openresty/nginx/conf
-ADD holmes-frontend.key /etc/ssl/private
-ADD holmes-frontend-selfsigned.crt /etc/ssl/certs
-ADD dhparam.pem /etc/ssl/certs
+ADD holmes-frontend.key /etc/ssl/private/
+ADD holmes-frontend-selfsigned.crt /etc/ssl/public/
+ADD dhparam.pem /etc/ssl/public/
 
-#install java-1.8-openjdk
+#install java-11-openjdk
 
 # add a simple script that can auto-detect the appropriate JAVA_HOME value
 # based on whether the JDK or only the JRE is installed
@@ -37,7 +40,7 @@ RUN { \
 	&& set -x \
 	&& apk upgrade \
     && apk update \
-    && apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" \
+    && apk add --no-cache openjdk11="$JAVA_ALPINE_VERSION" \
     && [ "$JAVA_HOME" = "$(docker-java-home)" ]  \
     #install neccessary tools
     && apk add --no-cache curl \
@@ -46,6 +49,7 @@ RUN { \
     #add the frontend pacakge to the docker images
     && rm /etc/nginx/conf.d/default.conf \
     && chmod -R 777 /usr/local/openresty/nginx/ \
+    && chmod -R 755 /etc/ssl/public \
     #switch the user to holmes
     && addgroup -S holmes && adduser -S -G holmes holmes \
     && chmod -R a+rw /home/holmes/ \

@@ -46,24 +46,24 @@ public class EngineInsQueryTool {
     }
 
     public List<String> getInstanceList() throws Exception {
-		String response;
-		HttpGet httpGet = new HttpGet(url);
-		try (CloseableHttpClient httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT)) {
-			HttpResponse httpResponse = HttpsUtils.get(httpGet, new HashMap<>(), httpClient);
-			response = HttpsUtils.extractResponseEntity(httpResponse);
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			httpGet.releaseConnection();
+        String response;
+        HttpGet httpGet = new HttpGet(url);
+        try (CloseableHttpClient httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT)) {
+            HttpResponse httpResponse = HttpsUtils.get(httpGet, new HashMap<>(), httpClient);
+            response = HttpsUtils.extractResponseEntity(httpResponse);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            httpGet.releaseConnection();
 
-		}
-		ServiceEntity service = GsonUtil.jsonToBean(response, ServiceEntity.class);
-		List<ServiceNode4Query> nodesList = service.getNodes();
-		List<String> ipList = new ArrayList<>();
-		for (ServiceNode4Query node : nodesList) {
-			ipList.add(node.getIp());
-		}
-		return ipList;
+        }
+        ServiceEntity service = GsonUtil.jsonToBean(response, ServiceEntity.class);
+        List<ServiceNode4Query> nodesList = service.getNodes();
+        List<String> ipList = new ArrayList<>();
+        for (ServiceNode4Query node : nodesList) {
+            ipList.add(node.getIp());
+        }
+        return ipList;
 
     }
 

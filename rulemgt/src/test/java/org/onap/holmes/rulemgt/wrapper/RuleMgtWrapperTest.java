@@ -16,36 +16,33 @@
 
 package org.onap.holmes.rulemgt.wrapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.DbDaoUtil;
-import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
-import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
-import org.onap.holmes.rulemgt.bean.request.RuleDeleteRequest;
-import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
-import org.onap.holmes.rulemgt.bean.request.RuleUpdateRequest;
+import org.onap.holmes.rulemgt.bean.request.*;
 import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
+import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
 import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
 import org.onap.holmes.rulemgt.send.Ip4AddingRule;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class RuleMgtWrapperTest {
 

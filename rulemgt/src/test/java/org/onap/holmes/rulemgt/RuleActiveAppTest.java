@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,7 @@
 
 package org.onap.holmes.rulemgt;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-
-import org.junit.Test;
-
 public class RuleActiveAppTest {
-
-    @Test
-    public void getName() throws Exception {
-        RuleActiveApp app = new RuleActiveApp();
-        assertThat(app.getName(), equalTo("Holmes Rule Management ActiveApp APP "));
-    }
 
     public static void main(String[] args) throws Exception {
         String filePath = "E:\\Codes\\ONAP\\holmes\\rule-management\\rulemgt-standalone\\src\\main\\assembly\\conf\\rulemgt.yml";
