@@ -1,6 +1,8 @@
-FROM openresty/openresty:alpine
+FROM onap/integration-java11:7.0.0
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
+
+USER root
 
 # 9101 - service port
 # 9104 - GUI port
@@ -8,54 +10,30 @@ MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 EXPOSE 9101 9104 9201
 
 ENV HOSTNAME=holmes-rule-mgmt \
-    LANG=C.UTF-8 \
-    JAVA_HOME=/usr/lib/jvm/java-11-openjdk \
-    PATH=$PATH:/usr/lib/jvm/java-11-openjdk/jre/bin:/usr/lib/jvm/java-11-openjdk/bin \
-    JAVA_ALPINE_VERSION=11.0.5_p10-r0 \
-    PG_VERSION=12.2-r0
+    LANG=C.UTF-8
 
-#add the backend package to the docker image
-WORKDIR /home/holmes
-ADD holmes-rulemgt-standalone-*-linux64.tar.gz /home/holmes/
+RUN apt-get upgrade \
+    && apt-get update \
+    && apt-get install -y curl postgresql-client-11 nginx
 
-#RUN mkdir /etc/ssl/private
-ADD holmes-rulemgt-frontend-*.tar.gz /usr/local/openresty/nginx/html/
-ADD nginx-https.conf /usr/local/openresty/nginx/conf
-ADD nginx-http.conf /usr/local/openresty/nginx/conf
+
+ADD holmes-rulemgt-standalone-*-linux64.tar.gz /opt/onap/
+ADD holmes-rulemgt-frontend-*.tar.gz /usr/share/nginx/html/
+ADD nginx-https.conf /etc/nginx/conf.d/
+ADD nginx-http.conf /etc/nginx/conf.d/
 ADD holmes-frontend.key /etc/ssl/private/
-ADD holmes-frontend-selfsigned.crt /etc/ssl/public/
-ADD dhparam.pem /etc/ssl/public/
+ADD holmes-frontend-selfsigned.crt /etc/ssl/certs/
+ADD dhparam.pem /etc/ssl/certs/
 
-#install java-11-openjdk
-
-# add a simple script that can auto-detect the appropriate JAVA_HOME value
-# based on whether the JDK or only the JRE is installed
-RUN { \
-		echo '#!/bin/sh'; \
-		echo 'set -e'; \
-		echo; \
-		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
-	} > /usr/local/bin/docker-java-home \
-	&& chmod +x /usr/local/bin/docker-java-home \
-	&& set -x \
-	&& apk upgrade \
-    && apk update \
-    && apk add --no-cache openjdk11="$JAVA_ALPINE_VERSION" \
-    && [ "$JAVA_HOME" = "$(docker-java-home)" ]  \
-    #install neccessary tools
-    && apk add --no-cache curl \
-    && apk add --no-cache postgresql-client="$PG_VERSION" \
-    && apk add --no-cache nss \
-    #add the frontend pacakge to the docker images
-    && rm /etc/nginx/conf.d/default.conf \
-    && chmod -R 777 /usr/local/openresty/nginx/ \
-    && chmod -R 755 /etc/ssl/public \
-    #switch the user to holmes
-    && addgroup -S holmes && adduser -S -G holmes holmes \
-    && chmod -R a+rw /home/holmes/ \
+RUN mkdir -p /usr/share/nginx/logs \
+    && chmod -R 777 /usr/share/nginx/ \
+    && chmod -R 777 /var/lib/nginx/ \
+    && chmod -R 755 /etc/ssl/private/ \
+    && chmod -R 777 /etc/nginx/conf.d/ \
+    && chmod -R a+rw /opt/onap/ \
     && chmod -R a+rw /var/log/ \
-    && chmod 755 /home/holmes/bin/*.sh
+    && chmod 755 /opt/onap/bin/*.sh
 
-USER holmes
-CMD ["sh", "/home/holmes/bin/run.sh"]
+USER onap
+ENTRYPOINT ["sh", "/opt/onap/bin/run.sh"]
 
