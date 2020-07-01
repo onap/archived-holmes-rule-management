@@ -27,7 +27,7 @@ main_path=$RUNHOME/..
 cd $main_path
 JAVA_OPTS="-Xms50m -Xmx128m"
 port=9201
-#JAVA_OPTS="$JAVA_OPTS -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=$port,server=y,suspend=n"
+#JAVA_OPTS="$JAVA_OPTS -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=*:$port,server=y,suspend=n"
 echo @JAVA_OPTS@ $JAVA_OPTS
 
 class_path="$main_path/lib/*"
@@ -56,7 +56,7 @@ sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/ru
 export SERVICE_IP=`hostname -i`
 echo SERVICE_IP=${SERVICE_IP}
 
-if [ ! -z ${TESTING} ] && [ ${TESTING} == 1 ]; then
+if [ ! -z ${TESTING} -a ${TESTING} = 1 ]; then
     if [ ! -z ${HOST_IP} ]; then
         export HOSTNAME=${HOST_IP}:9101
     else
@@ -65,7 +65,7 @@ if [ ! -z ${TESTING} ] && [ ${TESTING} == 1 ]; then
 fi
 
 export DB_PORT=5432
-if [ ! -z ${URL_JDBC} ] && [ `expr index $URL_JDBC :` != 0 ]; then
+if [ ! -z ${URL_JDBC}  -a `expr index $URL_JDBC :` != 0 ]; then
     export DB_PORT="${URL_JDBC##*:}"
 fi
 echo DB_PORT=$DB_PORT
@@ -73,7 +73,7 @@ echo DB_PORT=$DB_PORT
 if [ -z ${ENABLE_ENCRYPT} ]; then
     export ENABLE_ENCRYPT=true
 fi
-echo ENABLE_ENCRYPT=$ENABLE_ENCRYPT
+echo ENABLE_ENCRYPT=${ENABLE_ENCRYPT}
 
 KEY_PATH="$main_path/conf/holmes.keystore"
 KEY_PASSWORD="holmes"
@@ -81,7 +81,7 @@ KEY_PASSWORD="holmes"
 sed -i "s|keyStorePath:.*|keyStorePath: $KEY_PATH|" "$main_path/conf/rulemgt.yml"
 sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf/rulemgt.yml"
 
-if [ ${ENABLE_ENCRYPT} == true ]; then
+if [ ${ENABLE_ENCRYPT} = true ]; then
     sed -i "s|type:\s*https\?$|type: https|" "$main_path/conf/rulemgt.yml"
     sed -i "s|#\?keyStorePath|keyStorePath|" "$main_path/conf/rulemgt.yml"
     sed -i "s|#\?keyStorePassword|keyStorePassword|" "$main_path/conf/rulemgt.yml"
@@ -106,10 +106,10 @@ fi
 #echo Registered UI to MSB.
 
 
-if [ ${ENABLE_ENCRYPT} == true ]; then
-    nginx -c /usr/local/openresty/nginx/conf/nginx-https.conf
+if [ ${ENABLE_ENCRYPT} = true ]; then
+    nginx -c /etc/nginx/conf.d/nginx-https.conf
 else
-    nginx -c /usr/local/openresty/nginx/conf/nginx-http.conf
+    nginx -c /etc/nginx/conf.d/nginx-http.conf
 fi
 echo nginx started.
 
