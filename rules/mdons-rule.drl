@@ -1,0 +1,130 @@
+package org.onap.holmes.mdonsPnf;
+
+dialect "java"
+import org.onap.holmes.common.api.stat.VesAlarm;
+import org.onap.holmes.common.api.stat.AlarmAdditionalField;
+import org.onap.holmes.common.aai.AaiQueryMdons;
+import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.common.dmaap.entity.PolicyMsg;
+import org.onap.holmes.common.dmaap.DmaapService;
+import org.onap.holmes.common.utils.DroolsLog;
+import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+	
+function Map<String, String> processAlarm(String sourceId) {
+	AaiQueryMdons mdons = AaiQueryMdons.newInstance();
+    DroolsLog.printInfo("Alarm pnf id " + sourceId);
+	String pnfName = mdons.getPnfNameFromPnfId(sourceId);
+	DroolsLog.printInfo("Pnf name from AAI" + pnfName);
+	mdons.updatePnfOperationalStatus(pnfName, "down");
+	Map<String, String> accessMap = mdons.processPnf(pnfName);
+	DroolsLog.printInfo("Access List from AAI" + accessMap.toString());
+	mdons.updateLinksForAccessService(accessMap);
+    return accessMap;
+}
+
+function void processAlarmCleared(String sourceId) {
+	AaiQueryMdons mdons = AaiQueryMdons.newInstance();
+	DroolsLog.printInfo("Alarm pnf id " + sourceId);
+	String pnfName = mdons.getPnfNameFromPnfId(sourceId);
+	DroolsLog.printInfo("Pnf name from AAI" + pnfName);
+	mdons.updatePnfOperationalStatus(pnfName, "up");
+}
+
+function PolicyMsg createPolicyMsg(VesAlarm alarm, String serviceInstanceId, String serviceName) {
+    PolicyMsg m = new PolicyMsg();
+    m.setPolicyVersion("1.0.0");
+	m.setVersion("0.0.1");
+    m.setPolicyName("mdons");
+    m.setPolicyScope("service=OTNService,type=SampleType,closedLoopControlName=ControlLoop-MDONS-2179b738-fd36-4843-a71a-a8c24c70c66b");
+    m.setClosedLoopControlName("ControlLoop-MDONS-2179b738-fd36-4843-a71a-a8c24c70c66b");
+    m.setRequestID(UUID.randomUUID().toString());
+    m.setClosedLoopAlarmStart(alarm.getStartEpochMicrosec());
+    m.setClosedLoopAlarmEnd(alarm.getLastEpochMicrosec());
+    m.setTarget("vserver.vserver-name");
+    m.setAai(getAaiObjectPolicy(serviceName, serviceInstanceId));
+	
+    DmaapService.alarmUniqueRequestID.put(alarm.getEventId(), m.getRequestID());
+    return m;
+    }
+	
+function Map<String, Object> getAaiObjectPolicy(String serviceName, String serviceInstanceId){
+	Map<String, Object> aaiMap = new HashMap<String, Object>();
+	aaiMap.put("service-name", serviceName);
+	aaiMap.put("request-id" , serviceInstanceId);
+	aaiMap.put("service-type" , "MDONS_OTN");
+	return aaiMap;
+}	
+	
+rule "Process Alarms MSA"
+	no-loop true
+    salience 200
+	when
+        $a: VesAlarm(sourceId.contains("OWBSPDRNE"), 
+                        rootFlag != 1, eventSeverity.equals("MAJOR"))		
+    then
+		DroolsLog.printInfo("MSA Alarm: ID for alarm raised=" + $a.getEventId() + ", Event Name=" + $a.getSourceId());
+		Map<String, String> map = processAlarm($a.getSourceId() + "-XPDR1");
+		for(Map.Entry<String,String> entry : map.entrySet()){
+		    PolicyMsg msg = createPolicyMsg($a, entry.getKey(), entry.getValue());
+			DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+			dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_Output_Event");
+			DroolsLog.printInfo("Published to policy=" + msg.toString());
+
+		}
+		$a.setRootFlag(1);
+
+end	
+
+rule "Process Alarms TAPI"
+	no-loop true
+    salience 200
+	when
+        $a: VesAlarm(eventId.contains("FW950074SDN"), 
+                        rootFlag != 1, eventSeverity.equals("MINOR"))		
+    then
+		DroolsLog.printInfo("TAPI Alarm: ID for alarm raised=" + $a.getEventId() + ", Event Name=" + $a.getSourceId());
+		Map<String, String> map = processAlarm($a.getEventId());
+		for(Map.Entry<String,String> entry : map.entrySet()){
+		    PolicyMsg msg = createPolicyMsg($a, entry.getKey(), entry.getValue());
+			DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+			dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_Output_Event");
+			DroolsLog.printInfo("Published to policy=" + msg.toString());
+
+		}
+		$a.setRootFlag(1);
+
+end	
+
+rule "Process Alarms cleared MSA"
+	no-loop true
+    salience 200
+	when
+        $a: VesAlarm(sourceId.contains("OWBSPDRNE"), 
+                        rootFlag != 1, eventSeverity.equals("NORMAL"))	
+    then
+		DroolsLog.printInfo("MSA Alarm: ID for Alarm cleared =" + $a.getEventId() + ", Event Name=" + $a.getSourceId());
+		processAlarmCleared($a.getSourceId() + "-XPDR1");
+		$a.setRootFlag(1);
+
+end	
+
+rule "Process Alarms cleared TAPI"
+	no-loop true
+    salience 200
+	when
+        $a: VesAlarm(eventId.contains("FW950074SDN"), 
+                        rootFlag != 1, eventSeverity.equals("NORMAL"))		
+    then
+		DroolsLog.printInfo("TAPI Alarm: ID for Alarm cleared =" + $a.getEventId() + ", Event Name=" + $a.getSourceId());
+		processAlarmCleared($a.getEventId());
+		$a.setRootFlag(1);
+
+end	
