@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,73 +15,55 @@
  */
 package org.onap.holmes.rulemgt.msb;
 
-import lombok.extern.slf4j.Slf4j;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
-import org.onap.holmes.rulemgt.send.RuleAllocator;
 import org.onap.holmes.rulemgt.send.Ip4AddingRule;
-import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
+import org.onap.holmes.rulemgt.send.RuleAllocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-@Slf4j
 public class MsbQuery {
 
-    private RuleAllocator ruleAllocator;
-
+    static final private Logger log = LoggerFactory.getLogger(MsbQuery.class);
+    final private RuleAllocator ruleAllocator;
     private Ip4AddingRule ip4AddingRule;
-
     private EngineInsQueryTool engineInsQueryTool;
-
-    private RuleMgtWrapper ruleMgtWrapper;
-
-    private List<String> timerIpList;
 
     public MsbQuery() {
         ruleAllocator = new RuleAllocator();
-
-        ServiceLocator locator = ServiceLocatorHolder.getLocator();
-        ip4AddingRule = locator.getService(Ip4AddingRule.class);
-        engineInsQueryTool = locator.getService(EngineInsQueryTool.class);
-        ruleMgtWrapper = locator.getService(RuleMgtWrapper.class);
+        ip4AddingRule = ServiceLocatorHolder.getLocator().getService(Ip4AddingRule.class);
+        engineInsQueryTool = ServiceLocatorHolder.getLocator().getService(EngineInsQueryTool.class);
     }
 
     public void startTimer() {
         try {
-            timer();
+            new Timer().schedule(new TimerTask() {
+
+                public void run() {
+                    try {
+                        List<String> timerIpList = engineInsQueryTool.getInstanceList();
+                        log.info(String.format("There are %d engine instance(s) running currently.", timerIpList.size()));
+
+                        ip4AddingRule.setIpList(timerIpList);
+                        ruleAllocator.allocateRules(timerIpList);
+                    } catch (Exception e) {
+                        log.error("The timing query engine instance failed ", e);
+                    }
+                }
+
+            }, SECONDS.toMillis(10), SECONDS.toMillis(30));
         } catch (Exception e) {
             log.error("MSBQuery startTimer timer task failed !" + e.getMessage(), e);
             try {
-                Thread.sleep(30000);
+                SECONDS.sleep(30);
             } catch (InterruptedException e1) {
                 Thread.currentThread().interrupt();
             }
         }
-
-
     }
-
-    public void timer() throws Exception {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-
-            public void run() {
-                try {
-                    timerIpList = engineInsQueryTool.getInstanceList();
-                    log.info(String.format("There are %d engine instance(s) running currently.", timerIpList.size()));
-
-                    ip4AddingRule.setIpList(timerIpList);
-                    ruleAllocator.allocateRules(timerIpList);
-                } catch (Exception e) {
-                    log.error("The timing query engine instance failed ", e);
-                }
-            }
-
-        }, 10000, 30000);
-
-    }
-
 }

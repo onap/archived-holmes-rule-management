@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.DbDaoUtil;
@@ -33,7 +34,7 @@ import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
 import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
 import org.onap.holmes.rulemgt.send.Ip4AddingRule;
 import org.powermock.api.easymock.PowerMock;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
@@ -44,12 +45,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+@RunWith(PowerMockRunner.class)
 public class RuleMgtWrapperTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private RuleMgtWrapper ruleMgtWrapper;
 
