@@ -17,9 +17,6 @@
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.easymock.EasyMock;
@@ -28,15 +25,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
-import org.onap.holmes.common.exception.CorrelationException;
 import org.powermock.api.easymock.PowerMock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @PrepareForTest({EngineWrapper.class, EngineService.class, HttpsUtils.class, HttpResponse.class,
         StatusLine.class})
@@ -97,7 +96,7 @@ public class EngineWrapperTest {
     public void deployEngine_parse_content_exception() throws Exception {
         PowerMock.resetAll();
         String content = "";
-        PowerMockito.mockStatic(HttpsUtils.class);
+        PowerMock.mockStatic(HttpsUtils.class);
         thrown.expect(CorrelationException.class);
         thrown.expectMessage(
                 "Failed to parse the value returned by the engine management service.");
@@ -107,7 +106,7 @@ public class EngineWrapperTest {
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
-        PowerMockito.when(HttpsUtils.extractResponseEntity(httpResponse)).thenReturn(content);
+        EasyMock.expect(HttpsUtils.extractResponseEntity(httpResponse)).andReturn(content);
         PowerMock.replayAll();
 
         engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
@@ -119,14 +118,14 @@ public class EngineWrapperTest {
     public void deployEngine_success() throws Exception {
         PowerMock.resetAll();
         String content = "{\"packageName\":\"test\"}";
-        PowerMockito.mockStatic(HttpsUtils.class);
+        PowerMock.mockStatic(HttpsUtils.class);
         EasyMock.expect(
                 engineServiceMock.deploy(EasyMock.anyObject(CorrelationDeployRule4Engine.class),
                         EasyMock.anyObject(String.class)))
                 .andReturn(httpResponse);
         EasyMock.expect(httpResponse.getStatusLine()).andReturn(statusLineMock);
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(200);
-        PowerMockito.when(HttpsUtils.extractResponseEntity(httpResponse)).thenReturn(content);
+        EasyMock.expect(HttpsUtils.extractResponseEntity(httpResponse)).andReturn(content);
         PowerMock.replayAll();
 
         String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");

@@ -51,7 +51,6 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     public void run(RuleAppConfig configuration, Environment environment) throws Exception {
         super.run(configuration, environment);
 
-        environment.jersey().register(new RuleMgtResources());
         try {
             new MSBRegisterUtil().register2Msb(createMicroServiceInfo());
         } catch (CorrelationException e) {
