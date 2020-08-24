@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpDelete;
@@ -31,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
+import org.onap.holmes.common.utils.GsonUtil;
 import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
@@ -82,7 +82,7 @@ public class DcaeConfigurationPollingTest {
         expect(HttpsUtils.getConditionalHttpsClient(30000)).andReturn(clientMock);
         expect(HttpsUtils.get(anyObject(HttpGet.class), anyObject(HashMap.class), anyObject(CloseableHttpClient.class)))
                 .andReturn(httpResponseMock);
-        expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn(JSONObject.toJSONString(ruleQueryListResponse));
+        expect(HttpsUtils.extractResponseEntity(httpResponseMock)).andReturn(GsonUtil.beanToJson(ruleQueryListResponse));
         clientMock.close();
         expectLastCall();
 
