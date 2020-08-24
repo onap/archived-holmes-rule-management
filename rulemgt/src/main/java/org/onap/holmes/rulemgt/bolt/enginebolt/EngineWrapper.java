@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
  */
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import javax.inject.Inject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.jvnet.hk2.annotations.Service;
+import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
-import org.onap.holmes.common.exception.CorrelationException;
+
+import javax.inject.Inject;
 
 @Service
 @Slf4j
@@ -44,9 +45,8 @@ public class EngineWrapper {
         if (response.getStatusLine().getStatusCode() == RuleMgtConstant.RESPONSE_STATUS_OK) {
             log.info("Succeeded in calling the rule deployment RESTful API from the engine management service.");
             try {
-               // JSONObject json = JSONObject.fromObject(HttpsUtils.extractResponseEntity(response));
-                JSONObject json=  JSON.parseObject(HttpsUtils.extractResponseEntity(response));
-                return json.get(RuleMgtConstant.PACKAGE).toString();
+                JsonObject json = JsonParser.parseString(HttpsUtils.extractResponseEntity(response)).getAsJsonObject();
+                return json.get(RuleMgtConstant.PACKAGE).getAsString();
             } catch (Exception e) {
                 throw new CorrelationException("Failed to parse the value returned by the engine management service.", e);
             }
