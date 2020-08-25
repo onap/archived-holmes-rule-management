@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,14 +13,8 @@
  */
 package org.onap.holmes.rulemgt.dcae;
 
-import com.alibaba.fastjson.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import javax.ws.rs.core.MediaType;
-
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -38,6 +32,12 @@ import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
+
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 public class DcaeConfigurationPolling implements Runnable {
@@ -106,7 +106,7 @@ public class DcaeConfigurationPolling implements Runnable {
             httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
             HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
             String response = HttpsUtils.extractResponseEntity(httpResponse);
-            return JSONObject.parseObject(response, RuleQueryListResponse.class);
+            return GsonUtil.jsonToBean(response, RuleQueryListResponse.class);
         } finally {
             httpGet.releaseConnection();
             closeHttpClient(httpClient);
