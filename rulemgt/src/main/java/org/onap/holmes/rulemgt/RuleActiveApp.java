@@ -78,17 +78,21 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         msinfo.setServiceName("holmes-rule-mgmt");
         msinfo.setVersion("v1");
         msinfo.setUrl("/api/holmes-rule-mgmt/v1");
+        msinfo.setPath("/api/holmes-rule-mgmt/v1");
         msinfo.setProtocol("REST");
         msinfo.setVisualRange("0|1");
+        msinfo.setLb_policy("round-robin");
         msinfo.setEnable_ssl(HttpsUtils.isHttpsEnabled());
         Set<Node> nodes = new HashSet<>();
         Node node = new Node();
         node.setIp(serviceAddrInfo[0]);
         node.setPort("9101");
+        /* Following codes will cause an unregistration from MSB (due to MSB malfunction), comment them for now
         node.setCheckType("HTTP");
         node.setCheckUrl(String.format(msbAddrTemplate, serviceAddrInfo[0], "9101"));
         node.setCheckTimeOut("60s");
         node.setCheckInterval("60s");
+        */
         nodes.add(node);
         msinfo.setNodes(nodes);
         return msinfo;
