@@ -14,49 +14,45 @@
  * limitations under the License.
  */
 
-package org.onap.holmes.rulemgt.send;
+package org.onap.holmes.rulemgt;
 
 
-import org.easymock.EasyMock;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
 import org.onap.holmes.common.utils.DbDaoUtil;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
 import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
-import org.onap.holmes.rulemgt.msb.EngineInsQueryTool;
+import org.onap.holmes.rulemgt.tools.EngineTools;
 import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
 import org.onap.holmes.rulemgt.wrapper.RuleQueryWrapper;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.onap.holmes.rulemgt.send.RuleAllocator.ENABLE;
+import static org.easymock.EasyMock.*;
+import static org.onap.holmes.rulemgt.RuleAllocator.ENABLE;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ServiceLocator.class, RuleMgtWrapper.class, RuleQueryWrapper.class, EngineWrapper.class,
-        EngineInsQueryTool.class, DbDaoUtil.class, ServiceLocatorHolder.class})
+        EngineTools.class, DbDaoUtil.class, ServiceLocatorHolder.class})
 public class RuleAllocatorTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private RuleMgtWrapper ruleMgtWrapperMock;
     private RuleQueryWrapper ruleQueryWrapperMock;
     private EngineWrapper engineWrapperMock;
-    private EngineInsQueryTool engineInsQueryToolMock;
+    private EngineTools engineToolsMock;
     private DbDaoUtil dbDaoUtilMock;
     private CorrelationRuleDao correlationRuleDaoMock;
 
@@ -65,23 +61,12 @@ public class RuleAllocatorTest {
 
     @Before
     public void before() {
-        PowerMock.mockStatic(ServiceLocatorHolder.class);
-        ServiceLocator locator = PowerMock.createMock(ServiceLocator.class);
-        EasyMock.expect(ServiceLocatorHolder.getLocator()).andReturn(locator);
-
         ruleMgtWrapperMock = PowerMock.createMock(RuleMgtWrapper.class);
         ruleQueryWrapperMock = PowerMock.createMock(RuleQueryWrapper.class);
         engineWrapperMock = PowerMock.createMock(EngineWrapper.class);
-        engineInsQueryToolMock = PowerMock.createMock(EngineInsQueryTool.class);
+        engineToolsMock = PowerMock.createMock(EngineTools.class);
         dbDaoUtilMock = PowerMock.createMock(DbDaoUtil.class);
         correlationRuleDaoMock = PowerMock.createMock(CorrelationRuleDao.class);
-
-        EasyMock.expect(locator.getService(RuleMgtWrapper.class)).andReturn(ruleMgtWrapperMock);
-        EasyMock.expect(locator.getService(RuleQueryWrapper.class)).andReturn(ruleQueryWrapperMock);
-        EasyMock.expect(locator.getService(EngineWrapper.class)).andReturn(engineWrapperMock);
-        EasyMock.expect(locator.getService(EngineInsQueryTool.class)).andReturn(engineInsQueryToolMock);
-        EasyMock.expect(locator.getService(DbDaoUtil.class)).andReturn(dbDaoUtilMock);
-        EasyMock.expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(correlationRuleDaoMock);
 
         rules = new ArrayList<>();
         for (int i = 0; i < 20; ++i) {
@@ -114,33 +99,39 @@ public class RuleAllocatorTest {
     @Test
     public void allocateRuleTest_engine_scaled_out() throws Exception {
 
-        List<String> ipListFromMsb = new ArrayList<>();
-        ipListFromMsb.add("127.0.0.1");
-        ipListFromMsb.add("10.23.0.72");
+        List<String> newEngineInstances = new ArrayList();
+        newEngineInstances.add("127.0.0.1");
+        newEngineInstances.add("10.23.0.72");
+
+        List<String> ipListFromMsb = new ArrayList();
+        ipListFromMsb.addAll(newEngineInstances);
         ipListFromMsb.addAll(existingIps);
 
-        EasyMock.expect(engineInsQueryToolMock.getInstanceList()).andReturn(existingIps);
-        EasyMock.expect(ruleQueryWrapperMock.queryRuleByEnable(ENABLE)).andReturn(rules.stream()
+        expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(correlationRuleDaoMock);
+        expect(engineToolsMock.getInstanceList()).andReturn(ipListFromMsb);
+        expect(engineToolsMock.getLegacyEngineInstances()).andReturn(existingIps);
+        expect(ruleQueryWrapperMock.queryRuleByEnable(ENABLE)).andReturn(rules.stream()
                 .filter(r -> r.getEnabled() == ENABLE).collect(Collectors.toList()));
         for (String ip : existingIps) {
-            EasyMock.expect(ruleQueryWrapperMock.queryRuleByEngineInstance(EasyMock.anyObject(String.class)))
+            expect(ruleQueryWrapperMock.queryRuleByEngineInstance(ip))
                     .andReturn(rules.stream().filter(r -> r.getEngineInstance().equals(ip)).collect(Collectors.toList()));
 
         }
-        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine(EasyMock.anyObject(String.class),
-                EasyMock.anyObject(String.class))).andReturn(true).anyTimes();
-        EasyMock.expect(ruleQueryWrapperMock.queryRuleByEngineInstance(EasyMock.anyObject(String.class)))
+        expect(engineWrapperMock.deleteRuleFromEngine(anyObject(String.class),
+                anyObject(String.class))).andReturn(true).anyTimes();
+        expect(ruleQueryWrapperMock.queryRuleByEngineInstance(anyObject(String.class)))
                 .andReturn(new ArrayList<>()).times(2);
 
-        EasyMock.expect(ruleMgtWrapperMock.deployRule2Engine(EasyMock.anyObject(CorrelationRule.class),
-                EasyMock.anyObject(String.class))).andReturn("").anyTimes();
-        correlationRuleDaoMock.updateRule(EasyMock.anyObject(CorrelationRule.class));
-        EasyMock.expectLastCall().anyTimes();
+        expect(ruleMgtWrapperMock.deployRule2Engine(anyObject(CorrelationRule.class),
+                anyObject(String.class))).andReturn("").anyTimes();
+        correlationRuleDaoMock.updateRule(anyObject(CorrelationRule.class));
+        expectLastCall().anyTimes();
 
         PowerMock.replayAll();
 
-        RuleAllocator ruleAllocator = new RuleAllocator();
-        ruleAllocator.allocateRules(ipListFromMsb);
+        RuleAllocator ruleAllocator = new RuleAllocator(ruleMgtWrapperMock, ruleQueryWrapperMock,
+                engineWrapperMock, engineToolsMock, dbDaoUtilMock);
+        ruleAllocator.allocateRules();
 
         PowerMock.verifyAll();
 
@@ -153,58 +144,26 @@ public class RuleAllocatorTest {
         ipListFromMsb.addAll(existingIps);
         ipListFromMsb.remove(0);
 
-        List<CorrelationRule> rules = new ArrayList<>();
-
-
-        EasyMock.expect(engineInsQueryToolMock.getInstanceList()).andReturn(existingIps);
+        expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(correlationRuleDaoMock);
+        expect(engineToolsMock.getInstanceList()).andReturn(ipListFromMsb);
+        expect(engineToolsMock.getLegacyEngineInstances()).andReturn(existingIps);
         for (String ip : existingIps) {
-            EasyMock.expect(ruleQueryWrapperMock.queryRuleByEngineInstance(EasyMock.anyObject(String.class)))
+            expect(ruleQueryWrapperMock.queryRuleByEngineInstance(anyObject(String.class)))
                     .andReturn(rules.stream().filter(r -> r.getEngineInstance().equals(ip)).collect(Collectors.toList()));
 
         }
-        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine(EasyMock.anyObject(String.class),
-                EasyMock.anyObject(String.class))).andReturn(true).anyTimes();
+        expect(ruleMgtWrapperMock.deployRule2Engine(anyObject(CorrelationRule.class), anyString())).andReturn("anyId").times(2);
+        correlationRuleDaoMock.updateRule(anyObject(CorrelationRule.class));
+        expectLastCall().times(2);
 
         PowerMock.replayAll();
 
-        RuleAllocator ruleAllocator = new RuleAllocator();
-        ruleAllocator.allocateRules(ipListFromMsb);
+        RuleAllocator ruleAllocator = new RuleAllocator(ruleMgtWrapperMock, ruleQueryWrapperMock,
+                engineWrapperMock, engineToolsMock, dbDaoUtilMock);
+
+        ruleAllocator.allocateRules();
 
         PowerMock.verifyAll();
 
     }
-
-    @Test
-    public void allocateRuleTest_empty_param() throws Exception {
-
-        EasyMock.expect(engineInsQueryToolMock.getInstanceList()).andReturn(Collections.emptyList());
-
-        thrown.expect(NullPointerException.class);
-
-        PowerMock.replayAll();
-
-        RuleAllocator ruleAllocator = new RuleAllocator();
-        ruleAllocator.allocateRules(null);
-
-        PowerMock.verifyAll();
-
-    }
-
-    @Test
-    public void allocateRuleTest_equal_engine_instance_num() throws Exception {
-
-        List<String> ipListFromMsb = new ArrayList<>();
-        ipListFromMsb.addAll(existingIps);
-
-        EasyMock.expect(engineInsQueryToolMock.getInstanceList()).andReturn(existingIps);
-
-        PowerMock.replayAll();
-
-        RuleAllocator ruleAllocator = new RuleAllocator();
-        ruleAllocator.allocateRules(ipListFromMsb);
-
-        PowerMock.verifyAll();
-
-    }
-
 }

@@ -96,7 +96,7 @@ else
 fi
 
 
-./bin/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
+${RUNHOME}/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
 
 
 #Register the fronten to MSB

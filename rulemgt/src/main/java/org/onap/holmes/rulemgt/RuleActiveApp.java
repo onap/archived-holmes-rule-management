@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2018 ZTE Corporation.
+ * Copyright 2017-2020 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.common.utils.MSBRegisterUtil;
 import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
-import org.onap.holmes.rulemgt.msb.MsbQuery;
-import org.onap.holmes.rulemgt.resources.RuleMgtResources;
 import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
 import org.onap.msb.sdk.discovery.entity.Node;
 import org.slf4j.Logger;
@@ -66,8 +64,6 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
 
         environment.servlets().addFilter("customFilter", new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
                 .allOf(DispatcherType.class), true, "/*");
-
-        new MsbQuery().startTimer();
     }
 
     private MicroServiceInfo createMicroServiceInfo() {

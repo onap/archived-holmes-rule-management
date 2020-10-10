@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 ZTE Corporation.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import lombok.extern.slf4j.Slf4j;
 import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
@@ -39,7 +40,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
 import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
-import org.onap.holmes.rulemgt.send.Ip4AddingRule;
+import org.onap.holmes.rulemgt.tools.EngineTools;
 
 
 @Service
@@ -48,7 +49,7 @@ import org.onap.holmes.rulemgt.send.Ip4AddingRule;
 public class RuleMgtWrapper {
 
     @Inject
-    private Ip4AddingRule ip4AddingRule;
+    private EngineTools engineTools;
 
     @Inject
     private RuleQueryWrapper ruleQueryWrapper;
@@ -79,10 +80,10 @@ public class RuleMgtWrapper {
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
-        String ip ="";
-        try{
-            ip = ip4AddingRule.getEngineIp4AddRule();
-        }catch(Exception e){
+        String ip = "";
+        try {
+            ip = engineTools.getEngineWithLeastRules();
+        } catch (Exception e) {
             log.error("When adding rules, can not get engine instance ip");
         }
         String packageName = deployRule2Engine(correlationRule, ip);
@@ -180,7 +181,7 @@ public class RuleMgtWrapper {
     }
 
     private CorrelationRule convertCreateRequest2Rule(String userName,
-            RuleCreateRequest ruleCreateRequest) throws CorrelationException {
+                                                      RuleCreateRequest ruleCreateRequest) throws CorrelationException {
         String tempContent = ruleCreateRequest.getContent();
         CorrelationRule correlationRule = new CorrelationRule();
         String ruleId = "rule_" + System.currentTimeMillis();
@@ -205,7 +206,7 @@ public class RuleMgtWrapper {
     }
 
     private CorrelationRule convertRuleUpdateRequest2CorrelationRule(String modifier,
-            RuleUpdateRequest ruleUpdateRequest, String ruleName) throws CorrelationException {
+                                                                     RuleUpdateRequest ruleUpdateRequest, String ruleName) throws CorrelationException {
         CorrelationRule correlationRule = new CorrelationRule();
         String description = ruleUpdateRequest.getDescription() == null ? "" : ruleUpdateRequest.getDescription();
         correlationRule.setRid(ruleUpdateRequest.getRuleId());
@@ -221,7 +222,7 @@ public class RuleMgtWrapper {
 
     public String deployRule2Engine(CorrelationRule correlationRule, String ip)
             throws CorrelationException {
-        if (engineWarpper.checkRuleFromEngine(correlationRules2CheckRule(correlationRule), ip) && (
+        if (engineWarpper.checkRuleFromEngine(toCorrelationCheckRule(correlationRule), ip) && (
                 correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN)) {
             return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule), ip);
         }
@@ -269,7 +270,7 @@ public class RuleMgtWrapper {
         return correlationDeployRule4Engine;
     }
 
-    private CorrelationCheckRule4Engine correlationRules2CheckRule(
+    private CorrelationCheckRule4Engine toCorrelationCheckRule(
             CorrelationRule correlationRule) {
         CorrelationCheckRule4Engine correlationCheckRule4Engine = new CorrelationCheckRule4Engine();
         correlationCheckRule4Engine.setContent(correlationRule.getContent());

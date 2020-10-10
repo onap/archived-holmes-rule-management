@@ -1,12 +1,12 @@
 /**
- * Copyright 2017 ZTE Corporation.
- *
+ * Copyright 2017-2020 ZTE Corporation.
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,6 @@
  */
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
-import java.io.IOException;
-import java.util.HashMap;
-import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -31,6 +28,10 @@ import org.onap.holmes.common.utils.HttpsUtils;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
+
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -78,7 +79,7 @@ public class EngineService {
         HttpPut httpPut = new HttpPut(url);
         try {
             httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
-            return HttpsUtils.put(httpPut, headers, new HashMap<>(), new StringEntity(content),httpClient);
+            return HttpsUtils.put(httpPut, headers, new HashMap<>(), new StringEntity(content), httpClient);
         } finally {
             closeHttpClient(httpClient);
         }
@@ -101,7 +102,7 @@ public class EngineService {
         return headers;
     }
 
-    private String getRequestPref(){
+    private String getRequestPref() {
         return HttpsUtils.isHttpsEnabled() ? HTTPS : HTTP;
     }
 }

@@ -16,6 +16,8 @@
 package org.onap.holmes.rulemgt.db;
 
 import java.util.List;
+
+import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.utils.CorrelationRuleMapper;
@@ -26,6 +28,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+@Service
 @RegisterMapper(CorrelationRuleMapper.class)
 public abstract class CorrelationRuleDao {
 
