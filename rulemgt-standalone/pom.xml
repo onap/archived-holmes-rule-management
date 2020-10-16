@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.onap.holmes.rule-management</groupId>
         <artifactId>holmes-rulemgt-parent</artifactId>
-        <version>1.2.8-SNAPSHOT</version>
+        <version>1.2.8</version>
     </parent>
 
     <artifactId>holmes-rulemgt-standalone</artifactId>
