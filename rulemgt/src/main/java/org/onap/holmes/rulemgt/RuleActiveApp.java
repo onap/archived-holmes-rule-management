@@ -19,27 +19,18 @@ package org.onap.holmes.rulemgt;
 import io.dropwizard.setup.Environment;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
-import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.HttpsUtils;
-import org.onap.holmes.common.utils.MSBRegisterUtil;
 import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
-import org.onap.msb.sdk.discovery.entity.MicroServiceInfo;
-import org.onap.msb.sdk.discovery.entity.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
-
-    private Logger log = LoggerFactory.getLogger(RuleActiveApp.class);
 
     public static void main(String[] args) throws Exception {
         new RuleActiveApp().run(args);
@@ -48,12 +39,6 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
     @Override
     public void run(RuleAppConfig configuration, Environment environment) throws Exception {
         super.run(configuration, environment);
-
-        try {
-            new MSBRegisterUtil().register2Msb(createMicroServiceInfo());
-        } catch (CorrelationException e) {
-            log.warn(e.getMessage(), e);
-        }
 
         if (!"1".equals(System.getenv("TESTING"))) {
             ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -64,34 +49,6 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
 
         environment.servlets().addFilter("customFilter", new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
                 .allOf(DispatcherType.class), true, "/*");
-    }
-
-    private MicroServiceInfo createMicroServiceInfo() {
-        String msbAddrTemplate = (HttpsUtils.isHttpsEnabled() ? "https" : "http")
-                + "://%s:%s/api/holmes-rule-mgmt/v1/healthcheck";
-        String[] serviceAddrInfo = MicroServiceConfig.getMicroServiceIpAndPort();
-        MicroServiceInfo msinfo = new MicroServiceInfo();
-        msinfo.setServiceName("holmes-rule-mgmt");
-        msinfo.setVersion("v1");
-        msinfo.setUrl("/api/holmes-rule-mgmt/v1");
-        msinfo.setPath("/api/holmes-rule-mgmt/v1");
-        msinfo.setProtocol("REST");
-        msinfo.setVisualRange("0|1");
-        msinfo.setLb_policy("round-robin");
-        msinfo.setEnable_ssl(HttpsUtils.isHttpsEnabled());
-        Set<Node> nodes = new HashSet<>();
-        Node node = new Node();
-        node.setIp(serviceAddrInfo[0]);
-        node.setPort("9101");
-        /* Following codes will cause an unregistration from MSB (due to MSB malfunction), comment them for now
-        node.setCheckType("HTTP");
-        node.setCheckUrl(String.format(msbAddrTemplate, serviceAddrInfo[0], "9101"));
-        node.setCheckTimeOut("60s");
-        node.setCheckInterval("60s");
-        */
-        nodes.add(node);
-        msinfo.setNodes(nodes);
-        return msinfo;
     }
 }
 
