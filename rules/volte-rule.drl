@@ -38,7 +38,7 @@ no-loop true
 		DroolsLog.printInfo("Root alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
 		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, $child, "org.onap.holmes.droolsRule");
-        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+        dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		$root.setRootFlag(1);
 		update($root);
 end
@@ -55,7 +55,7 @@ no-loop true
 		DroolsLog.printInfo("New alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
 		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
-        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+        dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		$root.setRootFlag(1);
 		update($root);
 end
@@ -69,7 +69,7 @@ no-loop true
 		DroolsLog.printInfo("Alarm cleared: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
 		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
-        dmaapService.publishPolicyMsg(policyMsg, "unauthenticated.DCAE_CL_OUTPUT");
+        dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		retract($root);
 end
 

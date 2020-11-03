@@ -143,7 +143,7 @@ rule "Set Up Correlation"
 		    	if ($a.getRootFlag() != 1 && $b.getRootFlag() != 1) {
 			    	PolicyMsg msg = createPolicyMsg($a);
 			        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
-			        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+			        dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
 			        updateAaiLinkStatus(getLogicLink($a), status);
 		    	}
 		        $a.setRootFlag(1);

@@ -75,7 +75,7 @@ rule "Process Alarms MSA"
 		for(Map.Entry<String,String> entry : map.entrySet()){
 		    PolicyMsg msg = createPolicyMsg($a, entry.getKey(), entry.getValue());
 			DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
-			dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_Output_Event");
+			dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
 			DroolsLog.printInfo("Published to policy=" + msg.toString());
 
 		}
@@ -95,7 +95,7 @@ rule "Process Alarms TAPI"
 		for(Map.Entry<String,String> entry : map.entrySet()){
 		    PolicyMsg msg = createPolicyMsg($a, entry.getKey(), entry.getValue());
 			DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
-			dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_Output_Event");
+			dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
 			DroolsLog.printInfo("Published to policy=" + msg.toString());
 
 		}

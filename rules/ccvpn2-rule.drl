@@ -76,6 +76,6 @@ dialect "java"
            }
         PolicyMsg msg = createPolicyMsg($a, bandwidth);
         DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
-        dmaapService.publishPolicyMsg(msg, "unauthenticated.DCAE_CL_OUTPUT");
+        dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
         $a.setRootFlag(1);
     end
