@@ -11,6 +11,49 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Version: 7.0.1
+--------------
+
+:Release Date: 2020-11-19
+
+
+**New Features**
+
+
+**Bug Fixes**
+N/A
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusCloud and all critical vulnerabilities have been addressed. 
+
+Quick Links:
+    - `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+     
+    - `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+
+
+**Upgrade Notes**
+
+- Upgraded the Java environment from Java 8 to Java 11.
+- Changed the base images to onap/integration-java11:7.0.0.
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+
 Version: 5.0.1
 --------------
 
