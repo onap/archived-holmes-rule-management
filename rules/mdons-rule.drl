@@ -9,8 +9,8 @@ import org.onap.holmes.common.dmaap.entity.PolicyMsg;
 import org.onap.holmes.common.dmaap.DmaapService;
 import org.onap.holmes.common.utils.DroolsLog;
 import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import org.onap.holmes.common.dmaap.store.UniqueRequestIdCache;
+
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +50,8 @@ function PolicyMsg createPolicyMsg(VesAlarm alarm, String serviceInstanceId, Str
     m.setClosedLoopAlarmEnd(alarm.getLastEpochMicrosec());
     m.setTarget("vserver.vserver-name");
     m.setAai(getAaiObjectPolicy(serviceName, serviceInstanceId));
-	
-    DmaapService.alarmUniqueRequestID.put(alarm.getEventId(), m.getRequestID());
+
+    ServiceLocatorHolder.getLocator().getService(UniqueRequestIdCache.class).put(alarm.getEventId(), m.getRequestID());
     return m;
     }
 	
