@@ -4,5 +4,5 @@
 Configuration
 -------------
 
-No machanism for customized configurtions is provided in the El Alto release. Such functionalities will be provided in the future if necessary.
+No machanism for customized configurtions is provided in the Guilin release. Such functionalities will be provided in the future if necessary.
 
