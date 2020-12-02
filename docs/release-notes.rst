@@ -19,9 +19,12 @@ Version: 7.0.1
 
 **New Features**
 
+- `HOLMES-312 <https://jira.onap.org/browse/HOLMES-312>`_ Alarm Correlation Support in MDONS Close Loop
 
 **Bug Fixes**
-N/A
+
+- `HOLMES-357 <https://jira.onap.org/browse/HOLMES-357>`_ Some holmes pods have no limit
+- `HOLMES-367 <https://jira.onap.org/browse/HOLMES-367>`_ Holmes certificates are expired
 
 **Known Issues**
 
