@@ -48,10 +48,14 @@ if [ -z ${DB_NAME} ]; then
     echo "No database is name is specified. Use the default value \"$DB_NAME\"."
 fi
 
-sed -i "s|user:.*|user: $JDBC_USERNAME|" "$main_path/conf/rulemgt.yml"
-sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/rulemgt.yml"
-sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
-sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/rulemgt.yml"
+# if deployed using helm, use the helm-generated configuration file.
+if [[ -d /opt/hrmconfig ]]; then
+    cp /opt/hrmconfig/rulemgt.yml "$main_path/conf/rulemgt.yml"
+else
+    sed -i "s|user:.*|user: $JDBC_USERNAME|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
+fi
 
 export SERVICE_IP=`hostname -i`
 echo SERVICE_IP=${SERVICE_IP}
@@ -96,7 +100,7 @@ else
 fi
 
 
-${RUNHOME}/initDB.sh $JDBC_USERNAME $JDBC_PASSWORD $DB_NAME $DB_PORT "${URL_JDBC%:*}"
+${RUNHOME}/initDB.sh "$JDBC_USERNAME" "$JDBC_PASSWORD" "$DB_NAME" "$DB_PORT" "${URL_JDBC%:*}"
 
 
 #Register the fronten to MSB
