@@ -25,7 +25,7 @@ host=$5
 echo "Initializing the holmes rule management database..."
 main_path=$HOME/..
 
-if [[ -d /opt/hrmconfig ]]; then
+if [ -d /opt/hrmconfig ]; then
     cp /opt/hrmconfig/onap-holmes_rulemgt-createobj.sql "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
 else
     sed -i "s|DBNAME|$dbname|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
@@ -40,7 +40,7 @@ echo "password=$password"
 echo "port=$port"
 echo "host=$host"
 
-if [[ -z `env | grep PGPASSWORD` ]]; then
+if [ -z `env | grep PGPASSWORD` ]; then
     export PGPASSWORD=$password
     need_unset=1
 fi
@@ -49,7 +49,7 @@ psql -U "$user" -p "$port" -h "$host" -d "$dbname" -f $main_path/dbscripts/postg
 psql -U "$user" -p "$port" -h "$host" -d "$dbname" --command 'select * from aplus_rule;'
 sql_result=$?
 
-if [[ $need_unset -eq 1 ]]; then
+if [ $need_unset -eq 1 ]; then
     unset PGPASSWORD
 fi
 

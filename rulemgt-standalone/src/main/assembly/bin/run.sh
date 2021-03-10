@@ -49,7 +49,7 @@ if [ -z ${DB_NAME} ]; then
 fi
 
 # if deployed using helm, use the helm-generated configuration file.
-if [[ -d /opt/hrmconfig ]]; then
+if [ -d /opt/hrmconfig ]; then
     cp /opt/hrmconfig/rulemgt.yml "$main_path/conf/rulemgt.yml"
 else
     sed -i "s|user:.*|user: $JDBC_USERNAME|" "$main_path/conf/rulemgt.yml"
