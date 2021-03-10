@@ -49,7 +49,7 @@ psql -U "$user" -p "$port" -h "$host" -d "$dbname" -f $main_path/dbscripts/postg
 psql -U "$user" -p "$port" -h "$host" -d "$dbname" --command 'select * from aplus_rule;'
 sql_result=$?
 
-if [ $need_unset -eq 1 ]; then
+if [ $need_unset = 1 ]; then
     unset PGPASSWORD
 fi
 
