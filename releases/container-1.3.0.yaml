@@ -1,0 +1,9 @@
+---
+distribution_type: 'container'
+container_release_tag: '1.3.0'
+project: 'holmes-rule-management'
+log_dir: 'holmes-rule-management-master-docker-java-daily/1429/'
+ref: 680eede1040f09278b8d94a0e43744b843547f47
+containers:
+  - name: holmes/rule-management
+    version: 1.3.0-STAGING-20210311T004355Z
