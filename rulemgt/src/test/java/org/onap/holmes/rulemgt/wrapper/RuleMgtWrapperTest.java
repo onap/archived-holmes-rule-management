@@ -166,7 +166,7 @@ public class RuleMgtWrapperTest {
         correlationRuleRet.setRid("rule_" + System.currentTimeMillis());
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRuleName(ruleName)).andReturn(null);
-        EasyMock.expect(engineToolsMock.getEngineWithLeastRules()).andReturn("10.96.33.34");
+        EasyMock.expect(engineToolsMock.getEngineWithLeastRules()).andReturn("127.0.0.1");
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)
                 , EasyMock.anyObject(String.class)))
                 .andReturn(true);
@@ -202,11 +202,11 @@ public class RuleMgtWrapperTest {
         oldCorrelationRule.setPackageName("testName");
         oldCorrelationRule.setEnabled(1);
         oldCorrelationRule.setClosedControlLoopName("cl-name");
-        oldCorrelationRule.setEngineInstance("10.96.33.34");
+        oldCorrelationRule.setEngineInstance("127.0.0.1");
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des2", "contetnt2", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
-        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName", "10.96.33.34")).andReturn(true);
+        EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName", "127.0.0.1")).andReturn(true);
         correlationRuleDaoMock.updateRule(EasyMock.anyObject(CorrelationRule.class));
         EasyMock.expectLastCall();
         EasyMock.expect(engineWrapperMock.checkRuleFromEngine(EasyMock.anyObject(CorrelationCheckRule4Engine.class)

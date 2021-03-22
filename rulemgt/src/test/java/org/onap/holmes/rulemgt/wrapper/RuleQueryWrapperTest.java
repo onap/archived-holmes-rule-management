@@ -51,7 +51,7 @@ public class RuleQueryWrapperTest {
 
     @Test
     public void queryRuleByEngineInstance() throws Exception{
-        String engineInstance = "10.96.33.34";
+        String engineInstance = "127.0.0.1";
         EasyMock.expect(ruleQueryWrapper.queryRuleByEngineInstance(EasyMock.anyObject(String.class))).andReturn(new ArrayList<CorrelationRule>());
         PowerMock.replayAll();
         List<CorrelationRule> correlationRules = ruleQueryWrapper.queryRuleByEngineInstance(engineInstance);

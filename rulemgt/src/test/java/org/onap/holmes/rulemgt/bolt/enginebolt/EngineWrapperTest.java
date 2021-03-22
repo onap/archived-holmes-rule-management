@@ -69,7 +69,7 @@ public class EngineWrapperTest {
                         new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -87,7 +87,7 @@ public class EngineWrapperTest {
         EasyMock.expect(statusLineMock.getStatusCode()).andReturn(400);
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -109,7 +109,7 @@ public class EngineWrapperTest {
         EasyMock.expect(HttpsUtils.extractResponseEntity(httpResponse)).andReturn(content);
         PowerMock.replayAll();
 
-        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
+        engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -128,7 +128,7 @@ public class EngineWrapperTest {
         EasyMock.expect(HttpsUtils.extractResponseEntity(httpResponse)).andReturn(content);
         PowerMock.replayAll();
 
-        String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"10.96.33.34");
+        String result = engineWrapper.deployEngine(new CorrelationDeployRule4Engine(),"127.0.0.1");
 
         assertThat(result, equalTo("test"));
 
@@ -144,7 +144,7 @@ public class EngineWrapperTest {
                 new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.deleteRuleFromEngine("","10.96.33.34");
+        engineWrapper.deleteRuleFromEngine("","127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -162,7 +162,7 @@ public class EngineWrapperTest {
 
         PowerMock.replayAll();
 
-        engineWrapper.deleteRuleFromEngine("","10.96.33.34");
+        engineWrapper.deleteRuleFromEngine("","127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -177,7 +177,7 @@ public class EngineWrapperTest {
 
         PowerMock.replayAll();
 
-        boolean result = engineWrapper.deleteRuleFromEngine("","10.96.33.34");
+        boolean result = engineWrapper.deleteRuleFromEngine("","127.0.0.1");
 
         assertThat(result, equalTo(true));
     }
@@ -194,7 +194,7 @@ public class EngineWrapperTest {
                         new RuntimeException(""));
         PowerMock.replayAll();
 
-        engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"10.96.33.34");
+        engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"127.0.0.1");
 
         PowerMock.verifyAll();
     }
@@ -210,7 +210,7 @@ public class EngineWrapperTest {
 
         PowerMock.replayAll();
 
-        boolean result = engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"10.96.33.34");
+        boolean result = engineWrapper.checkRuleFromEngine(new CorrelationCheckRule4Engine(),"127.0.0.1");
 
         assertThat(result, equalTo(true));
     }
