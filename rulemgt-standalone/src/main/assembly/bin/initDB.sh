@@ -25,9 +25,13 @@ host=$5
 echo "Initializing the holmes rule management database..."
 main_path=$HOME/..
 
-sed -i "s|DBNAME|$dbname|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
-sed -i "s|DBUSER|$user|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
-sed -i "s|DBPWD|$password|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+if [ -d /opt/hrmconfig ]; then
+    cp /opt/hrmconfig/onap-holmes_rulemgt-createobj.sql "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+else
+    sed -i "s|DBNAME|$dbname|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+    sed -i "s|DBUSER|$user|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+    sed -i "s|DBPWD|$password|g" "$main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql"
+fi
 
 cat $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 echo "dbname=$dbname"
@@ -35,11 +39,20 @@ echo "user=$user"
 echo "password=$password"
 echo "port=$port"
 echo "host=$host"
-export PGPASSWORD=$password
-psql -U $user -p $port -h $host -d $dbname -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
-psql -U $user -p $port -h $host -d $dbname --command 'select * from aplus_rule;'
+
+if [ -z `env | grep PGPASSWORD` ]; then
+    export PGPASSWORD=$password
+    need_unset=1
+fi
+
+psql -U "'$user'" -p "'$port'" -h "'$host'" -d "'$dbname'" -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+psql -U "'$user'" -p "'$port'" -h "'$host'" -d "'$dbname'" --command 'select * from aplus_rule;'
 sql_result=$?
-unset PGPASSWORD
+
+if [ "$need_unset"x == "1"x ]; then
+    unset PGPASSWORD
+fi
+
 echo "sql_result=$sql_result"
 if [ $sql_result != 0 ] ; then
    echo "Failed to initialize the database!"
