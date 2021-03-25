@@ -7,7 +7,7 @@ Human Interfaces
 Target Users
 ^^^^^^^^^^^^
 
-The human interfaces provided in the Guilin release by Holmes is intended for the developers rather than the end users.
+The human interfaces provided in the Honolulu release by Holmes is intended for the developers rather than the end users.
 
 Interface Type
 ^^^^^^^^^^^^^^
