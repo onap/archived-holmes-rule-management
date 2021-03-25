@@ -4,7 +4,7 @@
 Consumed APIs
 -------------
 
-In the Guilin release, Holmes mainly depends on the APIs provided by DCAE, A&AI, DMaaP and MSB.
+In the Honolulu release, Holmes mainly depends on the APIs provided by DCAE, A&AI, DMaaP and MSB.
 
 DCAE
 ^^^^
@@ -30,10 +30,10 @@ In order to get the correlation between different alarms with the help of the to
 
 #. Query a VM by ID:
 
-   ``/aai/v11/search/nodes-query?search-node-type=vserver&filter=vserver-id:EQUALS:{vserver-id}`` 
+   ``/aai/v11/search/nodes-query?search-node-type=vserver&filter=vserver-id:EQUALS:{vserver-id}``
 
 More details could be found at `A&AI APIs <https://wiki.onap.org/pages/viewpage.action?pageId=13598793>`_.
- 
+
 DMaaP
 ^^^^^
 

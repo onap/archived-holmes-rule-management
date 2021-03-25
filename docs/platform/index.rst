@@ -7,7 +7,7 @@ Holmes provides alarm correlation and analysis for Telecom cloud infrastructure 
 
 .. toctree::
    :maxdepth: 1
-   
+
    architecture.rst
    offeredapis.rst
    consumedapis.rst
