@@ -118,6 +118,10 @@ ${RUNHOME}/initDB.sh "$JDBC_USERNAME" "$JDBC_PASSWORD" "$DB_NAME" "$DB_PORT" "${
 #curl -X POST -H "Content-Type: application/json" -d ${msg_body} http://${MSB_ADDR}/api/msdiscover/v1/services?is_manual=true
 #echo Registered UI to MSB.
 
+if [ -f "/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt" ]; then
+    sed -i "s|/etc/ssl/certs/holmes-frontend-selfsigned.crt|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt|" "/etc/nginx/conf.d/nginx-https.conf"
+    sed -i "s|/etc/ssl/private/holmes-frontend.key|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.key|" "/etc/nginx/conf.d/nginx-https.conf"
+fi
 
 if [ ${ENABLE_ENCRYPT} = true ]; then
     nginx -c /etc/nginx/conf.d/nginx-https.conf
