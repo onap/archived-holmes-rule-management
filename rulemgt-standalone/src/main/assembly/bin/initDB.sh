@@ -45,8 +45,8 @@ if [ -z `env | grep PGPASSWORD` ]; then
     need_unset=1
 fi
 
-psql -U "$user" -p "$port" -h "$host" -d "$dbname" -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
-psql -U "$user" -p "$port" -h "$host" -d "$dbname" --command 'select * from aplus_rule;'
+psql -U "'$user'" -p "'$port'" -h "'$host'" -d "'$dbname'" -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+psql -U "'$user'" -p "'$port'" -h "'$host'" -d "'$dbname'" --command 'select * from aplus_rule;'
 sql_result=$?
 
 if [ "$need_unset"x == "1"x ]; then
