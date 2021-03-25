@@ -10,6 +10,6 @@ as well as the release notes of Holmes in this document.
 
 .. toctree::
    :maxdepth: 1
-   
+
    platform/index.rst
    release-notes.rst

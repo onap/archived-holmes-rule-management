@@ -4,7 +4,7 @@
 Installation
 ------------
 
-In the Guilin release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
+In the Honolulu release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
 
 In case the users want to deploy Holmes independently, the steps for the installation is as follows.
 
@@ -13,7 +13,7 @@ Prerequisites
 
 #. MSB must be installed and started. The user knows the IP address of the MSB API gateway service.
 #. PostgreSQL must be installed and started. For the guidance on how to run a PostgreSQL, please refer to `Offical Repository of PostgreSQL <https://hub.docker.com/_/postgres/>`_.
-   
+
    **While setting up PostgreSQL, a database and a user named 'holmes' must be created. The corresponding password shuold be set to 'holmespwd'. Otherwise, Holmes could not be started up successfully.**
 
 Steps
@@ -21,7 +21,7 @@ Steps
 
 #. Start the rule management module of Holmes using the command below:
 
-   ``sudo docker run --name holmes-rule-management -p 9101:9101 -p 9201:9201 -p 9104:9104 -p 9105:9105 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/rule-management``   
+   ``sudo docker run --name holmes-rule-management -p 9101:9101 -p 9201:9201 -p 9104:9104 -p 9105:9105 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/rule-management``
 
 #. Start the engine manamgement module of Holmes using the command below:
 
@@ -35,7 +35,7 @@ Check the Status of Holmes
 
 After the installation, you have to check whether Holmes is alive or not using the health-check API.
 
-#. Use ``curl http://${msb-ip}:${msb-port}/api/holmes-rule-mgmt/v1/healthcheck`` or any other tools (e.g. Postman) to check whether the rule management module of Holmes has been spun up and registered to MSB successfully. 
+#. Use ``curl http://${msb-ip}:${msb-port}/api/holmes-rule-mgmt/v1/healthcheck`` or any other tools (e.g. Postman) to check whether the rule management module of Holmes has been spun up and registered to MSB successfully.
 
 #. Use ``curl http://${msb-ip}:${msb-port}/api/holmes-engine-mgmt/v1/healthcheck`` or any other tools (e.g. Postman) to check whether the engine management module of Holmes has been spun up and registered to MSB successfully.
 
