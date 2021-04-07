@@ -57,7 +57,7 @@ else
     sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
 fi
 
-export SERVICE_IP=`hostname -i`
+export SERVICE_IP=`hostname -i | awk '{print $1}'`
 echo SERVICE_IP=${SERVICE_IP}
 
 if [ ! -z ${TESTING} ] && [ ${TESTING} = 1 ]; then
