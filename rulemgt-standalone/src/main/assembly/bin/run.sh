@@ -53,7 +53,7 @@ sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/rulemgt.yml"
 sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
 sed -i "s|msbServerAddr:.*|msbServerAddr: http://$MSB_ADDR|" "$main_path/conf/rulemgt.yml"
 
-export SERVICE_IP=`hostname -i`
+export SERVICE_IP=`hostname -i | awk '{print $1}'`
 echo SERVICE_IP=${SERVICE_IP}
 
 if [ ! -z ${TESTING} -a ${TESTING} = 1 ]; then
