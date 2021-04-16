@@ -14,7 +14,7 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 8.0.1
 --------------
 
-:Release Date: 2021-04-01
+:Release Date: 2021-04-22
 
 
 **New Features**
