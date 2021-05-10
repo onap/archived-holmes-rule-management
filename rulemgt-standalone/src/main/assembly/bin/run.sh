@@ -112,7 +112,7 @@ fi
 ${RUNHOME}/initDB.sh "$JDBC_USERNAME" "$JDBC_PASSWORD" "$DB_NAME" "$DB_PORT" "${URL_JDBC%:*}"
 
 
-#Register the fronten to MSB
+#Register the frontend to MSB
 #body='{"serviceName":"holmes","version":"v1","url":"/iui/holmes","nodes":[{"ip":"host_ip","port":"9104","lb_server_params":"","checkType":"","checkUrl":"","checkInterval":"","checkTimeOut":"","ttl":"","ha_role":""}],"protocol":"UI","visualRange":"0|1","lb_policy":"","publish_port":"","namespace":"","network_plane_type":"","host":"","path":"","labels":[],"metadata":[]}'
 #msg_body=${body/host_ip/"${HOSTNAME%:*}"}
 #curl -X POST -H "Content-Type: application/json" -d ${msg_body} http://${MSB_ADDR}/api/msdiscover/v1/services?is_manual=true
@@ -122,6 +122,9 @@ if [ -f "/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt" ]; then
     sed -i "s|/etc/ssl/certs/holmes-frontend-selfsigned.crt|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt|" "/etc/nginx/conf.d/nginx-https.conf"
     sed -i "s|/etc/ssl/private/holmes-frontend.key|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.key|" "/etc/nginx/conf.d/nginx-https.conf"
 fi
+
+
+sed -i "s|msb-iag.onap|$MSB_ADDR|g" /etc/nginx/conf.d/nginx-http*.conf
 
 if [ ${ENABLE_ENCRYPT} = true ]; then
     nginx -c /etc/nginx/conf.d/nginx-https.conf
