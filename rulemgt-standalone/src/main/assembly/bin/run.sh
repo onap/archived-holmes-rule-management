@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Copyright 2017-2020 ZTE Corporation.
+# Copyright 2017-2021 ZTE Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,21 +112,18 @@ fi
 ${RUNHOME}/initDB.sh "$JDBC_USERNAME" "$JDBC_PASSWORD" "$DB_NAME" "$DB_PORT" "${URL_JDBC%:*}"
 
 
-#Register the frontend to MSB
-#body='{"serviceName":"holmes","version":"v1","url":"/iui/holmes","nodes":[{"ip":"host_ip","port":"9104","lb_server_params":"","checkType":"","checkUrl":"","checkInterval":"","checkTimeOut":"","ttl":"","ha_role":""}],"protocol":"UI","visualRange":"0|1","lb_policy":"","publish_port":"","namespace":"","network_plane_type":"","host":"","path":"","labels":[],"metadata":[]}'
-#msg_body=${body/host_ip/"${HOSTNAME%:*}"}
-#curl -X POST -H "Content-Type: application/json" -d ${msg_body} http://${MSB_ADDR}/api/msdiscover/v1/services?is_manual=true
-#echo Registered UI to MSB.
-
 if [ -f "/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt" ]; then
     sed -i "s|/etc/ssl/certs/holmes-frontend-selfsigned.crt|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.crt|" "/etc/nginx/conf.d/nginx-https.conf"
     sed -i "s|/etc/ssl/private/holmes-frontend.key|/opt/app/osaaf/local/org.onap.holmes-rule-mgmt.key|" "/etc/nginx/conf.d/nginx-https.conf"
 fi
 
+if [ "$MSB_IAG_SERVICE_PORT"x = "443"x ]; then
+    sed -i "s|http://msb-iag.onap|https://$MSB_IAG_SERVICE_HOST:$MSB_IAG_SERVICE_PORT|g" /etc/nginx/conf.d/nginx-http*.conf
+else
+    sed -i "s|http://msb-iag.onap|http://$MSB_IAG_SERVICE_HOST:$MSB_IAG_SERVICE_PORT|g" /etc/nginx/conf.d/nginx-http*.conf
+fi
 
-sed -i "s|msb-iag.onap|$MSB_ADDR|g" /etc/nginx/conf.d/nginx-http*.conf
-
-if [ ${ENABLE_ENCRYPT} = true ]; then
+if [ "${ENABLE_ENCRYPT}"x = "true"x ]; then
     nginx -c /etc/nginx/conf.d/nginx-https.conf
 else
     nginx -c /etc/nginx/conf.d/nginx-http.conf
