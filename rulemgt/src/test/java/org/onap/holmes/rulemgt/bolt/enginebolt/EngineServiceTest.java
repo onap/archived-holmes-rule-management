@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017 - 2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,67 +17,74 @@
 
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.onap.holmes.common.utils.HttpsUtils;
+import org.onap.holmes.common.utils.JerseyClient;
+import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
-import java.util.HashMap;
-
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.*;
 
-@PrepareForTest({HttpClients.class, CloseableHttpClient.class, HttpsUtils.class})
-@PowerMockIgnore("javax.net.ssl.*")
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(EngineService.class)
+@SuppressStaticInitializationFor({"org.onap.holmes.common.utils.JerseyClient"})
 public class EngineServiceTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private EngineService engineService;
-    private HttpResponse httpResponseMock;
-    private CloseableHttpClient closeableHttpClient;
-    private CorrelationDeployRule4Engine correlationDeployRule4Engine;
-    private CloseableHttpResponse closeableHttpResponseMock;
+    private EngineService engineService = new EngineService();
+    ;
 
     @Before
-    public void setUp() {
-        engineService = new EngineService();
-        closeableHttpClient = PowerMock.createMock(CloseableHttpClient.class);
-        httpResponseMock = PowerMock.createMock(HttpResponse.class);
-        closeableHttpResponseMock = PowerMock.createMock(CloseableHttpResponse.class);
-        correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
+    public void setUp() throws Exception {
+        System.setProperty("ENABLE_ENCRYPT", "false");
+    }
+
+    @Test
+    public void delete() throws Exception {
+        JerseyClient client = createMock(JerseyClient.class);
+        expectNew(JerseyClient.class).andReturn(client);
+        expect(client.path(anyString())).andReturn(client);
+        expect(client.delete(anyString())).andReturn("true");
+        replayAll();
+        assertThat(engineService.delete("test", "127.0.0.1"), is(true));
+        verifyAll();
+    }
+
+    @Test
+    public void check() throws Exception {
+        JerseyClient client = createMock(JerseyClient.class);
+        expectNew(JerseyClient.class).andReturn(client);
+        expect(client.header(anyString(), anyString())).andReturn(client);
+        expect(client.post(anyString(), anyObject())).andReturn("true");
+
+        CorrelationCheckRule4Engine correlationCheckRule4Engine = new CorrelationCheckRule4Engine();
+        correlationCheckRule4Engine.setContent("{\"package\":\"test\"}");
+
+        replayAll();
+        assertThat(engineService.check(correlationCheckRule4Engine, "127.0.0.1"), is(true));
+        verifyAll();
+    }
+
+    @Test
+    public void deploy() throws Exception {
+        JerseyClient client = createMock(JerseyClient.class);
+        expectNew(JerseyClient.class).andReturn(client);
+        expect(client.header(anyString(), anyString())).andReturn(client);
+        expect(client.put(anyString(), anyObject())).andReturn("true");
+
+        CorrelationDeployRule4Engine correlationDeployRule4Engine = new CorrelationDeployRule4Engine();
         correlationDeployRule4Engine.setContent("{\"package\":\"test\"}");
-        correlationDeployRule4Engine.setEngineId("engine_id");
-    }
 
-    @Test
-    public void testEngineService_createHeaders_ok() throws Exception {
-        PowerMock.resetAll();
-        HashMap<String, String> headers = Whitebox.invokeMethod(engineService, "createHeaders");
-        assertThat(headers.get("Content-Type"), equalTo("application/json"));
-        assertThat(headers.get("Accept"), equalTo("application/json"));
+        replayAll();
+        assertThat(engineService.deploy(correlationDeployRule4Engine, "127.0.0.1"), equalTo("true"));
+        verifyAll();
     }
-
-    @Test
-    public void testEngineService_closeHttpClient_ok() throws Exception {
-        PowerMock.resetAll();
-        CloseableHttpClient closeableHttpClient = HttpsUtils
-                .getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
-        Whitebox.invokeMethod(engineService, "closeHttpClient", closeableHttpClient);
-    }
-
 }

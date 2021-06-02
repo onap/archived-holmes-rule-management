@@ -19,6 +19,7 @@ package org.onap.holmes.rulemgt;
 import io.dropwizard.setup.Environment;
 import org.onap.holmes.common.config.MicroServiceConfig;
 import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
+import org.onap.holmes.common.utils.CommonUtils;
 import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.DcaeConfigurationPolling;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
         if (!"1".equals(System.getenv("TESTING"))) {
             ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
             service.scheduleAtFixedRate(
-                    new DcaeConfigurationPolling(MicroServiceConfig.getEnv(MicroServiceConfig.HOSTNAME)), 0,
+                    new DcaeConfigurationPolling(CommonUtils.getEnv(MicroServiceConfig.HOSTNAME)), 0,
                     DcaeConfigurationPolling.POLLING_PERIOD, TimeUnit.MILLISECONDS);
         }
 

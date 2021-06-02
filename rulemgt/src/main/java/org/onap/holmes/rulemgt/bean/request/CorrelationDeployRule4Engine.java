@@ -22,9 +22,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CorrelationDeployRule4Engine {
-
-    private String content;
+public class CorrelationDeployRule4Engine extends CorrelationCheckRule4Engine {
 
     private String engineId;
 

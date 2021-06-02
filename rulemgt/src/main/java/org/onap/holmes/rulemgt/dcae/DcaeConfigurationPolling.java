@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2020 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,29 +14,19 @@
 package org.onap.holmes.rulemgt.dcae;
 
 
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.onap.holmes.common.dcae.DcaeConfigurationQuery;
 import org.onap.holmes.common.dcae.entity.DcaeConfigurations;
 import org.onap.holmes.common.dcae.entity.Rule;
 import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.GsonUtil;
-import org.onap.holmes.common.utils.HttpsUtils;
+import org.onap.holmes.common.utils.JerseyClient;
 import org.onap.holmes.common.utils.Md5Util;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -77,12 +67,8 @@ public class DcaeConfigurationPolling implements Runnable {
         if (dcaeConfigurations != null) {
             try {
                 ruleQueryListResponse = getAllCorrelationRules();
-            } catch (CorrelationException e) {
-                log.error("Failed to get right response!" + e.getMessage(), e);
-            } catch (IOException e) {
-                log.error("Failed to extract response entity. " + e.getMessage(), e);
             } catch (Exception e) {
-                log.error("Failed to build http client. " + e.getMessage(), e);
+                log.error("Failed to get deployed rules from the rule management module: " + e.getMessage(), e);
             }
         }
         if (ruleQueryListResponse != null) {
@@ -97,53 +83,17 @@ public class DcaeConfigurationPolling implements Runnable {
         }
     }
 
-    public RuleQueryListResponse getAllCorrelationRules() throws CorrelationException, IOException {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", MediaType.APPLICATION_JSON);
-        CloseableHttpClient httpClient = null;
-        HttpGet httpGet = new HttpGet(url);
-        try {
-            httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
-            HttpResponse httpResponse = HttpsUtils.get(httpGet, headers, httpClient);
-            String response = HttpsUtils.extractResponseEntity(httpResponse);
-            return GsonUtil.jsonToBean(response, RuleQueryListResponse.class);
-        } finally {
-            httpGet.releaseConnection();
-            closeHttpClient(httpClient);
-        }
+    private RuleQueryListResponse getAllCorrelationRules() {
+        return new JerseyClient().get(url, RuleQueryListResponse.class);
     }
 
     private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
         boolean suc = false;
         for (Rule rule : dcaeConfigurations.getDefaultRules()) {
             RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(rule);
-            String content = "";
-            try {
-                content = GsonUtil.beanToJson(ruleCreateRequest);
-            } catch (Exception e) {
-                throw new CorrelationException("Failed to convert the message object to a json string.", e);
-            }
-            HashMap<String, String> headers = new HashMap<>();
-            headers.put("Content-Type", MediaType.APPLICATION_JSON);
-            headers.put("Accept", MediaType.APPLICATION_JSON);
-            HttpResponse httpResponse;
-            CloseableHttpClient httpClient = null;
-            HttpPut httpPut = new HttpPut(url);
-            try {
-                httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
-                httpResponse = HttpsUtils
-                        .put(httpPut, headers, new HashMap<>(), new StringEntity(content), httpClient);
-            } catch (UnsupportedEncodingException e) {
-                throw new CorrelationException("Failed to create https entity.", e);
-            } catch (Exception e) {
-                throw new CorrelationException(e.getMessage());
-            } finally {
-                httpPut.releaseConnection();
-                closeHttpClient(httpClient);
-            }
-            if (httpResponse != null) {
-                suc = httpResponse.getStatusLine().getStatusCode() == 200;
-            }
+            suc = new JerseyClient().header("Accept", MediaType.APPLICATION_JSON)
+                    .put(url, Entity.json(ruleCreateRequest)) != null;
+
             if (!suc) {
                 break;
             }
@@ -153,19 +103,8 @@ public class DcaeConfigurationPolling implements Runnable {
 
     private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs) {
         ruleResult4APIs.forEach(correlationRule -> {
-            HashMap<String, String> headers = new HashMap<>();
-            headers.put("Content-Type", MediaType.APPLICATION_JSON);
-            CloseableHttpClient httpClient = null;
-            HttpDelete httpDelete = new HttpDelete(url + "/" + correlationRule.getRuleId());
-            try {
-                httpClient = HttpsUtils.getConditionalHttpsClient(HttpsUtils.DEFUALT_TIMEOUT);
-                HttpsUtils.delete(httpDelete, headers, httpClient);
-            } catch (Exception e) {
-                log.warn("Failed to delete rule, the rule id is : " + correlationRule.getRuleId()
-                        + " exception messge is : " + e.getMessage(), e);
-            } finally {
-                httpDelete.releaseConnection();
-                closeHttpClient(httpClient);
+            if (null == new JerseyClient().delete(url + "/" + correlationRule.getRuleId())) {
+                log.warn("Failed to delete rule, the rule id is: {}", correlationRule.getRuleId());
             }
         });
     }
@@ -178,15 +117,5 @@ public class DcaeConfigurationPolling implements Runnable {
         ruleCreateRequest.setDescription("");
         ruleCreateRequest.setEnabled(1);
         return ruleCreateRequest;
-    }
-
-    private void closeHttpClient(CloseableHttpClient httpClient) {
-        if (httpClient != null) {
-            try {
-                httpClient.close();
-            } catch (IOException e) {
-                log.warn("Failed to close http client!");
-            }
-        }
     }
 }
