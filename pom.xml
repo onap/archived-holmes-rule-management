@@ -111,6 +111,10 @@
                     <groupId>com.squareup.retrofit2</groupId>
                     <artifactId>retrofit</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -126,7 +130,7 @@
         <dependency>
             <groupId>org.onap.holmes.common</groupId>
             <artifactId>holmes-actions</artifactId>
-            <version>1.3.2</version>
+            <version>1.3.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.jersey.containers</groupId>
