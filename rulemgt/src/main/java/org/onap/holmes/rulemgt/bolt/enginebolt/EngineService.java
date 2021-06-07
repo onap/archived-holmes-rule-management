@@ -51,13 +51,13 @@ public class EngineService {
                 .put(getUrl(ip), Entity.json(correlationDeployRule4Engine));
     }
 
-
     private String getRequestPref() {
         return CommonUtils.isHttpsEnabled() ? JerseyClient.PROTOCOL_HTTPS : JerseyClient.PROTOCOL_HTTP;
     }
 
     private String getUrl(String ip) {
         return new StringBuilder(getRequestPref())
+                .append(COLON)
                 .append(SEP)
                 .append(ip)
                 .append(COLON)
