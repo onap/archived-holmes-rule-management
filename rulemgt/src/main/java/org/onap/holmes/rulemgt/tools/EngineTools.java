@@ -65,7 +65,7 @@ public class EngineTools {
         Arrays.sort(numOfRules);
 
         for (String ip : ruleNumInEachEngine.keySet()) {
-            if (ruleNumInEachEngine.get(ip) == numOfRules[0]) {
+            if (ruleNumInEachEngine.get(ip).equals(numOfRules[0])) {
                 return ip;
             }
         }
