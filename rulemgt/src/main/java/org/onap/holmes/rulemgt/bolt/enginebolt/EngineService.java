@@ -34,19 +34,19 @@ public class EngineService {
     private static final String COLON = ":";
 
     protected boolean delete(String packageName, String ip) {
-        return new JerseyClient()
+        return JerseyClient.newInstance()
                 .path(packageName)
                 .delete(getUrl(ip)) != null;
     }
 
     protected boolean check(CorrelationCheckRule4Engine correlationCheckRule4Engine, String ip) {
-        return new JerseyClient()
+        return JerseyClient.newInstance()
                 .header("Accept", MediaType.APPLICATION_JSON)
                 .post(getUrl(ip), Entity.json(correlationCheckRule4Engine)) != null;
     }
 
     protected String deploy(CorrelationDeployRule4Engine correlationDeployRule4Engine, String ip) {
-        return new JerseyClient()
+        return JerseyClient.newInstance()
                 .header("Accept", MediaType.APPLICATION_JSON)
                 .put(getUrl(ip), Entity.json(correlationDeployRule4Engine));
     }

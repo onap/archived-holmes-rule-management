@@ -84,14 +84,14 @@ public class DcaeConfigurationPolling implements Runnable {
     }
 
     private RuleQueryListResponse getAllCorrelationRules() {
-        return new JerseyClient().get(url, RuleQueryListResponse.class);
+        return JerseyClient.newInstance().get(url, RuleQueryListResponse.class);
     }
 
     private boolean addAllCorrelationRules(DcaeConfigurations dcaeConfigurations) throws CorrelationException {
         boolean suc = false;
         for (Rule rule : dcaeConfigurations.getDefaultRules()) {
             RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(rule);
-            suc = new JerseyClient().header("Accept", MediaType.APPLICATION_JSON)
+            suc = JerseyClient.newInstance().header("Accept", MediaType.APPLICATION_JSON)
                     .put(url, Entity.json(ruleCreateRequest)) != null;
 
             if (!suc) {
@@ -103,7 +103,7 @@ public class DcaeConfigurationPolling implements Runnable {
 
     private void deleteAllCorrelationRules(List<RuleResult4API> ruleResult4APIs) {
         ruleResult4APIs.forEach(correlationRule -> {
-            if (null == new JerseyClient().delete(url + "/" + correlationRule.getRuleId())) {
+            if (null == JerseyClient.newInstance().delete(url + "/" + correlationRule.getRuleId())) {
                 log.warn("Failed to delete rule, the rule id is: {}", correlationRule.getRuleId());
             }
         });
