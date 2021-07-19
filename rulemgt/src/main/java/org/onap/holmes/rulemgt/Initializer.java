@@ -68,13 +68,13 @@ public class Initializer {
         Node node = new Node();
         node.setIp(isIpAddress(serviceIpAndPort[0]) ? serviceIpAndPort[0] : getEnv("HOLMES_RULE_MGMT_SERVICE_HOST"));
         node.setPort("9101");
-        /* Following codes will cause an unregistration from MSB (due to MSB malfunction), comment them for now*/
+        /* Following codes will cause an unregistration from MSB (due to MSB malfunction), comment them for now
         String msbAddrTemplate = (CommonUtils.isHttpsEnabled() ? "https" : "http")
                 + "://%s:%s/api/holmes-rule-mgmt/v1/healthcheck";
         node.setCheckType("HTTP");
         node.setCheckUrl(String.format(msbAddrTemplate, serviceIpAndPort[0], "9101"));
         node.setCheckTimeOut("60s");
-        node.setCheckInterval("60s");
+        node.setCheckInterval("60s");*/
 
         nodes.add(node);
         msinfo.setNodes(nodes);
