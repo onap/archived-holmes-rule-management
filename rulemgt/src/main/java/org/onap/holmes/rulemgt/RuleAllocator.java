@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2020 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -41,6 +42,8 @@ public class RuleAllocator {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuleAllocator.class);
 
     public final static int ENABLE = 1;
+    public final static int RETRY_TIMES = 5;
+    public final static long RETRY_INTERVAL_SEC = 15;
     private RuleMgtWrapper ruleMgtWrapper;
     private RuleQueryWrapper ruleQueryWrapper;
     private EngineWrapper engineWrapper;
@@ -194,7 +197,7 @@ public class RuleAllocator {
 
     // Sorted by the number of rules each engine contains, in a descending order.
     private List<String> sortIpByRuleNumDesc(List<String> ips) {
-        List<CorrelationRule> rules = null;
+        List<CorrelationRule> rules;
         Map<String, Integer> ruleNumOfEngines = new HashMap();
 
         try {
@@ -219,12 +222,27 @@ public class RuleAllocator {
     }
 
     private void allocateRule(CorrelationRule rule, String ip) throws CorrelationException {
-        try {
-            ruleMgtWrapper.deployRule2Engine(rule, ip);
-            correlationRuleDao.updateRule(rule);
-        } catch (CorrelationException e) {
-            throw new CorrelationException(String.format("Failed to allocate rule <%s> to <%s>",
-                    rule.getName(), ip), e);
+        // Retry for a couple of times in case of deployment failure
+        // due to unfinished initialization procedures of engine instances.
+        for (int i = 0; i <= RETRY_TIMES; ++i) {
+            try {
+                ruleMgtWrapper.deployRule2Engine(rule, ip);
+                correlationRuleDao.updateRule(rule);
+                // If the codes reach here, it means everything's okay. There's no need to run the loop more.
+                break;
+            } catch (CorrelationException e) {
+                LOGGER.warn(String.format("Failed to allocate rule <%s> to <%s>. Retry: %d.",
+                        rule.getName(), ip, i), e);
+                if (i == RETRY_TIMES) {
+                    throw new CorrelationException(String.format("Failed to allocate rule <%s> to <%s>",
+                            rule.getName(), ip), e);
+                }
+                try {
+                    SECONDS.sleep(RETRY_INTERVAL_SEC * (i + 1));
+                } catch (InterruptedException interruptedException) {
+                    LOGGER.info(interruptedException.getMessage(), interruptedException);
+                }
+            }
         }
     }
 

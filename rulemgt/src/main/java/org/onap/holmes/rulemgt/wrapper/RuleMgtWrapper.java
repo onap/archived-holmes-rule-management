@@ -75,7 +75,7 @@ public class RuleMgtWrapper {
         }
         CorrelationRule correlationRule = convertCreateRequest2Rule(creator,
                 ruleCreateRequest);
-        checkCorrelation(correlationRule);
+        validateCorrelationRule(correlationRule);
         CorrelationRule ruleTemp = correlationRuleDao.queryRuleByRuleName(correlationRule.getName());
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
@@ -110,36 +110,40 @@ public class RuleMgtWrapper {
         if (oldCorrelationRule == null) {
             throw new CorrelationException("You're trying to update a rule which does not exist in the system.");
         }
-        String updateIp = "";
-        updateIp = oldCorrelationRule.getEngineInstance();
+
+        String updateIp = oldCorrelationRule.getEngineInstance();
+        if (!checkIfEngineExists(updateIp)) {
+            updateIp = engineTools.getEngineWithLeastRules();
+        }
         CorrelationRule newCorrelationRule = convertRuleUpdateRequest2CorrelationRule(modifier,
                 ruleUpdateRequest, oldCorrelationRule.getName());
         newCorrelationRule.setEngineInstance(updateIp);
-        checkCorrelation(newCorrelationRule);
+        validateCorrelationRule(newCorrelationRule);
         RuleAddAndUpdateResponse ruleChangeResponse = new RuleAddAndUpdateResponse();
         ruleChangeResponse.setRuleId(newCorrelationRule.getRid());
 
-        if (!haveChange(newCorrelationRule, oldCorrelationRule)) {
+        if (!checkIfRuleChanged(newCorrelationRule, oldCorrelationRule)) {
             return ruleChangeResponse;
         }
-        if (oldCorrelationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN) {
-            String oldRuleEngineInstance = oldCorrelationRule.getEngineInstance();
-            engineWarpper.deleteRuleFromEngine(oldCorrelationRule.getPackageName(), oldRuleEngineInstance);
+        String engineInstance = oldCorrelationRule.getEngineInstance();
+        if (oldCorrelationRule.getEnabled() == RuleMgtConstant.STATUS_ENABLED
+                && checkIfEngineExists(engineInstance)) {
+            engineWarpper.deleteRuleFromEngine(oldCorrelationRule.getPackageName(), engineInstance);
         }
         newCorrelationRule.setPackageName(deployRule2Engine(newCorrelationRule, updateIp));
         correlationRuleDao.updateRule(newCorrelationRule);
         return ruleChangeResponse;
     }
 
-    private void checkCorrelation(CorrelationRule correlationRule) throws CorrelationException {
+    private void validateCorrelationRule(CorrelationRule correlationRule) throws CorrelationException {
         int enabled = correlationRule.getEnabled();
         String ruleName = correlationRule.getName() == null ? "" : correlationRule.getName().trim();
         String content = correlationRule.getContent() == null ? "" : correlationRule.getContent().trim();
         if ("".equals(content)) {
             throw new CorrelationException("The contents of the rule can not be empty!");
         }
-        if (enabled != RuleMgtConstant.STATUS_RULE_CLOSE
-                && enabled != RuleMgtConstant.STATUS_RULE_OPEN) {
+        if (enabled != RuleMgtConstant.STATUS_DISABLED
+                && enabled != RuleMgtConstant.STATUS_ENABLED) {
             throw new CorrelationException("Invalid rule status. Only 0 (disabled) and 1 (enabled) are allowed.");
         }
         if ("".equals(ruleName)) {
@@ -147,7 +151,7 @@ public class RuleMgtWrapper {
         }
     }
 
-    private boolean haveChange(CorrelationRule newCorrelationRule, CorrelationRule oldCorrelationRule) {
+    private boolean checkIfRuleChanged(CorrelationRule newCorrelationRule, CorrelationRule oldCorrelationRule) {
         String newContent = newCorrelationRule.getContent();
         String oldContent = oldCorrelationRule.getContent();
         int newEnabled = newCorrelationRule.getEnabled();
@@ -173,7 +177,7 @@ public class RuleMgtWrapper {
             log.warn("the rule:rule id=" + ruleDeleteRequest.getRuleId() + " does not exist the database.");
             throw new CorrelationException("You're trying to delete a rule which does not exist in the system.");
         }
-        if (correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN) {
+        if (correlationRule.getEnabled() == RuleMgtConstant.STATUS_ENABLED) {
             String ip = correlationRule.getEngineInstance();
             engineWarpper.deleteRuleFromEngine(correlationRule.getPackageName(), ip);
         }
@@ -223,7 +227,7 @@ public class RuleMgtWrapper {
     public String deployRule2Engine(CorrelationRule correlationRule, String ip)
             throws CorrelationException {
         if (engineWarpper.checkRuleFromEngine(toCorrelationCheckRule(correlationRule), ip) && (
-                correlationRule.getEnabled() == RuleMgtConstant.STATUS_RULE_OPEN)) {
+                correlationRule.getEnabled() == RuleMgtConstant.STATUS_ENABLED)) {
             return engineWarpper.deployEngine(correlationRules2DeployRule(correlationRule), ip);
         }
         return "";
@@ -275,5 +279,10 @@ public class RuleMgtWrapper {
         CorrelationCheckRule4Engine correlationCheckRule4Engine = new CorrelationCheckRule4Engine();
         correlationCheckRule4Engine.setContent(correlationRule.getContent());
         return correlationCheckRule4Engine;
+    }
+
+    private boolean checkIfEngineExists(String ip) {
+        List engineList = engineTools.getInstanceList();
+        return engineList.contains(ip);
     }
 }

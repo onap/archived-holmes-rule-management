@@ -38,6 +38,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -206,6 +207,7 @@ public class RuleMgtWrapperTest {
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des2", "contetnt2", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
+        EasyMock.expect(engineToolsMock.getInstanceList()).andReturn(Arrays.asList("127.0.0.1", "127.0.0.2")).times(2);
         EasyMock.expect(engineWrapperMock.deleteRuleFromEngine("testName", "127.0.0.1")).andReturn(true);
         correlationRuleDaoMock.updateRule(EasyMock.anyObject(CorrelationRule.class));
         EasyMock.expectLastCall();
@@ -234,9 +236,11 @@ public class RuleMgtWrapperTest {
         oldCorrelationRule.setPackageName("testName");
         oldCorrelationRule.setEnabled(1);
         oldCorrelationRule.setClosedControlLoopName("cl-name");
+        oldCorrelationRule.setEngineInstance("127.0.0.1");
         RuleUpdateRequest ruleUpdateRequest = createRuleUpdateRequest("rule_1", "cl-name", "des1", "content", 1);
 
         EasyMock.expect(correlationRuleDaoMock.queryRuleByRid("rule_1")).andReturn(oldCorrelationRule);
+        EasyMock.expect(engineToolsMock.getInstanceList()).andReturn(Arrays.asList("127.0.0.1", "127.0.0.2"));
 
         PowerMock.replayAll();
 
