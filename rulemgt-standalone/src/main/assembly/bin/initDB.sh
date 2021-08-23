@@ -45,6 +45,12 @@ if [ -z `env | grep PGPASSWORD` ]; then
     need_unset=1
 fi
 
+# Escape the single quote to avoid cause errors when executing the scripts.
+password=`sed -rn "s/.+ ('.+') .+/\1/p" $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql`
+password=${password:1:-1}
+password_e=`echo $password | sed "s#'#''#g"`
+sed -i "s#$password#$password_e#" $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
+
 psql -U "$user" -p "$port" -h "$host" -d "$dbname" -f $main_path/dbscripts/postgresql/onap-holmes_rulemgt-createobj.sql
 psql -U "$user" -p "$port" -h "$host" -d "$dbname" --command 'select * from aplus_rule;'
 sql_result=$?
