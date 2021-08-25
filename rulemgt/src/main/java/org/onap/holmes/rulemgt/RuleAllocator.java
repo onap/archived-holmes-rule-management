@@ -90,15 +90,16 @@ public class RuleAllocator {
             return;
         }
 
-        if (legacyEngineInstances.size() < numOfEngines) {
-            //extend
+        if (legacyEngineInstances.size() < numOfEngines) { // extend
             List<CorrelationRule> rules2Allocate = calculateRule(legacyEngineInstances, numOfEngines);
             List<CorrelationRule> rules2Delete = copyList(rules2Allocate);
             List<String> newInstanceIds = sortOutNewEngineInstances(engines, legacyEngineInstances);
             distributeRules(newInstanceIds, rules2Allocate);
             cleanUpRulesFromEngines(rules2Delete, legacyEngineInstances);
-        } else {
-            //destroy
+        } else { // destroy
+            // If new engine instances share the same IP addresses with the old ones, the
+            // rule management module will simply leave the them to cope with the legacy rules.
+            // Here, it only takes care of the rules that need to be moved from one IP address to another.
             List<String> destroyed = getDestroyedEngines(engines, legacyEngineInstances);
             distributeRules(getRemainingEngines(engines, destroyed), getRules(destroyed));
         }
