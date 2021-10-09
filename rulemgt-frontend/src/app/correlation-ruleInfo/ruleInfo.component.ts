@@ -304,7 +304,7 @@ export class RuleInfo implements OnInit {
   }
 
   replacePkgName (content: string): string {
-    let reg = /(package\s+[\w\d\.]+)(\s+|;).*/;
+    let reg = /(package\s+[\w\d\.]+)(\s.|;).*/;
     let groups = reg.exec(content);
     let pkgName = groups[1];
     if (pkgName == null) {
@@ -312,5 +312,4 @@ export class RuleInfo implements OnInit {
     }
     return content.replace(pkgName, pkgName + new Date().getTime());
   }
-
 }
