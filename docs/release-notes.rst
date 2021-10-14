@@ -14,7 +14,7 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 9.0.1
 --------------
 
-:Release Date: 2021-10-28
+:Release Date: 2021-11-04
 
 
 **New Features**
@@ -24,6 +24,10 @@ N/A
 **Bug Fixes**
 
 - `Fixed Vulnerability issues by removing httpclient. <https://jira.onap.org/browse/HOLMES-441>`_
+- `Failed to update rules if the package name does not end with a semicolon. <https://jira.onap.org/browse/HOLMES-482>`_
+- `Database instantiation failed due to holmesdb password with single quote. <https://jira.onap.org/browse/HOLMES-463>`_
+- `Existing rules are not able to sync when engine get restarted/redeployed. <https://jira.onap.org/browse/HOLMES-462>`_
+- `RESTful APIs of the Engine Management Module are not Accessible. <https://jira.onap.org/browse/HOLMES-454>`_
 
 **Known Issues**
 
