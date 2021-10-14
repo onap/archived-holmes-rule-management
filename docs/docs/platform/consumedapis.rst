@@ -4,7 +4,7 @@
 Consumed APIs
 -------------
 
-In the Honolulu release, Holmes mainly depends on the APIs provided by DCAE, A&AI, DMaaP and MSB.
+In the Istanbul release, Holmes mainly depends on the APIs provided by DCAE, A&AI, DMaaP and MSB.
 
 DCAE
 ^^^^
