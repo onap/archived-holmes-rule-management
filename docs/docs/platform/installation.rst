@@ -4,7 +4,7 @@
 Installation
 ------------
 
-In the Honolulu release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
+In the Istanbul release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
 
 In case the users want to deploy Holmes independently, the steps for the installation is as follows.
 
