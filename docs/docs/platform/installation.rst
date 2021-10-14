@@ -4,7 +4,7 @@
 Installation
 ------------
 
-In the Honolulu release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
+In the Istanbul release, Holmes is deployed as an analytic application by the DCAE controller. So the users do not have to install it on their own.
 
 In case the users want to deploy Holmes independently, the steps for the installation is as follows.
 
@@ -21,11 +21,11 @@ Steps
 
 #. Start the rule management module of Holmes using the command below:
 
-   ``sudo docker run --name holmes-rule-management -p 9101:9101 -p 9201:9201 -p 9104:9104 -p 9105:9105 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/rule-management``
+   ``sudo docker run --name holmes-rule-management -p 9101:9101 -p 9104:9104 -p 9201:9201 -d -e URL_JDBC=$DB_IP -e MSB_IAG_SERVICE_HOST=$MSB_IAG_IP -e MSB_IAG_SERVICE_PORT=$MSB_IAG_PORT -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/rule-management:9.0.0``
 
 #. Start the engine manamgement module of Holmes using the command below:
 
-   ``sudo docker run --name holmes-engine-management -p 9102:9102 -d -e URL_JDBC=$DB_IP -e MSB_ADDR=$MSB_IP -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/engine-management``
+   ``sudo docker run --name holmes-engine-management -p 9102:9102 -d -e URL_JDBC=$DB_IP -e MSB_IAG_SERVICE_HOST=$MSB_IAG_IP -e MSB_IAG_SERVICE_PORT=MSB_IAG_PORT -e TESTING=1 -e HOST_IP=$HOST_IP -e ENABLE_ENCRYPT=false nexus3.onap.org:10001/onap/holmes/engine-management:9.0.0``
 
 When the environment variable ``TESTING`` is set to ``1``, it means Holmes is running in the standalone mode. All the interactions between Holmes and other ONAP components are routed by MSB. In order to register Holmes itself to MSB, the users have to specify the IP address of the host using the ``HOST_IP`` variable. Please note that the ``HOST_IP`` should be the IP address of the host, rather than the IP address of the containers (of which the IP address is allocated by the docker daemon).
 ``ENABLE_ENCRYPT`` specifies whether HTTPS is enabled. When it is set to "false", only the HTTP schema is allowed. Otherwise, only HTTPS is allowed.
