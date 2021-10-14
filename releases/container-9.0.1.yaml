@@ -1,0 +1,9 @@
+---
+distribution_type: 'container'
+container_release_tag: '9.0.1'
+project: 'holmes-rule-management'
+log_dir: 'holmes-rule-management-istanbul-docker-java-daily/3/'
+ref: fd7182f8f768edf0cf9310fc682b61e07b80c113
+containers:
+  - name: holmes/rule-management
+    version: 1.3.4-STAGING-20211014T011124Z
