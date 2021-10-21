@@ -1,4 +1,0 @@
-lfdocs-conf
-autopep8
-sphinxcontrib-spelling
-pylint
