@@ -11,7 +11,7 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
-Version: 9.0.1
+Version: 9.0.0
 --------------
 
 :Release Date: 2021-11-04
