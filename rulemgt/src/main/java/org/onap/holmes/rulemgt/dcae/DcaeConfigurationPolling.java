@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Slf4j
+@Deprecated
 public class DcaeConfigurationPolling implements Runnable {
 
     public static final long POLLING_PERIOD = 30 * 1000L;
