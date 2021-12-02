@@ -54,41 +54,46 @@ public class ConfigFileScanningTask implements Runnable {
         if (null == configFileScanner) {
             configFileScanner = new ConfigFileScanner();
         }
-        Map<String, String> newConfig = extractConfigItems(configFileScanner.scan(configFile));
 
-        List<RuleResult4API> deployedRules = getExistingRules();
+        try {
+            Map<String, String> newConfig = extractConfigItems(configFileScanner.scan(configFile));
 
-        // deal with newly added rules
-        final Set<String> existingKeys = new HashSet(configInEffect.keySet());
-        final Set<String> newKeys = new HashSet(newConfig.keySet());
-        newKeys.stream()
-                .filter(key -> !existingKeys.contains(key))
-                .forEach(key -> {
-                    if (deployRule(key, newConfig.get(key))) {
-                        configInEffect.put(key, newConfig.get(key));
-                        LOGGER.info("Rule '{}' has been deployed.", key);
-                    }
-                });
+            List<RuleResult4API> deployedRules = getExistingRules();
 
-        // deal with removed rules
-        existingKeys.stream().filter(key -> !newKeys.contains(key)).forEach(key -> {
-            if (deleteRule(find(deployedRules, key))) {
-                configInEffect.remove(key);
-                LOGGER.info("Rule '{}' has been removed.", key);
-            }
-        });
+            // deal with newly added rules
+            final Set<String> existingKeys = new HashSet(configInEffect.keySet());
+            final Set<String> newKeys = new HashSet(newConfig.keySet());
+            newKeys.stream()
+                    .filter(key -> !existingKeys.contains(key))
+                    .forEach(key -> {
+                        if (deployRule(key, newConfig.get(key))) {
+                            configInEffect.put(key, newConfig.get(key));
+                            LOGGER.info("Rule '{}' has been deployed.", key);
+                        }
+                    });
 
-        // deal with changed rules
-        existingKeys.stream().filter(key -> newKeys.contains(key)).forEach(key -> {
-            if (changed(configInEffect.get(key), newConfig.get(key))) {
+            // deal with removed rules
+            existingKeys.stream().filter(key -> !newKeys.contains(key)).forEach(key -> {
                 if (deleteRule(find(deployedRules, key))) {
                     configInEffect.remove(key);
-                    deployRule(key, newConfig.get(key));
-                    configInEffect.put(key, newConfig.get(key));
-                    LOGGER.info("Rule '{}' has been updated.", key);
+                    LOGGER.info("Rule '{}' has been removed.", key);
                 }
-            }
-        });
+            });
+
+            // deal with changed rules
+            existingKeys.stream().filter(key -> newKeys.contains(key)).forEach(key -> {
+                if (changed(configInEffect.get(key), newConfig.get(key))) {
+                    if (deleteRule(find(deployedRules, key))) {
+                        configInEffect.remove(key);
+                        deployRule(key, newConfig.get(key));
+                        configInEffect.put(key, newConfig.get(key));
+                        LOGGER.info("Rule '{}' has been updated.", key);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.warn("Unhandled error: \n" + e.getMessage(), e);
+        }
     }
 
     private Map<String, String> extractConfigItems(Map<String, String> configFiles) {
@@ -113,6 +118,7 @@ public class ConfigFileScanningTask implements Runnable {
         }
         return path;
     }
+
     private String readFile(String path) {
         String finalPath = normalizePath(path);
         File file = new File(finalPath);
