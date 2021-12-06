@@ -27,16 +27,16 @@ export class AppComponent implements OnInit {
         if (rtnLanguage == 'null' || rtnLanguage == null) {
             rtnLanguage = window.navigator.language;
         }
-        if (rtnLanguage.startsWith('en')) {
-            return 'en';
-        } else {
+        if (rtnLanguage.startsWith('zh')) {
             return 'zh';
+        } else {
+            return 'en';
         }
     }
 
     ngOnInit(): void {
         this.translate.addLangs(['en', 'zh']);
-        this.translate.setDefaultLang('zh');
+        this.translate.setDefaultLang('en');
         let language = this.getLanguage();
         this.translate.use(language);
     }
