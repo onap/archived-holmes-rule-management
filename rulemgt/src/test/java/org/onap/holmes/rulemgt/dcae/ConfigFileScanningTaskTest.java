@@ -44,6 +44,8 @@ public class ConfigFileScanningTaskTest {
 
     @Test
     public void run_add_rules() throws Exception {
+        System.setProperty("ENABLE_ENCRYPT", "true");
+
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String indexPath = getFilePath("index-add.json");
         String contents = FileUtils.readTextFile(indexPath);
@@ -68,10 +70,14 @@ public class ConfigFileScanningTaskTest {
 
         Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
         assertThat(config.size(), is(1));
+
+        System.clearProperty("ENABLE_ENCRYPT");
     }
 
     @Test
     public void run_remove_rules_normal() throws Exception {
+        System.setProperty("ENABLE_ENCRYPT", "false");
+
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String indexPath = getFilePath("index-add.json");
         String contents = FileUtils.readTextFile(indexPath);
@@ -98,6 +104,8 @@ public class ConfigFileScanningTaskTest {
 
         Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
         assertThat(config.size(), is(0));
+
+        System.clearProperty("ENABLE_ENCRYPT");
     }
 
     @Test
@@ -238,4 +246,6 @@ public class ConfigFileScanningTaskTest {
         ruleResult4API.setEnabled(1);
         return ruleResult4API;
     }
+
+
 }

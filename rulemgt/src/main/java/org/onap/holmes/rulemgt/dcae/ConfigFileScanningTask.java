@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang.StringUtils;
 import org.onap.holmes.common.ConfigFileScanner;
+import org.onap.holmes.common.utils.CommonUtils;
 import org.onap.holmes.common.utils.FileUtils;
 import org.onap.holmes.common.utils.JerseyClient;
 import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
@@ -43,10 +44,11 @@ public class ConfigFileScanningTask implements Runnable {
     final private Map<String, String> configInEffect = new HashMap(); // Contents for configInEffect are <closedControlLoop>:<ruleContents> pairs.
     private String configFile = "/opt/hrmrules/index.json";
     private ConfigFileScanner configFileScanner;
-    private String url = "https://127.0.0.1:9101/api/holmes-rule-mgmt/v1/rule";
+    private String url;
 
     public ConfigFileScanningTask(ConfigFileScanner configFileScanner) {
         this.configFileScanner = configFileScanner;
+        this.url = getRequestPref() + "://127.0.0.1:9101/api/holmes-rule-mgmt/v1/rule";
     }
 
     @Override
@@ -192,5 +194,9 @@ public class ConfigFileScanningTask implements Runnable {
             return false;
         }
         return true;
+    }
+
+    private String getRequestPref() {
+        return CommonUtils.isHttpsEnabled() ? JerseyClient.PROTOCOL_HTTPS : JerseyClient.PROTOCOL_HTTP;
     }
 }
