@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2020 ZTE Corporation.
+ * Copyright 2017-2022 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,36 @@
 
 package org.onap.holmes.rulemgt;
 
-import io.dropwizard.setup.Environment;
+import lombok.extern.slf4j.Slf4j;
 import org.onap.holmes.common.ConfigFileScanner;
-import org.onap.holmes.common.dropwizard.ioc.bundle.IOCApplication;
-import org.onap.holmes.common.utils.transactionid.TransactionIdFilter;
 import org.onap.holmes.rulemgt.dcae.ConfigFileScanningTask;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.ComponentScan;
 
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
+@Slf4j
+@SpringBootApplication
+@ServletComponentScan
+@ComponentScan(basePackages = {"org.onap.holmes"})
+public class RuleActiveApp implements ApplicationRunner {
 
-    public static void main(String[] args) throws Exception {
-        new RuleActiveApp().run(args);
+    public static void main(String[] args) {
+        SpringApplication.run(RuleActiveApp.class, args);
     }
 
     @Override
-    public void run(RuleAppConfig configuration, Environment environment) throws Exception {
-        super.run(configuration, environment);
-
+    public void run(ApplicationArguments args) {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(
                 new ConfigFileScanningTask(new ConfigFileScanner()), 60L,
                 ConfigFileScanningTask.POLLING_PERIOD, TimeUnit.SECONDS);
-
-        environment.servlets().addFilter("customFilter", new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
-                .allOf(DispatcherType.class), true, "/*");
 
         Initializer.setReadyForMsbReg(true);
     }

@@ -17,6 +17,10 @@
 package org.onap.holmes.rulemgt.db;
 
 import org.easymock.EasyMock;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.result.ResultIterable;
+import org.jdbi.v3.core.statement.Query;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,14 +28,11 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.DbDaoUtil;
 import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.Query;
 
 import java.util.*;
 
@@ -39,30 +40,28 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DbDaoUtil.class, Handle.class, Query.class})
-public class CorrelationRuleQueryDaoTest {
+@PrepareForTest({Handle.class, Query.class})
+public class CorrelationRuleQueryServiceTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    private DbDaoUtil dbDaoUtil;
-
     private Handle handle;
-
     private Query query;
-
-    private CorrelationRuleQueryDao correlationRuleQueryDao;
+    private ResultIterable resultIterable;
+    private CorrelationRuleQueryService correlationRuleQueryDao;
     private RuleQueryCondition ruleQueryCondition;
+    private Jdbi jdbi;
 
     @Before
     public void setUp() throws Exception {
-        correlationRuleQueryDao = new CorrelationRuleQueryDao();
+        correlationRuleQueryDao = new CorrelationRuleQueryService();
 
-        dbDaoUtil = PowerMock.createMock(DbDaoUtil.class);
+        jdbi = PowerMock.createMock(Jdbi.class);
         handle = PowerMock.createMock(Handle.class);
         query = PowerMock.createMock(Query.class);
+        resultIterable = PowerMock.createMock(ResultIterable.class);
 
-        Whitebox.setInternalState(correlationRuleQueryDao, "dbDaoUtil", dbDaoUtil);
+        Whitebox.setInternalState(correlationRuleQueryDao, "jdbi", jdbi);
 
         ruleQueryCondition = createRuleQueryCondition();
     }
@@ -74,10 +73,10 @@ public class CorrelationRuleQueryDaoTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage("Failed to query the rule.");
 
-        EasyMock.expect(dbDaoUtil.getHandle()).andReturn(handle);
+        EasyMock.expect(jdbi.open()).andReturn(handle);
         EasyMock.expect(handle.createQuery(EasyMock.anyObject(String.class))).andReturn(query);
-        EasyMock.expect(query.list()).andThrow(new RuntimeException()).anyTimes();
-        dbDaoUtil.close(handle);
+        EasyMock.expect(query.mapToMap()).andThrow(new RuntimeException()).anyTimes();
+        handle.close();
         EasyMock.expectLastCall();
 
         PowerMock.replayAll();
@@ -89,10 +88,11 @@ public class CorrelationRuleQueryDaoTest {
 
     @Test
     public void getCorrelationRulesByCondition_normal() throws Exception {
-        EasyMock.expect(dbDaoUtil.getHandle()).andReturn(handle);
+        EasyMock.expect(jdbi.open()).andReturn(handle);
         EasyMock.expect(handle.createQuery(EasyMock.anyObject(String.class))).andReturn(query);
-        EasyMock.expect(query.list()).andReturn(createQueryResult()).anyTimes();
-        dbDaoUtil.close(handle);
+        EasyMock.expect(query.mapToMap()).andReturn(resultIterable);
+        EasyMock.expect(resultIterable.list()).andReturn(createQueryResult());
+        handle.close();
         EasyMock.expectLastCall();
 
         PowerMock.replayAll();
@@ -108,10 +108,11 @@ public class CorrelationRuleQueryDaoTest {
         thrown.expect(CorrelationException.class);
         thrown.expectMessage("An error occurred while building the query SQL.");
 
-        EasyMock.expect(dbDaoUtil.getHandle()).andReturn(handle);
+        EasyMock.expect(jdbi.open()).andReturn(handle);
         EasyMock.expect(handle.createQuery(EasyMock.anyObject(String.class))).andReturn(query);
-        EasyMock.expect(query.list()).andReturn(createQueryResult()).anyTimes();
-        dbDaoUtil.close(handle);
+        EasyMock.expect(query.mapToMap()).andReturn(resultIterable);
+        EasyMock.expect(resultIterable.list()).andReturn(createQueryResult());
+        handle.close();
         EasyMock.expectLastCall();
 
         PowerMock.replayAll();
@@ -128,16 +129,16 @@ public class CorrelationRuleQueryDaoTest {
         value.put("rid", "rule_" + System.currentTimeMillis());
         value.put("description", "desc");
         value.put("enable", 0);
-        value.put("templateID", 1L);
-        value.put("engineId", "engine-001");
-        value.put("engineType", "engineType-001");
+        value.put("templateid", 1L);
+        value.put("engineid", "engine-001");
+        value.put("enginetype", "engineType-001");
         value.put("creator", "admin");
-        value.put("createTime", new Date());
+        value.put("createtime", new Date());
         value.put("updator", "admin");
-        value.put("updateTime", new Date());
+        value.put("updatetime", new Date());
         value.put("params", new Properties());
         value.put("domain", "Domain");
-        value.put("isManual", 0);
+        value.put("ismanual", 0);
         value.put("vendor", "Vendor");
         value.put("content", "Contents");
         value.put("package", "package");

@@ -29,6 +29,7 @@ RUN mkdir -p /usr/share/nginx/logs \
     && chmod -R 777 /usr/share/nginx/ \
     && chmod -R 777 /var/lib/nginx/ \
     && chmod -R 755 /etc/ssl/private/ \
+    && chmod -R 755 /etc/ssl/certs/ \
     && chmod -R 777 /etc/nginx/conf.d/ \
     && chmod -R a+rw /opt/onap/ \
     && chmod -R a+rw /var/log/ \
