@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 ZTE Corporation.
+ * Copyright 2020-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
 
 package org.onap.holmes.rulemgt.controller;
 
-import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.engine.entity.EngineEntity;
 import org.onap.holmes.common.engine.service.EngineEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,7 +35,7 @@ public class EngineInstanceController extends TimerTask {
     private static final long THRESHOLD = 3 * INTERVAL;
     private Timer timer = new Timer("EngineInstanceController", true);
 
-    @Inject
+    @Autowired
     private EngineEntityService engineEntityService;
 
     @PostConstruct

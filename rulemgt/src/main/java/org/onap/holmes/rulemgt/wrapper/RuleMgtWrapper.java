@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,58 +15,44 @@
  */
 package org.onap.holmes.rulemgt.wrapper;
 
+import lombok.extern.slf4j.Slf4j;
+import org.onap.holmes.common.api.entity.CorrelationRule;
+import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.rulemgt.bean.request.*;
+import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
+import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
+import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
+import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
+import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
+import org.onap.holmes.rulemgt.db.CorrelationRuleQueryService;
+import org.onap.holmes.rulemgt.db.CorrelationRuleService;
+import org.onap.holmes.rulemgt.tools.EngineTools;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
-import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
-import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
-import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
-import org.onap.holmes.common.api.entity.CorrelationRule;
-import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.DbDaoUtil;
-import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
-import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
-import org.onap.holmes.rulemgt.bean.request.RuleDeleteRequest;
-import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
-import org.onap.holmes.rulemgt.bean.request.RuleUpdateRequest;
-import org.onap.holmes.rulemgt.bean.response.RuleAddAndUpdateResponse;
-import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
-import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
-import org.onap.holmes.rulemgt.db.CorrelationRuleQueryDao;
-import org.onap.holmes.rulemgt.tools.EngineTools;
 
 
 @Service
-@Singleton
 @Slf4j
 public class RuleMgtWrapper {
 
-    @Inject
+    @Autowired
     private EngineTools engineTools;
 
-    @Inject
+    @Autowired
     private RuleQueryWrapper ruleQueryWrapper;
 
-    @Inject
-    private CorrelationRuleQueryDao correlationRuleQueryDao;
-    @Inject
+    @Autowired
+    private CorrelationRuleQueryService correlationRuleQueryDao;
+
+    @Autowired
     private EngineWrapper engineWarpper;
-    @Inject
-    private DbDaoUtil daoUtil;
 
-    private CorrelationRuleDao correlationRuleDao;
-
-    @PostConstruct
-    public void initDaoUtil() {
-        correlationRuleDao = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class);
-    }
+    @Autowired
+    private CorrelationRuleService correlationRuleService;
 
     public RuleAddAndUpdateResponse addCorrelationRule(String creator, RuleCreateRequest ruleCreateRequest)
             throws CorrelationException {
@@ -76,7 +62,7 @@ public class RuleMgtWrapper {
         CorrelationRule correlationRule = convertCreateRequest2Rule(creator,
                 ruleCreateRequest);
         validateCorrelationRule(correlationRule);
-        CorrelationRule ruleTemp = correlationRuleDao.queryRuleByRuleName(correlationRule.getName());
+        CorrelationRule ruleTemp = correlationRuleService.queryRuleByRuleName(correlationRule.getName());
         if (ruleTemp != null) {
             throw new CorrelationException("A rule with the same name already exists.");
         }
@@ -91,7 +77,7 @@ public class RuleMgtWrapper {
         correlationRule.setEngineInstance(ip);
         CorrelationRule result = null;
         try {
-            result = correlationRuleDao.saveRule(correlationRule);
+            result = correlationRuleService.saveRule(correlationRule);
         } catch (CorrelationException e) {
             engineWarpper.deleteRuleFromEngine(packageName, ip);
             throw new CorrelationException(e.getMessage(), e);
@@ -106,7 +92,7 @@ public class RuleMgtWrapper {
         if (ruleUpdateRequest == null) {
             throw new CorrelationException("The request object can not be empty!");
         }
-        CorrelationRule oldCorrelationRule = correlationRuleDao.queryRuleByRid(ruleUpdateRequest.getRuleId());
+        CorrelationRule oldCorrelationRule = correlationRuleService.queryRuleByRid(ruleUpdateRequest.getRuleId());
         if (oldCorrelationRule == null) {
             throw new CorrelationException("You're trying to update a rule which does not exist in the system.");
         }
@@ -131,7 +117,7 @@ public class RuleMgtWrapper {
             engineWarpper.deleteRuleFromEngine(oldCorrelationRule.getPackageName(), engineInstance);
         }
         newCorrelationRule.setPackageName(deployRule2Engine(newCorrelationRule, updateIp));
-        correlationRuleDao.updateRule(newCorrelationRule);
+        correlationRuleService.updateRule(newCorrelationRule);
         return ruleChangeResponse;
     }
 
@@ -172,7 +158,7 @@ public class RuleMgtWrapper {
         if (ruleDeleteRequest == null) {
             throw new CorrelationException("The request object can not be empty!");
         }
-        CorrelationRule correlationRule = correlationRuleDao.queryRuleByRid(ruleDeleteRequest.getRuleId());
+        CorrelationRule correlationRule = correlationRuleService.queryRuleByRid(ruleDeleteRequest.getRuleId());
         if (correlationRule == null) {
             log.warn("the rule:rule id=" + ruleDeleteRequest.getRuleId() + " does not exist the database.");
             throw new CorrelationException("You're trying to delete a rule which does not exist in the system.");
@@ -181,7 +167,7 @@ public class RuleMgtWrapper {
             String ip = correlationRule.getEngineInstance();
             engineWarpper.deleteRuleFromEngine(correlationRule.getPackageName(), ip);
         }
-        correlationRuleDao.deleteRule(correlationRule);
+        correlationRuleService.deleteRule(correlationRule);
     }
 
     private CorrelationRule convertCreateRequest2Rule(String userName,
