@@ -15,8 +15,6 @@
  */
 package org.onap.holmes.rulemgt.bean.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
