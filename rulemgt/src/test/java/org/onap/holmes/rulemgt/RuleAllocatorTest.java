@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2020 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,17 @@
 package org.onap.holmes.rulemgt;
 
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.onap.holmes.common.api.entity.CorrelationRule;
-import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
-import org.onap.holmes.common.utils.DbDaoUtil;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
+import org.onap.holmes.rulemgt.db.CorrelationRuleService;
 import org.onap.holmes.rulemgt.tools.EngineTools;
 import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
 import org.onap.holmes.rulemgt.wrapper.RuleQueryWrapper;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,17 +37,15 @@ import java.util.stream.Collectors;
 import static org.easymock.EasyMock.*;
 import static org.onap.holmes.rulemgt.RuleAllocator.ENABLE;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ServiceLocator.class, RuleMgtWrapper.class, RuleQueryWrapper.class, EngineWrapper.class,
-        EngineTools.class, DbDaoUtil.class, ServiceLocatorHolder.class})
+@PrepareForTest({RuleMgtWrapper.class, RuleQueryWrapper.class, EngineWrapper.class,
+        EngineTools.class})
 public class RuleAllocatorTest {
 
     private RuleMgtWrapper ruleMgtWrapperMock;
     private RuleQueryWrapper ruleQueryWrapperMock;
     private EngineWrapper engineWrapperMock;
     private EngineTools engineToolsMock;
-    private DbDaoUtil dbDaoUtilMock;
-    private CorrelationRuleDao correlationRuleDaoMock;
+    private CorrelationRuleService correlationRuleServiceMock;
 
     private List<CorrelationRule> rules;
     private List<String> existingIps;
@@ -65,8 +56,7 @@ public class RuleAllocatorTest {
         ruleQueryWrapperMock = PowerMock.createMock(RuleQueryWrapper.class);
         engineWrapperMock = PowerMock.createMock(EngineWrapper.class);
         engineToolsMock = PowerMock.createMock(EngineTools.class);
-        dbDaoUtilMock = PowerMock.createMock(DbDaoUtil.class);
-        correlationRuleDaoMock = PowerMock.createMock(CorrelationRuleDao.class);
+        correlationRuleServiceMock = PowerMock.createMock(CorrelationRuleService.class);
 
         rules = new ArrayList<>();
         for (int i = 0; i < 20; ++i) {
@@ -107,7 +97,6 @@ public class RuleAllocatorTest {
         ipListFromMsb.addAll(newEngineInstances);
         ipListFromMsb.addAll(existingIps);
 
-        expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(correlationRuleDaoMock);
         expect(engineToolsMock.getInstanceList()).andReturn(ipListFromMsb);
         expect(engineToolsMock.getLegacyEngineInstances()).andReturn(existingIps);
         expect(ruleQueryWrapperMock.queryRuleByEnable(ENABLE)).andReturn(rules.stream()
@@ -124,13 +113,13 @@ public class RuleAllocatorTest {
 
         expect(ruleMgtWrapperMock.deployRule2Engine(anyObject(CorrelationRule.class),
                 anyObject(String.class))).andReturn("").anyTimes();
-        correlationRuleDaoMock.updateRule(anyObject(CorrelationRule.class));
+        correlationRuleServiceMock.updateRule(anyObject(CorrelationRule.class));
         expectLastCall().anyTimes();
 
         PowerMock.replayAll();
 
         RuleAllocator ruleAllocator = new RuleAllocator(ruleMgtWrapperMock, ruleQueryWrapperMock,
-                engineWrapperMock, engineToolsMock, dbDaoUtilMock);
+                engineWrapperMock, engineToolsMock, correlationRuleServiceMock);
         ruleAllocator.allocateRules();
 
         PowerMock.verifyAll();
@@ -144,7 +133,6 @@ public class RuleAllocatorTest {
         ipListFromMsb.addAll(existingIps);
         ipListFromMsb.remove(0);
 
-        expect(dbDaoUtilMock.getJdbiDaoByOnDemand(CorrelationRuleDao.class)).andReturn(correlationRuleDaoMock);
         expect(engineToolsMock.getInstanceList()).andReturn(ipListFromMsb);
         expect(engineToolsMock.getLegacyEngineInstances()).andReturn(existingIps);
         for (String ip : existingIps) {
@@ -153,13 +141,13 @@ public class RuleAllocatorTest {
 
         }
         expect(ruleMgtWrapperMock.deployRule2Engine(anyObject(CorrelationRule.class), anyString())).andReturn("anyId").times(2);
-        correlationRuleDaoMock.updateRule(anyObject(CorrelationRule.class));
+        correlationRuleServiceMock.updateRule(anyObject(CorrelationRule.class));
         expectLastCall().times(2);
 
         PowerMock.replayAll();
 
         RuleAllocator ruleAllocator = new RuleAllocator(ruleMgtWrapperMock, ruleQueryWrapperMock,
-                engineWrapperMock, engineToolsMock, dbDaoUtilMock);
+                engineWrapperMock, engineToolsMock, correlationRuleServiceMock);
 
         ruleAllocator.allocateRules();
 

@@ -17,6 +17,7 @@
 package org.onap.holmes.rulemgt.dcae;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
@@ -32,9 +33,6 @@ import org.powermock.core.classloader.annotations.SuppressStaticInitializationFo
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
@@ -47,6 +45,13 @@ public class ConfigFileScanningTaskTest {
     @Rule
     public final SystemOutRule systemOut = new SystemOutRule().enableLog();
 
+    private JerseyClient jcMock;
+
+    @Before
+    public void before() {
+        jcMock = PowerMock.createMock(JerseyClient.class);
+    }
+
     @Test
     public void run_failed_to_get_existing_rules() throws Exception {
         System.setProperty("ENABLE_ENCRYPT", "true");
@@ -57,7 +62,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", indexPath);
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andThrow(new RuntimeException());
 
@@ -80,7 +84,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", indexPath);
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
         EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andReturn(rqlr);
@@ -110,7 +113,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-empty.json"));
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
         rqlr.getCorrelationRules().add(getRuleResult4API(clName, contents));
@@ -138,7 +140,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", indexPath);
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
         rqlr.getCorrelationRules().add(getRuleResult4API(clName, contents));
@@ -164,7 +165,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-rule-changed.json"));
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
         rqlr.getCorrelationRules().add(getRuleResult4API(clName, oldDrlContents));
@@ -194,7 +194,6 @@ public class ConfigFileScanningTaskTest {
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-rule-spaces-test.json"));
 
         // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
         rqlr.getCorrelationRules().add(getRuleResult4API(clName, oldDrlContents));

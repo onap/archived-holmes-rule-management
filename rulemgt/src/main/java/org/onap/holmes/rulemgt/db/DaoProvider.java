@@ -1,28 +1,31 @@
 /**
- * Copyright 2017-2021 ZTE Corporation.
- *
+ * Copyright 2022 ZTE Corporation.
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onap.holmes.rulemgt.constant;
 
-public class RuleMgtConstant {
+package org.onap.holmes.rulemgt.db;
 
-    private RuleMgtConstant() {
+import org.jdbi.v3.core.Jdbi;
+import org.onap.holmes.rulemgt.db.jdbi.CorrelationRuleDao;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+public class DaoProvider {
+
+    @Bean
+    public CorrelationRuleDao correlationRuleDao(Jdbi jdbi) {
+        return jdbi.onDemand(CorrelationRuleDao.class);
     }
-    public static final int STATUS_ENABLED = 1;
-    public static final int STATUS_DISABLED = 0;
-    public static final int STATUS_RULE_ALL = 2;
-    public static final String PACKAGE = "packageName";
-    public static final String ENGINE_PATH = "/api/holmes-engine-mgmt/v1/rule";
 }

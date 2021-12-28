@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 ZTE Corporation.
+ * Copyright 2021-2022 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.holmes.common.ConfigFileScanner;
 import org.onap.holmes.common.utils.CommonUtils;
 import org.onap.holmes.common.utils.FileUtils;
@@ -31,8 +31,8 @@ import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
