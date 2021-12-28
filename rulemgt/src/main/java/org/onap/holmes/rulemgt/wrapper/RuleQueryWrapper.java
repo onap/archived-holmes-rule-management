@@ -16,37 +16,28 @@
 
 package org.onap.holmes.rulemgt.wrapper;
 
-import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.DbDaoUtil;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
+import org.onap.holmes.rulemgt.db.CorrelationRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.List;
 
 @Service
 public class RuleQueryWrapper {
 
-    @Inject
-    private DbDaoUtil daoUtil;
-    private CorrelationRuleDao correlationRuleDao;
+    @Autowired
+    private CorrelationRuleService correlationRuleService;
 
-    @PostConstruct
-    public void initDaoUtil() {
-        correlationRuleDao = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class);
-    }
 
-    public List<CorrelationRule> queryRuleByEnable(int enable) throws CorrelationException {
-        List<CorrelationRule> ruleTemp = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                .queryRuleByRuleEnable(enable);
+    public List<CorrelationRule> queryRuleByEnable(int enable) {
+        List<CorrelationRule> ruleTemp = correlationRuleService.queryRuleByRuleEnable(enable);
         return ruleTemp;
     }
 
     public List<CorrelationRule> queryRuleByEngineInstance(String instance) throws CorrelationException {
-        List<CorrelationRule> ruleTemp = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class)
-                .queryRuleByRuleEngineInstance(instance);
+        List<CorrelationRule> ruleTemp = correlationRuleService.queryRuleByRuleEngineInstance(instance);
         return ruleTemp;
     }
 }

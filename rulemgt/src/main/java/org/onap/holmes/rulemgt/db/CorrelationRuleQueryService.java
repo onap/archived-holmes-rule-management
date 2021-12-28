@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,28 @@
  */
 package org.onap.holmes.rulemgt.db;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.Query;
+import org.onap.holmes.common.api.entity.CorrelationRule;
+import org.onap.holmes.common.exception.CorrelationException;
+import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
+import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
-import org.onap.holmes.rulemgt.bean.request.RuleQueryCondition;
-import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
-import org.onap.holmes.common.api.entity.CorrelationRule;
-import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.DbDaoUtil;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.Query;
+import java.util.*;
 
 @Service
 @Slf4j
-public class CorrelationRuleQueryDao {
+public class CorrelationRuleQueryService {
 
-    @Inject
-    private DbDaoUtil dbDaoUtil;
+    @Autowired
+    private Jdbi jdbi;
 
     public List<CorrelationRule> getCorrelationRulesByCondition(RuleQueryCondition ruleQueryCondition)
             throws CorrelationException {
@@ -48,9 +45,9 @@ public class CorrelationRuleQueryDao {
         String whereStr = getWhereStrByRequestEntity(ruleQueryCondition);
         try {
             StringBuilder querySql = new StringBuilder("SELECT * FROM APLUS_RULE ").append(whereStr);
-            handle = dbDaoUtil.getHandle();
+            handle = jdbi.open();
             Query query = handle.createQuery(querySql.toString());
-            for (Object value : query.list()) {
+            for (Object value : query.mapToMap().list()) {
                 CorrelationRule correlationRule = getCorrelationRule((Map) value);
                 correlationRules.add(correlationRule);
             }
@@ -59,7 +56,7 @@ public class CorrelationRuleQueryDao {
             log.warn("Failed to query the rule: id =" + ruleQueryCondition.getRid() + ".");
             throw new CorrelationException("Failed to query the rule.", e);
         } finally {
-            dbDaoUtil.close(handle);
+            handle.close();
         }
     }
 
@@ -69,19 +66,19 @@ public class CorrelationRuleQueryDao {
         correlationRule.setRid((String) value.get("rid"));
         correlationRule.setDescription((String) value.get("description"));
         correlationRule.setEnabled((Integer) value.get("enable"));
-        correlationRule.setTemplateID((Long) value.get("templateID"));
-        correlationRule.setEngineID((String) value.get("engineID"));
-        correlationRule.setEngineType((String) value.get("engineType"));
+        correlationRule.setTemplateID((Long) value.get("templateid"));
+        correlationRule.setEngineID((String) value.get("engineid"));
+        correlationRule.setEngineType((String) value.get("enginetype"));
         correlationRule.setCreator((String) value.get("creator"));
-        correlationRule.setCreateTime((Date) value.get("createTime"));
+        correlationRule.setCreateTime((Date) value.get("createtime"));
         correlationRule.setModifier((String) value.get("updator"));
-        correlationRule.setUpdateTime((Date) value.get("updateTime"));
+        correlationRule.setUpdateTime((Date) value.get("updatetime"));
         correlationRule.setParams((Properties) value.get("params"));
         correlationRule.setContent((String) value.get("content"));
         correlationRule.setVendor((String) value.get("vendor"));
         correlationRule.setPackageName((String) value.get("package"));
         correlationRule.setClosedControlLoopName((String) value.get("ctrlloop"));
-        correlationRule.setEngineInstance((String) value.get("engineInstance"));
+        correlationRule.setEngineInstance((String) value.get("engineinstance"));
         return correlationRule;
     }
 
