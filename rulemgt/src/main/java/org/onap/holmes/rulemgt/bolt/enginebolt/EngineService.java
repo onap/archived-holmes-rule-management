@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2021 ZTE Corporation.
+ * Copyright 2017-2022 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.onap.holmes.rulemgt.bolt.enginebolt;
 
-import org.jvnet.hk2.annotations.Service;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import org.onap.holmes.common.utils.CommonUtils;
 import org.onap.holmes.common.utils.JerseyClient;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
+import org.springframework.stereotype.Service;
 
 import static org.onap.holmes.rulemgt.constant.RuleMgtConstant.ENGINE_PATH;
 

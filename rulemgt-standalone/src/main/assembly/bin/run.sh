@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# Copyright 2017-2021 ZTE Corporation.
+# Copyright 2017-2022 ZTE Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,13 +48,19 @@ if [ -z ${DB_NAME} ]; then
     echo "No database is name is specified. Use the default value \"$DB_NAME\"."
 fi
 
+export DB_PORT=5432
+if [ ! -z ${URL_JDBC} ] && [ `expr index $URL_JDBC :` != 0 ]; then
+    export DB_PORT="${URL_JDBC##*:}"
+fi
+echo DB_PORT=$DB_PORT
+
 # if deployed using helm, use the helm-generated configuration file.
 if [ -d /opt/hrmconfig ]; then
-    cp /opt/hrmconfig/rulemgt.yml "$main_path/conf/rulemgt.yml"
+    cp /opt/hrmconfig/application.yaml "$main_path/conf/application.yaml"
 else
-    sed -i "s|user:.*|user: $JDBC_USERNAME|" "$main_path/conf/rulemgt.yml"
-    sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/rulemgt.yml"
-    sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC/$DB_NAME|" "$main_path/conf/rulemgt.yml"
+    sed -i "s|username:.*|username: $JDBC_USERNAME|" "$main_path/conf/application.yaml"
+    sed -i "s|password:.*|password: $JDBC_PASSWORD|" "$main_path/conf/application.yaml"
+    sed -i "s|url:.*|url: jdbc:postgresql://$URL_JDBC:$DB_PORT/$DB_NAME|" "$main_path/conf/application.yaml"
 fi
 
 export SERVICE_IP=`hostname -i | awk '{print $1}'`
@@ -65,12 +71,6 @@ if [ ! -z ${HOST_IP} ]; then
 else
     export HOSTNAME=${SERVICE_IP}:9101
 fi
-
-export DB_PORT=5432
-if [ ! -z ${URL_JDBC} ] && [ `expr index $URL_JDBC :` != 0 ]; then
-    export DB_PORT="${URL_JDBC##*:}"
-fi
-echo DB_PORT=$DB_PORT
 
 if [ -z ${ENABLE_ENCRYPT} ]; then
     export ENABLE_ENCRYPT=true
@@ -89,8 +89,8 @@ echo "KEY_PATH=$KEY_PATH"
 echo "KEY_PASS=$KEY_PASSWORD"
 
 #HTTPS Configurations
-sed -i "s|keyStorePath:.*|keyStorePath: $KEY_PATH|" "$main_path/conf/rulemgt.yml"
-sed -i "s|keyStorePassword:.*|keyStorePassword: $KEY_PASSWORD|" "$main_path/conf/rulemgt.yml"
+sed -i "s|key-store:.*|key-store: $KEY_PATH|" "$main_path/conf/application.yaml"
+sed -i "s|key-store-password:.*|key-store-password: $KEY_PASSWORD|" "$main_path/conf/application.yaml"
 
 if [ ${ENABLE_ENCRYPT} = true ]; then
     sed -i "s|type:\s*https\?$|type: https|" "$main_path/conf/rulemgt.yml"
@@ -122,10 +122,13 @@ else
 fi
 
 if [ "${ENABLE_ENCRYPT}"x = "true"x ]; then
-    nginx -c /etc/nginx/conf.d/nginx-https.conf
+    sudo nginx -c /etc/nginx/conf.d/nginx-https.conf
 else
-    nginx -c /etc/nginx/conf.d/nginx-http.conf
+    sudo nginx -c /etc/nginx/conf.d/nginx-http.conf
 fi
 echo nginx started.
 
-"$JAVA" $JAVA_OPTS -classpath "$class_path" org.onap.holmes.rulemgt.RuleActiveApp server "$main_path/conf/rulemgt.yml"
+cat "$main_path/conf/application.yaml"
+
+JAR=`ls -lt $main_path/lib | grep -e "holmes-rulemgt-.*jar$" | awk '{print $9}'`
+"$JAVA" $JAVA_OPTS -jar "$main_path/lib/$JAR" -classpath "$class_path" --spring.config.location="$main_path/conf/application.yaml"
