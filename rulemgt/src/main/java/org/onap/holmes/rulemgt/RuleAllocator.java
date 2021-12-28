@@ -17,27 +17,25 @@
 package org.onap.holmes.rulemgt;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
-import org.onap.holmes.common.utils.DbDaoUtil;
 import org.onap.holmes.rulemgt.bolt.enginebolt.EngineWrapper;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
+import org.onap.holmes.rulemgt.db.CorrelationRuleService;
 import org.onap.holmes.rulemgt.tools.EngineTools;
 import org.onap.holmes.rulemgt.wrapper.RuleMgtWrapper;
 import org.onap.holmes.rulemgt.wrapper.RuleQueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slf4j
-@Service
+@Component
 public class RuleAllocator {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuleAllocator.class);
 
@@ -48,16 +46,16 @@ public class RuleAllocator {
     private RuleQueryWrapper ruleQueryWrapper;
     private EngineWrapper engineWrapper;
     private EngineTools engineTools;
-    private CorrelationRuleDao correlationRuleDao;
+    private CorrelationRuleService correlationRuleService;
 
-    @Inject
+    @Autowired
     public RuleAllocator(RuleMgtWrapper ruleMgtWrapper, RuleQueryWrapper ruleQueryWrapper,
-                         EngineWrapper engineWrapper, EngineTools engineTools, DbDaoUtil daoUtil) {
+                         EngineWrapper engineWrapper, EngineTools engineTools, CorrelationRuleService correlationRuleService) {
         this.ruleMgtWrapper = ruleMgtWrapper;
         this.ruleQueryWrapper = ruleQueryWrapper;
         this.engineWrapper = engineWrapper;
         this.engineTools = engineTools;
-        correlationRuleDao = daoUtil.getJdbiDaoByOnDemand(CorrelationRuleDao.class);
+        this.correlationRuleService = correlationRuleService;
     }
 
     @PostConstruct
@@ -228,7 +226,7 @@ public class RuleAllocator {
         for (int i = 0; i <= RETRY_TIMES; ++i) {
             try {
                 ruleMgtWrapper.deployRule2Engine(rule, ip);
-                correlationRuleDao.updateRule(rule);
+                correlationRuleService.updateRule(rule);
                 // If the codes reach here, it means everything's okay. There's no need to run the loop more.
                 break;
             } catch (CorrelationException e) {

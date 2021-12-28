@@ -17,10 +17,10 @@
 
 package org.onap.holmes.rulemgt.bean.request;
 
+import org.junit.Test;
+
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
 
 public class CorrelationRestRequestTest {
 
