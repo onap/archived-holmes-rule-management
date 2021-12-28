@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2020 ZTE Corporation.
+ * Copyright 2017-2021 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,25 @@
 package org.onap.holmes.rulemgt.tools;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.engine.entity.EngineEntity;
 import org.onap.holmes.common.engine.service.EngineEntityService;
 import org.onap.holmes.rulemgt.wrapper.RuleQueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @Slf4j
 public class EngineTools {
 
-    @Inject
+    @Autowired
     private RuleQueryWrapper ruleQueryWrapper;
-    @Inject
+    @Autowired
     private EngineEntityService engineEntityService;
 
     public List<String> getInstanceList() {

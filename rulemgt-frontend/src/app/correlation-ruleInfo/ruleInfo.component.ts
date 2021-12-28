@@ -110,7 +110,7 @@ export class RuleInfo implements OnInit {
                   let msg = { title: 'modalTitleUpdate', message: 'message_update_rule_success' };
                   this.modalService.announceOpenModal(msg);
                   this.router.navigate(['alarmRule']);
-                } else if (res.status == 499) {
+                } else if (res.status == 500) {
                   let msg = { title: 'modalTitleUpdate', message: 'message_exception_rule_fail' };
                   this.modalService.announceOpenModal(msg);
                 } else {
@@ -123,7 +123,7 @@ export class RuleInfo implements OnInit {
                 this.modalService.announceOpenModal(msg);
               }
               );
-          } else if (res.status == 499) {
+          } else if (res.status == 500) {
             let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
             this.modalService.announceOpenModal(msg);
             return false;
@@ -152,7 +152,7 @@ export class RuleInfo implements OnInit {
               let msg = { title: 'modalTitleDefault', message: 'message_add_rule_success' };
               this.modalService.announceOpenModal(msg);
               this.router.navigate(['alarmRule']);
-            } else if (res.status == 499) {
+            } else if (res.status == 500) {
               let msg = { title: 'modalTitleDefault', message: 'message_rule_name_repeat_error' };
               this.modalService.announceOpenModal(msg);
             } else {
@@ -165,7 +165,7 @@ export class RuleInfo implements OnInit {
             this.modalService.announceOpenModal(msg);
           });
           return true;
-        } else if (res.status == 499) {
+        } else if (res.status == 500) {
           let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
           this.modalService.announceOpenModal(msg);
           return false;
@@ -196,7 +196,7 @@ export class RuleInfo implements OnInit {
           if (res.status == 200) {
             let msg = { 'title': 'modalTitleCheck', message: 'message_checkContent_rule_success' };
             this.modalService.announceOpenModal(msg);
-          } else if (res.status == 499) {
+          } else if (res.status == 500) {
             let msg = { 'title': 'modalTitleCheck', message: 'message_rule_content_repeat_error' };
             this.modalService.announceOpenModal(msg);
             return false;

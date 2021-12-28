@@ -1,5 +1,5 @@
 /**
- * Copyright 2017-2021 ZTE Corporation.
+ * Copyright 2017-2022 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,8 +25,8 @@ import org.onap.holmes.rulemgt.bean.request.RuleCreateRequest;
 import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
 @Slf4j

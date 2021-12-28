@@ -16,13 +16,14 @@
 
 package org.onap.holmes.rulemgt.bean.response;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class RuleQueryListResponseTest {
 
