@@ -79,6 +79,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.2</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <warSourceExcludes>
@@ -103,6 +104,7 @@
           <descriptors>
             <descriptor>assembly.xml</descriptor>
           </descriptors>
+          <tarLongFileMode>posix</tarLongFileMode>
           <appendAssemblyId>false</appendAssemblyId>
           <outputDirectory>target/</outputDirectory>
         </configuration>

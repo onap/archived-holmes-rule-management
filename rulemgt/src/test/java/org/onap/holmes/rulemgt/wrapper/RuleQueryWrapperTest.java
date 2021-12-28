@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.holmes.common.api.entity.CorrelationRule;
-import org.onap.holmes.rulemgt.db.CorrelationRuleDao;
+import org.onap.holmes.rulemgt.db.jdbi.CorrelationRuleDao;
 import org.powermock.api.easymock.PowerMock;
 
 import java.util.ArrayList;

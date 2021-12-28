@@ -18,19 +18,18 @@ package org.onap.holmes.rulemgt.bolt.enginebolt;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.rulemgt.bean.request.CorrelationCheckRule4Engine;
 import org.onap.holmes.rulemgt.bean.request.CorrelationDeployRule4Engine;
 import org.onap.holmes.rulemgt.constant.RuleMgtConstant;
-
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class EngineWrapper {
 
-    @Inject
+    @Autowired
     private EngineService engineService;
 
     public String deployEngine(CorrelationDeployRule4Engine correlationRule, String ip) throws CorrelationException {
