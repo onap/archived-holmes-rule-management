@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ZTE Corporation.
+ * Copyright 2017-2022 ZTE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,23 @@
 
 package org.onap.holmes.rulemgt.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.SwaggerDefinition;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import lombok.extern.slf4j.Slf4j;
-import org.jvnet.hk2.annotations.Service;
 
-@Service
-@Path("/swagger.json")
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/swagger.json")
 @Slf4j
 public class SwaggerResource {
 
-    @GET
+    @GetMapping
     @Produces(MediaType.APPLICATION_JSON)
     public String getSwaggerJson() {
         URL url = SwaggerResource.class.getResource("/swagger.json");
