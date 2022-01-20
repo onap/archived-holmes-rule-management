@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: tang peng <tang.peng5@zte.com.cn>
+Code-Review+1: Guangrong Fu <fu.guangrong@zte.com.cn>
+Submitted-by: Guangrong Fu <fu.guangrong@zte.com.cn>
+Submitted-at: Thu, 20 Jan 2022 06:32:42 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/holmes/rule-management/+/126654
+Project: holmes/rule-management
+Branch: refs/heads/master
