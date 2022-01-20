@@ -22,6 +22,30 @@
       "revId": "bd9a7d88980da9e427dfa12672f9481aff6b336f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "475e0533_98d81ecc",
+        "filename": "rulemgt/src/main/java/org/onap/holmes/rulemgt/dcae/ConfigFileScanningTask.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1515
+      },
+      "writtenOn": "2022-01-20T06:32:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9101a955_cbf122ec",
+      "range": {
+        "startLine": 48,
+        "startChar": 20,
+        "endLine": 48,
+        "endChar": 34
+      },
+      "revId": "bd9a7d88980da9e427dfa12672f9481aff6b336f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
