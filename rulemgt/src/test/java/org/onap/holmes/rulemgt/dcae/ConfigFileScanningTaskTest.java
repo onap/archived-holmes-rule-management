@@ -17,7 +17,9 @@
 package org.onap.holmes.rulemgt.dcae;
 
 import org.easymock.EasyMock;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runner.RunWith;
 import org.onap.holmes.common.ConfigFileScanner;
 import org.onap.holmes.common.utils.FileUtils;
@@ -33,14 +35,38 @@ import org.powermock.reflect.Whitebox;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JerseyClient.class})
 @SuppressStaticInitializationFor({"org.onap.holmes.common.utils.JerseyClient"})
 public class ConfigFileScanningTaskTest {
+
+    @Rule
+    public final SystemOutRule systemOut = new SystemOutRule().enableLog();
+
+    @Test
+    public void run_failed_to_get_existing_rules() throws Exception {
+        System.setProperty("ENABLE_ENCRYPT", "true");
+
+        String indexPath = getFilePath("index-add.json");
+
+        ConfigFileScanningTask cfst = new ConfigFileScanningTask(null);
+        Whitebox.setInternalState(cfst, "configFile", indexPath);
+
+        // mock for getExistingRules
+        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
+        PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
+        EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andThrow(new RuntimeException());
+
+        PowerMock.replayAll();
+        cfst.run();
+        PowerMock.verifyAll();
+
+        assertThat(systemOut.getLog(), containsString("Failed to get existing rules for comparison."));
+    }
 
     @Test
     public void run_add_rules() throws Exception {
@@ -57,7 +83,6 @@ public class ConfigFileScanningTaskTest {
         JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
         PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
         RuleQueryListResponse rqlr = new RuleQueryListResponse();
-        rqlr.getCorrelationRules().add(getRuleResult4API(clName, contents));
         EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andReturn(rqlr);
 
         // mock for deployRule
@@ -68,8 +93,7 @@ public class ConfigFileScanningTaskTest {
         cfst.run();
         PowerMock.verifyAll();
 
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(1));
+        assertThat(systemOut.getLog(), containsString("Rule 'ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b' has been deployed."));
 
         System.clearProperty("ENABLE_ENCRYPT");
     }
@@ -102,37 +126,9 @@ public class ConfigFileScanningTaskTest {
         cfst.run();
         PowerMock.verifyAll();
 
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(0));
+        assertThat(systemOut.getLog(), containsString("Rule 'ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b' has been removed."));
 
         System.clearProperty("ENABLE_ENCRYPT");
-    }
-
-    @Test
-    public void run_remove_rules_delete_null_pointer() throws Exception {
-        String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
-        String indexPath = getFilePath("index-add.json");
-        String contents = FileUtils.readTextFile(indexPath);
-        Map<String, String> configInEffect = new HashMap<>();
-        configInEffect.put(clName, contents);
-
-        ConfigFileScanningTask cfst = new ConfigFileScanningTask(new ConfigFileScanner());
-        Whitebox.setInternalState(cfst, "configFile", indexPath);
-        Whitebox.setInternalState(cfst, "configInEffect", configInEffect);
-
-        // mock for getExistingRules
-        JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
-        PowerMock.expectNew(JerseyClient.class).andReturn(jcMock).anyTimes();
-        RuleQueryListResponse rqlr = new RuleQueryListResponse();
-        rqlr.getCorrelationRules().add(getRuleResult4API("a-non-existing-rule", contents));
-        EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andReturn(rqlr);
-
-        PowerMock.replayAll();
-        cfst.run();
-        PowerMock.verifyAll();
-
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(1));
     }
 
     @Test
@@ -140,12 +136,9 @@ public class ConfigFileScanningTaskTest {
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String indexPath = getFilePath("index-add.json");
         String contents = FileUtils.readTextFile(indexPath);
-        Map<String, String> configInEffect = new HashMap<>();
-        configInEffect.put(clName, contents);
 
         ConfigFileScanningTask cfst = new ConfigFileScanningTask(new ConfigFileScanner());
         Whitebox.setInternalState(cfst, "configFile", indexPath);
-        Whitebox.setInternalState(cfst, "configInEffect", configInEffect);
 
         // mock for getExistingRules
         JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
@@ -161,8 +154,7 @@ public class ConfigFileScanningTaskTest {
         cfst.run();
         PowerMock.verifyAll();
 
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(1));
+        assertThat(systemOut.getLog(), containsString("Failed to delete rule, the rule id is: ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b"));
     }
 
     @Test
@@ -170,12 +162,9 @@ public class ConfigFileScanningTaskTest {
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String oldDrlPath = getFilePath("ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b.drl");
         String oldDrlContents = FileUtils.readTextFile(oldDrlPath);
-        Map<String, String> configInEffect = new HashMap<>();
-        configInEffect.put(clName, oldDrlContents);
 
         ConfigFileScanningTask cfst = new ConfigFileScanningTask(new ConfigFileScanner());
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-rule-changed.json"));
-        Whitebox.setInternalState(cfst, "configInEffect", configInEffect);
 
         // mock for getExistingRules
         JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
@@ -195,11 +184,7 @@ public class ConfigFileScanningTaskTest {
         cfst.run();
         PowerMock.verifyAll();
 
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(1));
-        assertThat(config.get(clName),
-                equalTo(FileUtils.readTextFile(
-                        getFilePath("ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b-changed.drl"))));
+        assertThat(systemOut.getLog(), containsString("Rule 'ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b' has been updated."));
     }
 
     @Test
@@ -207,12 +192,9 @@ public class ConfigFileScanningTaskTest {
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String oldDrlPath = getFilePath("ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b.drl");
         String oldDrlContents = FileUtils.readTextFile(oldDrlPath);
-        Map<String, String> configInEffect = new HashMap<>();
-        configInEffect.put(clName, oldDrlContents);
 
         ConfigFileScanningTask cfst = new ConfigFileScanningTask(new ConfigFileScanner());
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-rule-spaces-test.json"));
-        Whitebox.setInternalState(cfst, "configInEffect", configInEffect);
 
         // mock for getExistingRules
         JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
@@ -225,11 +207,7 @@ public class ConfigFileScanningTaskTest {
         cfst.run();
         PowerMock.verifyAll();
 
-        Map<String, String> config = Whitebox.getInternalState(cfst, "configInEffect");
-        assertThat(config.size(), is(1));
-        assertThat(config.get(clName),
-                equalTo(FileUtils.readTextFile(
-                        getFilePath("ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b.drl"))));
+        assertThat(systemOut.getLog(), not(containsString("has been updated.")));
     }
 
     private String getFilePath(String fileName) {
@@ -246,6 +224,4 @@ public class ConfigFileScanningTaskTest {
         ruleResult4API.setEnabled(1);
         return ruleResult4API;
     }
-
-
 }
