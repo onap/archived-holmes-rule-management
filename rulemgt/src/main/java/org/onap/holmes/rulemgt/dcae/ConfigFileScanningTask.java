@@ -53,14 +53,32 @@ public class ConfigFileScanningTask implements Runnable {
 
     @Override
     public void run() {
+        List<RuleResult4API> deployedRules = null;
+        boolean isRuleQueryAvailable = true;
+
+        try {
+            deployedRules = getExistingRules();
+        } catch (Exception e) {
+            LOGGER.warn("Failed to get existing rules for comparison.", e);
+            isRuleQueryAvailable = false;
+        }
+
+        // If it fails to load rule through API, it means that something must be wrong with the
+        // holmes-rule-mgmt service. Hence, there's no need to go on with remaining steps.
+        if (!isRuleQueryAvailable) {
+            return;
+        }
+
+        for (RuleResult4API ruleResult4API : deployedRules) {
+            configInEffect.put(ruleResult4API.getLoopControlName(), ruleResult4API.getContent());
+        }
+
         if (null == configFileScanner) {
             configFileScanner = new ConfigFileScanner();
         }
 
         try {
             Map<String, String> newConfig = extractConfigItems(configFileScanner.scan(configFile));
-
-            List<RuleResult4API> deployedRules = getExistingRules();
 
             // deal with newly added rules
             final Set<String> existingKeys = new HashSet(configInEffect.keySet());
@@ -69,15 +87,14 @@ public class ConfigFileScanningTask implements Runnable {
                     .filter(key -> !existingKeys.contains(key))
                     .forEach(key -> {
                         if (deployRule(key, newConfig.get(key))) {
-                            configInEffect.put(key, newConfig.get(key));
                             LOGGER.info("Rule '{}' has been deployed.", key);
                         }
                     });
 
             // deal with removed rules
+            final List<RuleResult4API> existingRules = deployedRules;
             existingKeys.stream().filter(key -> !newKeys.contains(key)).forEach(key -> {
-                if (deleteRule(find(deployedRules, key))) {
-                    configInEffect.remove(key);
+                if (deleteRule(find(existingRules, key))) {
                     LOGGER.info("Rule '{}' has been removed.", key);
                 }
             });
@@ -85,10 +102,8 @@ public class ConfigFileScanningTask implements Runnable {
             // deal with changed rules
             existingKeys.stream().filter(key -> newKeys.contains(key)).forEach(key -> {
                 if (changed(configInEffect.get(key), newConfig.get(key))) {
-                    if (deleteRule(find(deployedRules, key))) {
-                        configInEffect.remove(key);
+                    if (deleteRule(find(existingRules, key))) {
                         deployRule(key, newConfig.get(key));
-                        configInEffect.put(key, newConfig.get(key));
                         LOGGER.info("Rule '{}' has been updated.", key);
                     }
                 }
