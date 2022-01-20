@@ -41,7 +41,6 @@ public class ConfigFileScanningTask implements Runnable {
     final public static long POLLING_PERIOD = 30L;
     final private static Logger LOGGER = LoggerFactory.getLogger(ConfigFileScanningTask.class);
     final private static long FILE_SIZE_LMT = 1024 * 1024 * 10; // 10MB
-    final private Map<String, String> configInEffect = new HashMap(); // Contents for configInEffect are <closedControlLoop>:<ruleContents> pairs.
     private String configFile = "/opt/hrmrules/index.json";
     private ConfigFileScanner configFileScanner;
     private String url;
@@ -69,6 +68,8 @@ public class ConfigFileScanningTask implements Runnable {
             return;
         }
 
+        // Contents for configInEffect are <closedControlLoop>:<ruleContents> pairs.
+        Map<String, String> configInEffect = new HashMap();
         for (RuleResult4API ruleResult4API : deployedRules) {
             configInEffect.put(ruleResult4API.getLoopControlName(), ruleResult4API.getContent());
         }

@@ -105,12 +105,9 @@ public class ConfigFileScanningTaskTest {
         String clName = "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b";
         String indexPath = getFilePath("index-add.json");
         String contents = FileUtils.readTextFile(indexPath);
-        Map<String, String> configInEffect = new HashMap<>();
-        configInEffect.put(clName, contents);
 
         ConfigFileScanningTask cfst = new ConfigFileScanningTask(new ConfigFileScanner());
         Whitebox.setInternalState(cfst, "configFile", getFilePath("index-empty.json"));
-        Whitebox.setInternalState(cfst, "configInEffect", configInEffect);
 
         // mock for getExistingRules
         JerseyClient jcMock = PowerMock.createMock(JerseyClient.class);
