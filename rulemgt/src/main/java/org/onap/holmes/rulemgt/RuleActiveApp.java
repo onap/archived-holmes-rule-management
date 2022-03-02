@@ -45,6 +45,8 @@ public class RuleActiveApp extends IOCApplication<RuleAppConfig> {
 
         environment.servlets().addFilter("customFilter", new TransactionIdFilter()).addMappingForUrlPatterns(EnumSet
                 .allOf(DispatcherType.class), true, "/*");
+
+        Initializer.setReadyForMsbReg(true);
     }
 }
 

@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.onap.holmes.common.utils.CommonUtils.getEnv;
 import static org.onap.holmes.common.utils.CommonUtils.isIpAddress;
@@ -37,6 +38,7 @@ import static org.onap.holmes.common.utils.CommonUtils.isIpAddress;
 @Service
 public class Initializer {
     private static final Logger logger = LoggerFactory.getLogger(Initializer.class);
+    private static boolean readyForMsbReg = false;
     private MsbRegister msbRegister;
 
     @Inject
@@ -46,11 +48,32 @@ public class Initializer {
 
     @PostConstruct
     private void init() {
+        waitUntilReady();
         try {
             msbRegister.register2Msb(createMicroServiceInfo());
         } catch (CorrelationException e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    private void waitUntilReady() {
+        int count = 1;
+        while(!readyForMsbReg) {
+            if (count > 20) {
+                break;
+            }
+            int interval = 5 * count++;
+            logger.info("Not ready for MSB registration. Try again after {} seconds...", interval);
+            try {
+                TimeUnit.SECONDS.sleep(interval);
+            } catch (InterruptedException e) {
+                logger.info(e.getMessage(), e);
+            }
+        }
+    }
+
+    public static void setReadyForMsbReg(boolean readyForMsbReg) {
+        Initializer.readyForMsbReg = readyForMsbReg;
     }
 
     private MicroServiceInfo createMicroServiceInfo() {

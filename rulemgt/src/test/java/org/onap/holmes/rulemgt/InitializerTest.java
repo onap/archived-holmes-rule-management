@@ -26,6 +26,8 @@ import org.powermock.core.classloader.annotations.SuppressStaticInitializationFo
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
+import java.util.concurrent.TimeUnit;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MicroServiceConfig.class)
 @SuppressStaticInitializationFor("org.onap.holmes.common.utils.CommonUtils")
@@ -45,8 +47,21 @@ public class InitializerTest {
 
         PowerMock.replayAll();
 
+        setReadyFlagAfter(3);
+
         WhiteboxImpl.invokeMethod(initializer, "init");
 
         PowerMock.verifyAll();
+    }
+
+    private void setReadyFlagAfter(final int second) {
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(second);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Initializer.setReadyForMsbReg(true);
+        }).start();
     }
 }
