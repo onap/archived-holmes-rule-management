@@ -51,6 +51,8 @@ public class InitializerTest {
 
         WhiteboxImpl.invokeMethod(initializer, "init");
 
+        TimeUnit.SECONDS.sleep(6);
+
         PowerMock.verifyAll();
     }
 
