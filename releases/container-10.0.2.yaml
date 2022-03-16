@@ -1,0 +1,9 @@
+---
+distribution_type: 'container'
+container_release_tag: '10.0.2'
+project: 'holmes-rule-management'
+log_dir: 'holmes-rule-management-master-docker-java-daily/1825/'
+ref: 4b7a98e2df1ab7671abd39de96cf8fd8d40396a8
+containers:
+  - name: holmes/rule-management
+    version: 1.3.6-STAGING-20220316T010659Z
