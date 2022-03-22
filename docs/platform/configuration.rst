@@ -4,5 +4,5 @@
 Configuration
 -------------
 
-No machanism for customized configurtions is provided in the Istanbul release. Such functionalities will be provided in the future if necessary.
+No machanism for customized configurtions is provided in the Jakarta release. Such functionalities will be provided in the future if necessary.
 
