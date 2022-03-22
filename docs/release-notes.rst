@@ -11,6 +11,53 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Version: 10.0.0
+---------------
+
+:Release Date: 2022-05-12
+
+
+**New Features**
+
+- `Added support to 7.1 VES data-stream in parallel to 5.4. <https://jira.onap.org/browse/HOLMES-308>`_
+- `Removed CBS/consul dependency for application config management to finish DEAE tranformation to support Helm. <https://jira.onap.org/browse/HOLMES-488>`_
+
+**Bug Fixes**
+
+- `Engine instance recreating ALARM_INFO table on every restart of pod. <https://jira.onap.org/browse/HOLMES-491>`_
+- `Make EN lang as default for other than ZH locale in Holmes UI. <https://jira.onap.org/browse/HOLMES-499>`_
+- `Date parsing exceptions in logs after rule-management restart. <https://jira.onap.org/browse/HOLMES-492>`_
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusCloud and all critical vulnerabilities have been addressed.
+
+Quick Links:
+
+- `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+
+
+**Upgrade Notes**
+
+N/A
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+
 Version: 9.0.0
 --------------
 
