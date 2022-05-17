@@ -14,7 +14,7 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 10.0.0
 ---------------
 
-:Release Date: 2022-05-12
+:Release Date: 2022-06-02
 
 
 **New Features**
@@ -32,6 +32,8 @@ Version: 10.0.0
 
 - If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
 - The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+- `Unable to perform CRUD operations on rules when multiple engine instances running <https://jira.onap.org/browse/HOLMES-493>`_ (a potential problem, not reproduced)
+- `Inconsistency of alarm processing when multiple engine instances running <https://jira.onap.org/browse/HOLMES-494>`_ (a potential problem, not reproduced)
 
 **Security Issues**
 
