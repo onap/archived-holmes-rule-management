@@ -36,17 +36,17 @@ logging:
     - type: console
       threshold: INFO
       timeZone: UTC
-      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] invocationID:{InvocationID} - %m%n"
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t][%X{RequestID}][%X{InvocationID}] - %m%n"
     - type: file
       threshold: ERROR
       #logFormat: "%nopexception%logger\n|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}\n|%level\n|%message\n|%X{InvocationID}\n|%rootException\n|%marker\n|%thread\n|%n \r\n"
-      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] invocationID:{InvocationID} - %m%n"
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t][%X{RequestID}][%X{InvocationID}] - %m%n"
       currentLogFilename: /var/log/ONAP/holmes/rulemgt-relation-error.log
       archivedLogFilenamePattern: /var/log/ONAP/holmes/zip/rulemgt-relation-error-%d{yyyy-MM-dd}.log.gz
       archivedFileCount: 7
     - type: file
       threshold: INFO
-      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t] invocationID:{InvocationID} - %m%n"
+      logFormat: "%d{yyyy-MM-dd HH:mm:ss SSS} %-5p [%c][%t][%X{RequestID}][%X{InvocationID}] - %m%n"
       currentLogFilename: /var/log/ONAP/holmes/rulemgt-relation-debug.log
       archivedLogFilenamePattern: /var/log/ONAP/holmes/zip/rulemgt-relation-debug-%d{yyyy-MM-dd}.log.gz
       archivedFileCount: 7
