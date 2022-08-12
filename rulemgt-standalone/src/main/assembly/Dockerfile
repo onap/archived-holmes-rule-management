@@ -12,7 +12,9 @@ EXPOSE 9101 9104 9201
 ENV HOSTNAME=holmes-rule-mgmt \
     LANG=C.UTF-8
 
-RUN apt-get upgrade \
+RUN  sed -i 's/security.debian.org/mirrors.zte.com.cn/g' /etc/apt/sources.list \
+    && sed -i 's/deb.debian.org/mirrors.zte.com.cn/g' /etc/apt/sources.list \
+    && apt-get upgrade \
     && apt-get update \
     && apt-get install -y curl postgresql-client-11 nginx
 
