@@ -4,7 +4,7 @@ import org.onap.holmes.common.dmaap.DmaapService;
 import org.onap.holmes.common.api.stat.VesAlarm;
 import org.onap.holmes.common.aai.CorrelationUtil;
 import org.onap.holmes.common.dmaap.entity.PolicyMsg;
-import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+import org.onap.holmes.common.utils.SpringContextUtil;
 import org.onap.holmes.common.utils.DroolsLog;
  
 
@@ -36,7 +36,7 @@ no-loop true
 		$child : VesAlarm(eventId != $eventId, parentId == $eventId)
 	then
 		DroolsLog.printInfo("Root alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
-		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		DmaapService dmaapService = SpringContextUtil.getBean(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, $child, "org.onap.holmes.droolsRule");
         dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		$root.setRootFlag(1);
@@ -53,7 +53,7 @@ no-loop true
             eventName in ("Fault_MultiCloud_VMFailure"))
     then
 		DroolsLog.printInfo("New alarm: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
-		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		DmaapService dmaapService = SpringContextUtil.getBean(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
         dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		$root.setRootFlag(1);
@@ -67,7 +67,7 @@ no-loop true
         $root : VesAlarm(alarmIsCleared == 1, rootFlag == 1)
     then
 		DroolsLog.printInfo("Alarm cleared: ID=" + $root.getEventId() + ", Event Name=" + $root.getEventName());
-		DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+		DmaapService dmaapService = SpringContextUtil.getBean(DmaapService.class);
 		PolicyMsg policyMsg = dmaapService.getPolicyMsg($root, null, "org.onap.holmes.droolsRule");
         dmaapService.publishPolicyMsg(policyMsg, "dcae_cl_out");
 		retract($root);

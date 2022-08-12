@@ -9,10 +9,9 @@ import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.common.dmaap.entity.PolicyMsg;
 import org.onap.holmes.common.dmaap.DmaapService;
 import org.onap.holmes.common.utils.DroolsLog;
-import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+import org.onap.holmes.common.utils.SpringContextUtil;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -76,13 +75,13 @@ function void updateAaiTpStatus(String networkId, String pnfName, String ifName,
 
 function Map<String, Object> getAdditionalResourceInfo(String networkId, String pnfName, String ifName, String status) {
     AaiQuery4Ccvpn aai = AaiQuery4Ccvpn.newInstance();
-    JSONObject instance = aai.getServiceInstance(networkId, pnfName, ifName, status);
+    JsonObject instance = aai.getServiceInstance(networkId, pnfName, ifName, status);
  
     Map<String, Object> ret = new HashMap<String, Object>();
-    ret.put("service-instance.service-instance-id", instance.getString("service-instance-id"));
+    ret.put("service-instance.service-instance-id", instance.get("service-instance-id").getAsString());
     ret.put("vserver.vserver-name", "TBD");
-    ret.put("globalSubscriberId", instance.getString("globalSubscriberId"));
-    ret.put("serviceType", instance.getString("serviceType"));
+    ret.put("globalSubscriberId", instance.get("globalSubscriberId").getAsString());
+    ret.put("serviceType", instance.get("serviceType").getAsString());
     ret.put("network-information.network-id", networkId);
  
     return ret;
@@ -142,7 +141,7 @@ rule "Set Up Correlation"
 		    	// If any of the alarms have been marked as root, a policy message has ever been created and sent. Do NOT send it again.
 		    	if ($a.getRootFlag() != 1 && $b.getRootFlag() != 1) {
 			    	PolicyMsg msg = createPolicyMsg($a);
-			        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+			        DmaapService dmaapService = SpringContextUtil.getBean(DmaapService.class);
 			        dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
 			        updateAaiLinkStatus(getLogicLink($a), status);
 		    	}

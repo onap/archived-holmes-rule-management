@@ -9,10 +9,9 @@ dialect "java"
     import org.onap.holmes.common.dmaap.entity.PolicyMsg;
     import org.onap.holmes.common.dmaap.DmaapService;
     import org.onap.holmes.common.utils.DroolsLog;
-    import org.onap.holmes.common.dropwizard.ioc.utils.ServiceLocatorHolder;
+    import org.onap.holmes.common.utils.SpringContextUtil;
 
-    import com.alibaba.fastjson.JSONArray;
-    import com.alibaba.fastjson.JSONObject;
+    import com.google.gson.JsonObject;
 
     import java.util.List;
     import java.util.Map;
@@ -32,17 +31,17 @@ dialect "java"
 
     function Map<String, Object> getAdditionalResourceInfo(VesAlarm a, String bandwidth) {
         AaiQuery4Ccvpn2 aai = AaiQuery4Ccvpn2.newInstance();
-        JSONObject instance = aai.getServiceInstance(getAdditionalField(a, "siteService")); 
+        JsonObject instance = aai.getServiceInstance(getAdditionalField(a, "siteService")); 
         Map<String, Object> ret = new HashMap<String, Object>();
-        ret.put("service-instance.service-instance-id", instance.getString("service-instance-id")); 
+        ret.put("service-instance.service-instance-id", instance.get("service-instance-id").getAsString()); 
          ret.put("vserver.vserver-name", "TBD");
-         ret.put("globalSubscriberId", instance.getString("globalSubscriberId"));
-         ret.put("serviceType", instance.getString("serviceType"));
+         ret.put("globalSubscriberId", instance.get("globalSubscriberId").getAsString());
+         ret.put("serviceType", instance.get("serviceType").getAsString());
          ret.put("vserver.is-closed-loop-disabled", "false");
          ret.put("vserver.prov-status", "ACTIVE");
          ret.put("bandwidth", bandwidth);
          ret.put("bandwidth-change-time", getAdditionalField(a, "timestamp"));
-         ret.put("vnfId", instance.getString("vnfId"));
+         ret.put("vnfId", instance.get("vnfId").getAsString());
          return ret;
     }
 
@@ -75,7 +74,7 @@ dialect "java"
                bandwidth = "10000";
            }
         PolicyMsg msg = createPolicyMsg($a, bandwidth);
-        DmaapService dmaapService = ServiceLocatorHolder.getLocator().getService(DmaapService.class);
+        DmaapService dmaapService = SpringContextUtil.getBean(DmaapService.class);
         dmaapService.publishPolicyMsg(msg, "dcae_cl_out");
         $a.setRootFlag(1);
     end
