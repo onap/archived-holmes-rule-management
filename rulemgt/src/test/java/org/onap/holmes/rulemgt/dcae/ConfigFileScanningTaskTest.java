@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 ZTE Corporation.
+ * Copyright 2021-2022 ZTE Corporation.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -214,6 +214,7 @@ public class ConfigFileScanningTaskTest {
         ruleResult4API.setContent(contents);
         ruleResult4API.setDescription("");
         ruleResult4API.setEnabled(1);
+        ruleResult4API.setCreator("__SYSTEM__DEFAULT__");
         return ruleResult4API;
     }
 }
