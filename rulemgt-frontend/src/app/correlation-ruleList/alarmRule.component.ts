@@ -52,8 +52,7 @@ export class AlarmRule implements OnInit {
     } else if (select == "common_disabled") {
       this.ruleModel.enabled = 0;
     } else {
-
-      this.ruleModel.enabled = null;
+      this.ruleModel.enabled = 2;
     }
     this.setActiveText();
   }
@@ -116,7 +115,7 @@ export class AlarmRule implements OnInit {
   public reset(): void {
     this.ruleModel.ruleName = null;
     this.activeText = 'option_all';
-    this.ruleModel.enabled = null;
+    this.ruleModel.enabled = 2;
     this.getRules();
   }
 
@@ -144,7 +143,7 @@ export class AlarmRule implements OnInit {
       creator: null,
       updateTime: null,
       modifier: null,
-      enabled: 0,
+      enabled: 2,
       loopControlName: ''
     };
     this.ruleRequest = {
@@ -152,7 +151,7 @@ export class AlarmRule implements OnInit {
       ruleName: null,
       creator: null,
       modifier: null,
-      enabled: null,
+      enabled: 2,
       loopControlName: ''
     };
     this.getRules();

@@ -57,7 +57,7 @@ export class AlarmRuleService {
     let data = {'ruleId': ruleId};
     var queryrequest = JSON.stringify(data);
     const url = `${this.ruleUrl}?queryrequest=${queryrequest}`;
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => res.json().correlationRules as RuleModel[])
       .catch(this.handleError);
@@ -67,7 +67,7 @@ export class AlarmRuleService {
     let data = {ruleName: rule.ruleName, enabled: rule.enabled}
     console.log(JSON.stringify(data));
     const url = `${this.ruleUrl}?queryrequest=${JSON.stringify(data)}`
-    return this.http.get(url, {body: data, headers: this.headers})
+    return this.http.get(encodeURI(url))
       .toPromise()
       .then(res => res.json().correlationRules as RuleModel[])
       .catch(this.handleError);
