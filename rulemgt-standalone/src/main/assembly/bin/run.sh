@@ -119,9 +119,9 @@ else
 fi
 
 if [ "${ENABLE_ENCRYPT}"x = "true"x ]; then
-    sudo nginx -c /etc/nginx/conf.d/nginx-https.conf
+    nginx -c /etc/nginx/conf.d/nginx-https.conf
 else
-    sudo nginx -c /etc/nginx/conf.d/nginx-http.conf
+    nginx -c /etc/nginx/conf.d/nginx-http.conf
 fi
 echo nginx started.
 
