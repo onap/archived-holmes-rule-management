@@ -42,7 +42,7 @@ public class ConfigFileScanningTask implements Runnable {
     final public static long POLLING_PERIOD = 30L;
     final private static Logger LOGGER = LoggerFactory.getLogger(ConfigFileScanningTask.class);
     final private static long FILE_SIZE_LMT = 1024 * 1024 * 10; // 10MB
-    final private static String CREATOR = "__SYSTEM__DEFAULT__";
+    final private static String DEFAULT_CREATOR = "__SYSTEM__DEFAULT__";
     private String configFile = "/opt/hrmrules/index.json";
     private ConfigFileScanner configFileScanner;
     private String url;
@@ -178,7 +178,7 @@ public class ConfigFileScanningTask implements Runnable {
         List<RuleResult4API> deployedRules = Collections.EMPTY_LIST;
         if (null != ruleQueryListResponse) {
             deployedRules = ruleQueryListResponse.getCorrelationRules()
-                    .stream().filter(r -> CREATOR.equals(r.getCreator())).collect(Collectors.toList());
+                    .stream().filter(r -> DEFAULT_CREATOR.equals(r.getCreator())).collect(Collectors.toList());
         }
         return deployedRules;
     }
@@ -200,7 +200,7 @@ public class ConfigFileScanningTask implements Runnable {
         ruleCreateRequest.setContent(contents);
         ruleCreateRequest.setDescription("");
         ruleCreateRequest.setEnabled(1);
-        ruleCreateRequest.setCreator(CREATOR);
+        ruleCreateRequest.setCreator(DEFAULT_CREATOR);
         return ruleCreateRequest;
     }
 
