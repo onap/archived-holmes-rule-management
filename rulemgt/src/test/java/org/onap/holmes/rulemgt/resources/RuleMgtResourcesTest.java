@@ -51,7 +51,7 @@ public class RuleMgtResourcesTest {
     private RuleMgtResources ruleMgtResources = new RuleMgtResources();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Whitebox.setInternalState(ruleMgtResources, "ruleMgtWrapper", ruleMgtWrapper);
         PowerMock.resetAll();
     }
@@ -64,7 +64,7 @@ public class RuleMgtResourcesTest {
         final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
         EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin", ruleCreateRequest))
                 .andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
+        EasyMock.expect(request.getHeader("username")).andReturn("admin").times(2);
         PowerMock.replayAll();
         ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
         PowerMock.verifyAll();
@@ -76,7 +76,7 @@ public class RuleMgtResourcesTest {
         final RuleCreateRequest ruleCreateRequest = new RuleCreateRequest();
         EasyMock.expect(ruleMgtWrapper.addCorrelationRule("admin",
                 ruleCreateRequest)).andReturn(new RuleAddAndUpdateResponse());
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
+        EasyMock.expect(request.getHeader("username")).andReturn("admin").times(2);
         PowerMock.replayAll();
         ruleMgtResources.addCorrelationRule(request, ruleCreateRequest);
         PowerMock.verifyAll();
@@ -89,7 +89,7 @@ public class RuleMgtResourcesTest {
         final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
         EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin", ruleUpdateRequest))
                 .andThrow(new CorrelationException(EasyMock.anyObject(String.class)));
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
+        EasyMock.expect(request.getHeader("username")).andReturn("admin").times(2);
         PowerMock.replayAll();
         ruleMgtResources.updateCorrelationRule(request, ruleUpdateRequest);
         PowerMock.verifyAll();
@@ -100,7 +100,7 @@ public class RuleMgtResourcesTest {
         final RuleUpdateRequest ruleUpdateRequest = new RuleUpdateRequest();
         EasyMock.expect(ruleMgtWrapper.updateCorrelationRule("admin",
                 ruleUpdateRequest)).andReturn(new RuleAddAndUpdateResponse());
-        EasyMock.expect(request.getHeader("username")).andReturn("admin");
+        EasyMock.expect(request.getHeader("username")).andReturn("admin").times(2);
         PowerMock.replayAll();
         ruleMgtResources.updateCorrelationRule(request, ruleUpdateRequest);
         PowerMock.verifyAll();

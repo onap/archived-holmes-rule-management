@@ -62,10 +62,9 @@ public class RuleMgtResources {
         try {
             ruleChangeResponse = ruleMgtWrapper
                     .addCorrelationRule(UserUtil.getUserName(request), ruleCreateRequest);
-            log.info("create rule:" + ruleCreateRequest.getRuleName() + " success.");
             return ruleChangeResponse;
         } catch (CorrelationException e) {
-            log.error("create rule:" + ruleCreateRequest.getRuleName() + " failed", e);
+            log.error(String.format("failed to create the rule: %s", ruleCreateRequest.getRuleName()), e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }
@@ -85,7 +84,7 @@ public class RuleMgtResources {
             log.info("update rule:" + ruleUpdateRequest.getRuleId() + " successful");
             return ruleChangeResponse;
         } catch (CorrelationException e) {
-            log.error("update rule:" + ruleUpdateRequest.getContent() + " failed", e);
+            log.error(String.format("failed to update the rule: %s", ruleUpdateRequest.getRuleId()), e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }
@@ -95,10 +94,9 @@ public class RuleMgtResources {
     public ResponseEntity deleteCorrelationRule(@PathVariable("ruleid") String ruleId) {
         try {
             ruleMgtWrapper.deleteCorrelationRule(new RuleDeleteRequest(ruleId));
-            log.info("delete rule:" + ruleId + " successful");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (CorrelationException e) {
-            log.error("delete rule:" + ruleId + " failed", e);
+            log.error(String.format("failed to delete the rule: %s", ruleId), e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }
@@ -118,10 +116,9 @@ public class RuleMgtResources {
         try {
             ruleQueryListResponse = ruleMgtWrapper
                     .getCorrelationRuleByCondition(ruleQueryCondition);
-            log.info("query rule successful by condition:" + ruleQueryCondition);
             return ruleQueryListResponse;
         } catch (CorrelationException e) {
-            log.error("query rule failed,cause query condition conversion failure", e);
+            log.error(String.format("failed to query the rule: %s", ruleQueryCondition.getName()), e);
             throw ExceptionUtil.buildExceptionResponse(e.getMessage());
         }
     }

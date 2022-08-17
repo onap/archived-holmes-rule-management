@@ -28,6 +28,7 @@ import org.onap.holmes.rulemgt.bean.response.RuleQueryListResponse;
 import org.onap.holmes.rulemgt.bean.response.RuleResult4API;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JerseyClient.class})
+@SuppressStaticInitializationFor({"org.onap.holmes.common.utils.JerseyClient"})
 public class ConfigFileScanningTaskTest {
 
     @Rule
@@ -81,7 +83,7 @@ public class ConfigFileScanningTaskTest {
         EasyMock.expect(jcMock.get(EasyMock.anyString(), EasyMock.anyObject())).andReturn(rqlr);
 
         // mock for deployRule
-        EasyMock.expect(jcMock.header(EasyMock.anyString(), EasyMock.anyObject())).andReturn(jcMock);
+        EasyMock.expect(jcMock.header(EasyMock.anyString(), EasyMock.anyObject())).andReturn(jcMock).times(2);
         EasyMock.expect(jcMock.put(EasyMock.anyString(), EasyMock.anyObject())).andReturn("");
 
         PowerMock.replayAll();
@@ -169,7 +171,7 @@ public class ConfigFileScanningTaskTest {
         EasyMock.expect(jcMock.delete(EasyMock.anyString())).andReturn("");
 
         // mock for deployRule
-        EasyMock.expect(jcMock.header(EasyMock.anyString(), EasyMock.anyObject())).andReturn(jcMock);
+        EasyMock.expect(jcMock.header(EasyMock.anyString(), EasyMock.anyObject())).andReturn(jcMock).times(2);
         EasyMock.expect(jcMock.put(EasyMock.anyString(), EasyMock.anyObject())).andReturn("");
 
         PowerMock.replayAll();

@@ -186,6 +186,7 @@ public class ConfigFileScanningTask implements Runnable {
     private boolean deployRule(String clName, String contents) {
         RuleCreateRequest ruleCreateRequest = getRuleCreateRequest(clName, contents);
         if (JerseyClient.newInstance().header("Accept", MediaType.APPLICATION_JSON)
+                .header("username", DEFAULT_CREATOR)
                 .put(url, Entity.json(ruleCreateRequest)) == null) {
             LOGGER.error("Failed to deploy rule: {}.", clName);
             return false;
@@ -200,7 +201,6 @@ public class ConfigFileScanningTask implements Runnable {
         ruleCreateRequest.setContent(contents);
         ruleCreateRequest.setDescription("");
         ruleCreateRequest.setEnabled(1);
-        ruleCreateRequest.setCreator(DEFAULT_CREATOR);
         return ruleCreateRequest;
     }
 
