@@ -4,7 +4,7 @@
 Installation
 ------------
 
-In the Jakarta release, Holmes could either be deployed as an analytics application of DCAE along with the whole ONAP or be deployed in a standalone mode for the sake of saving resources.
+In the Kohn release, Holmes could either be deployed as an analytics application of DCAE along with the whole ONAP or be deployed in a standalone mode for the sake of saving resources.
 
 If a user wants to deploy Holmes using Helm, please refer to the OOM manual for help.
 

@@ -11,6 +11,54 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Version: 11.0.0
+---------------
+
+:Release Date: 2022-11-10
+
+
+**New Features**
+
+- `Migrate from Dropwizard to Springboot <https://jira.onap.org/browse/HOLMES-511>`_
+
+**Bug Fixes**
+
+- `Nginx stops working. Holmes UI is not available. <https://jira.onap.org/browse/HOLMES-565>`_
+- `Manually deployed rules are removed with no reason from Holmes. <https://jira.onap.org/browse/HOLMES-564>`_
+- `Holmes does not log the request ID and the transaction ID in the log file. <https://jira.onap.org/browse/HOLMES-563>`_
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+- `Unable to perform CRUD operations on rules when multiple engine instances running <https://jira.onap.org/browse/HOLMES-493>`_ (a potential problem, not reproduced)
+- `Inconsistency of alarm processing when multiple engine instances running <https://jira.onap.org/browse/HOLMES-494>`_ (a potential problem, not reproduced)
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusCloud and all critical vulnerabilities have been addressed.
+
+Quick Links:
+
+- `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+
+
+**Upgrade Notes**
+
+N/A
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+
 Version: 10.0.0
 ---------------
 
