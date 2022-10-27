@@ -16,6 +16,7 @@
 package org.onap.holmes.rulemgt.wrapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.holmes.common.api.entity.CorrelationRule;
 import org.onap.holmes.common.exception.CorrelationException;
 import org.onap.holmes.rulemgt.bean.request.*;
@@ -79,7 +80,9 @@ public class RuleMgtWrapper {
         try {
             result = correlationRuleService.saveRule(correlationRule);
         } catch (CorrelationException e) {
-            engineWarpper.deleteRuleFromEngine(packageName, ip);
+            if (StringUtils.isNotEmpty(packageName)) {
+                engineWarpper.deleteRuleFromEngine(packageName, ip);
+            }
             throw new CorrelationException(e.getMessage(), e);
         }
         RuleAddAndUpdateResponse ruleAddAndUpdateResponse = new RuleAddAndUpdateResponse();
