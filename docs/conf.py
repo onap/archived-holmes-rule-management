@@ -1,5 +1,6 @@
 from docs_conf.conf import *
 
+project = "onap"
 release = "master"
 version = "master"
 
