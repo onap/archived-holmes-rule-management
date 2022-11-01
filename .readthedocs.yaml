@@ -1,12 +1,10 @@
 ---
 # .readthedocs.yml
-# Read the Docs configuration file
-# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-# Required
+# # Read the Docs configuration file
+# # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+# # Required
+#
 version: 2
-
-formats:
-  - htmlzip
 
 build:
   image: latest
@@ -14,7 +12,10 @@ build:
 python:
   version: 3.7
   install:
-    - requirements: requirements.txt
+    - requirements: docs/requirements-docs.txt
+
+submodules:
+  include: all
 
 sphinx:
   configuration: docs/conf.py
