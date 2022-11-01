@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72c51ed0_7c74b93a",
+        "filename": "docs/conf.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1489
+      },
+      "writtenOn": "2022-11-01T00:20:17Z",
+      "side": 1,
+      "message": "Change it to \"kohn\".",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 16
+      },
+      "revId": "a875377b333c8ac8182475457760cb3f79c64683",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
