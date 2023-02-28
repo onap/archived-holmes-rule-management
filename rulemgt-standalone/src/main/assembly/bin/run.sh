@@ -73,7 +73,7 @@ else
 fi
 
 if [ -z ${ENABLE_ENCRYPT} ]; then
-    export ENABLE_ENCRYPT=true
+    export ENABLE_ENCRYPT=false
 fi
 echo ENABLE_ENCRYPT=${ENABLE_ENCRYPT}
 
