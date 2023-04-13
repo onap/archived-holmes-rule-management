@@ -11,6 +11,60 @@ and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
 reason which causes the failure or degradation of services by digging into the
 ocean of events collected from different levels of the telecom cloud.
 
+Holmes Rule Management Release Notes
+====================================
+
+Holmes provides alarm correlation and analysis for telecom cloud infrastructure
+and services, including hosts, vims, VNFs and NSs. Holmes aims to find the root
+reason which causes the failure or degradation of services by digging into the
+ocean of events collected from different levels of the telecom cloud.
+
+Version: 12.0.0
+---------------
+
+:Release Date: 2023-06-08
+
+
+**New Features**
+
+- `Added support for Ingress <https://jira.onap.org/browse/HOLMES-612>`_
+
+**Bug Fixes**
+
+N/A
+
+**Known Issues**
+
+- If the database is not stable, there may be data/status inconsistency between the rule management module and the engine management module.
+- The current horizontal scaling mechanism can not efficiently balance the load. Optimization is needed in the future.
+- `Unable to perform CRUD operations on rules when multiple engine instances running <https://jira.onap.org/browse/HOLMES-493>`_ (a potential problem, not reproduced)
+- `Inconsistency of alarm processing when multiple engine instances running <https://jira.onap.org/browse/HOLMES-494>`_ (a potential problem, not reproduced)
+
+**Security Issues**
+
+HOLMES code has been formally scanned during build time using NexusCloud and all critical vulnerabilities have been addressed.
+
+Quick Links:
+
+- `HOLMES project page <https://wiki.onap.org/display/DW/Holmes+Project>`_
+- `Passing Badge information for HOLMES <https://bestpractices.coreinfrastructure.org/en/projects/1602>`_
+
+
+**Upgrade Notes**
+
+N/A
+
+
+**Deprecation Notes**
+
+N/A
+
+
+**Other**
+
+N/A
+
+
 Version: 11.0.0
 ---------------
 

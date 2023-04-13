@@ -4,5 +4,5 @@
 Configuration
 -------------
 
-No machanism for customized configurtions is provided in the Kohn release. Such functionalities will be provided in the future if necessary.
+No machanism for customized configurtions is provided in the London release. Such functionalities will be provided in the future if necessary.
 
