@@ -22,7 +22,7 @@ ocean of events collected from different levels of the telecom cloud.
 Version: 12.0.0
 ---------------
 
-:Release Date: 2023-06-08
+:Release Date: 2023-06-15
 
 
 **New Features**
