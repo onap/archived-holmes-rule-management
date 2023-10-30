@@ -1,4 +1,4 @@
-FROM onap/integration-java11:7.0.0
+FROM onap/integration-java17:12.0.0
 
 MAINTAINER "Guangrong Fu" <fu.guangrong@zte.com.cn>
 
@@ -10,24 +10,23 @@ USER root
 EXPOSE 9101 9104 9201
 
 ENV HOSTNAME=holmes-rule-mgmt \
-    LANG=C.UTF-8
+    LANG=C.UTF-8 \
+    PG_VERSION=12.2-r0
 
-RUN apt-get upgrade \
-    && apt-get update \
-    && apt-get install -y curl postgresql-client-11 nginx
+RUN apk update \
+    && apk add --no-cache curl postgresql-client nginx \
+    && mkdir -p /opt/onap
 
 
 ADD holmes-rulemgt-standalone-*-linux64.tar.gz /opt/onap/
-ADD holmes-rulemgt-frontend-*.tar.gz /usr/share/nginx/html/
+ADD holmes-rulemgt-frontend-*.tar.gz /var/lib/nginx/html/
 ADD nginx-https.conf /etc/nginx/conf.d/
 ADD nginx-http.conf /etc/nginx/conf.d/
 ADD holmes-frontend.key /etc/ssl/private/
 ADD holmes-frontend-selfsigned.crt /etc/ssl/certs/
 ADD dhparam.pem /etc/ssl/certs/
 
-RUN mkdir -p /usr/share/nginx/logs \
-    && chmod -R 777 /usr/share/nginx/ \
-    && chmod -R 777 /var/lib/nginx/ \
+RUN chmod -R 777 /var/lib/nginx/ \
     && chmod -R 755 /etc/ssl/private/ \
     && chmod -R 755 /etc/ssl/certs/ \
     && chmod -R 777 /etc/nginx/conf.d/ \
