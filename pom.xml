@@ -17,11 +17,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.onap.oparent</groupId>
-        <artifactId>oparent</artifactId>
-        <version>3.0.0</version>
-    </parent>
 
     <groupId>org.onap.holmes.rule-management</groupId>
     <artifactId>holmes-rulemgt-parent</artifactId>
@@ -45,16 +40,24 @@
         <bundle.name>${project.artifactId}-${project.version}</bundle.name>
 
         <jersey.version>3.0.5</jersey.version>
-        <springboot.version>2.7.2</springboot.version>
+        <springboot.version>3.1.4</springboot.version>
         <jetty.version>9.4.18.v20190429</jetty.version>
         <powermock.version>2.0.9</powermock.version>
         <jdbi.version>3.19.0</jdbi.version>
-        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
         <jakarta.ws.rs.version>3.1.0</jakarta.ws.rs.version>
 
         <linux64id>linux64</linux64id>
         <linux64outputdir>target/assembly/${linux64id}</linux64outputdir>
         <version.output>target/version</version.output>
+
+        <jacoco.version>0.8.5</jacoco.version>
+        <sonar-jacoco-listeners.version>3.2</sonar-jacoco-listeners.version>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**</sonar.exclusions>
+        <swagger-properties>${basedir}/src/main/resources/swagger.properties</swagger-properties>
+        <swagger-json>${basedir}/src/main/resources/swagger.json</swagger-json>
     </properties>
 
     <dependencyManagement>
@@ -95,48 +98,9 @@
             <version>${jdbi.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.onap.msb.java-sdk</groupId>
-            <artifactId>msb-java-sdk</artifactId>
-            <version>1.2.5</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.squareup.okhttp3</groupId>
-                    <artifactId>okhttp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-server</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.checkerframework</groupId>
-                    <artifactId>checker-qual</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.squareup.retrofit2</groupId>
-                    <artifactId>retrofit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.onap.holmes.common</groupId>
             <artifactId>holmes-actions</artifactId>
-            <version>1.4.5</version>
+            <version>1.4.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.swagger</groupId>
@@ -154,6 +118,12 @@
             <version>${jakarta.ws.rs.version}</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>4.10.0</version>
@@ -161,7 +131,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
+            <version>1.18.28</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
